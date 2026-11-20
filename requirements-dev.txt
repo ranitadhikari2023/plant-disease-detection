@@ -1,0 +1,8 @@
+# Development and Testing Dependencies
+# Inherits production runtime dependencies
+-r requirements.txt
+
+# Testing Framework
+pytest==8.3.5
+iniconfig==2.3.1
+pluggy==1.7.0

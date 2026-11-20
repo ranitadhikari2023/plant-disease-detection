@@ -1,11 +1,28 @@
-# predict_hierarchical.py
+# archive/v1/predict_hierarchical.py
+"""
+DEPRECATED — ARCHIVED V1 INFERENCE SCRIPT (April 2026 Legacy Architecture)
+
+WARNING: This script is preserved for historical reference and backward compatibility tests only.
+It represents the original single-stage hierarchical predictor with legacy single-threshold gating.
+For all production inference, use predict_hierarchical_v2.py (MobileNetV2 + CBAM Attention).
+"""
 import os
+import warnings
 from pathlib import Path
 from PIL import Image
 import numpy as np
 
+warnings.warn(
+    "predict_hierarchical.py (V1) is deprecated. Use predict_hierarchical_v2.py for production inference.",
+    DeprecationWarning,
+    stacklevel=2
+)
+
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 import tensorflow as tf
+
+# Default location for archived V1 model weights
+DEFAULT_MODELS_DIR = Path(__file__).resolve().parent / "models"
 
 # --- 1. Constants & Vocabularies ---
 SPECIES_LABELS = ['Potato', 'Tomato']
@@ -18,10 +35,10 @@ MODEL_POTATO = None
 MODEL_TOMATO = None
 
 
-def load_models(models_dir="models"):
+def load_models(models_dir=None):
     """
-    Loads and caches the hierarchical deep learning models.
-    Can be invoked eagerly at server startup or lazily upon first inference.
+    Loads and caches the legacy hierarchical deep learning models.
+    Defaults to archive/v1/models/ relative to this script.
     """
     global MODEL_SPECIES, MODEL_POTATO, MODEL_TOMATO
 
@@ -60,7 +77,7 @@ def load_models(models_dir="models"):
         except ImportError:
             pass
 
-    base_dir = Path(models_dir)
+    base_dir = Path(models_dir) if models_dir is not None else DEFAULT_MODELS_DIR
     species_path = base_dir / "species_expert.keras"
     potato_path = base_dir / "potato_expert.keras"
     tomato_path = base_dir / "tomato_expert.keras"

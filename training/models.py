@@ -133,7 +133,9 @@ def get_mobilenet_backbone(image_size=(224, 224)):
     First attempts local extraction from models/species_expert.keras to prevent network dependency.
     Falls back to tf.keras.applications.MobileNetV2 if available.
     """
-    local_ref = Path("models/species_expert.keras")
+    local_ref = Path("archive/v1/models/species_expert.keras")
+    if not local_ref.exists():
+        local_ref = Path("models/species_expert.keras")
     if local_ref.exists():
         # Backward-compat hook for Dense deserialization if needed
         orig_dense_from_config = keras.layers.Dense.from_config

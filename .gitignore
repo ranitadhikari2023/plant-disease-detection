@@ -28,6 +28,7 @@ dataset/**
 
 # Legacy V1 model checkpoints
 models/*.keras
+archive/v1/models/*.keras
 
 # Generated deployment artifacts
 *.onnx
