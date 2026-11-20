@@ -1,10 +1,13 @@
 # Core Deep Learning, Inference, Training & Data Pipeline
-tensorflow
-numpy
-pillow
-matplotlib
-psutil
+tensorflow==2.21.0
+keras==3.12.1
+numpy==2.2.6
+pillow==12.1.1
+matplotlib==3.10.8
+psutil==7.2.2
+protobuf==7.34.1
 
-# Optional: MLOps Model Deployment & ONNX Export
-tf2onnx
-onnxruntime
+# MLOps Model Deployment & ONNX Export
+tf2onnx==1.17.0
+onnx==1.23.2
+onnxruntime==1.20.0
