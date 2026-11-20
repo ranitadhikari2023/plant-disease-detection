@@ -1,0 +1,131 @@
+{
+  "audit_timestamp": "2026-11-19 23:40:26",
+  "total_images": 11988,
+  "corrupted_images": 0,
+  "classes": [
+    {
+      "crop": "potato",
+      "disease": "Early_blight",
+      "total_images": 1998,
+      "original_images": 558,
+      "augmented_images": 1440,
+      "percent_augmented": 72.07,
+      "exact_duplicate_groups": 152,
+      "unique_source_groups": 558,
+      "corrupted": 0
+    },
+    {
+      "crop": "potato",
+      "disease": "Late_blight",
+      "total_images": 1998,
+      "original_images": 558,
+      "augmented_images": 1440,
+      "percent_augmented": 72.07,
+      "exact_duplicate_groups": 144,
+      "unique_source_groups": 558,
+      "corrupted": 0
+    },
+    {
+      "crop": "potato",
+      "disease": "healthy",
+      "total_images": 1998,
+      "original_images": 81,
+      "augmented_images": 1917,
+      "percent_augmented": 95.95,
+      "exact_duplicate_groups": 506,
+      "unique_source_groups": 90,
+      "corrupted": 0
+    },
+    {
+      "crop": "tomato",
+      "disease": "Early_blight",
+      "total_images": 1998,
+      "original_images": 558,
+      "augmented_images": 1440,
+      "percent_augmented": 72.07,
+      "exact_duplicate_groups": 96,
+      "unique_source_groups": 558,
+      "corrupted": 0
+    },
+    {
+      "crop": "tomato",
+      "disease": "Late_blight",
+      "total_images": 1998,
+      "original_images": 1260,
+      "augmented_images": 738,
+      "percent_augmented": 36.94,
+      "exact_duplicate_groups": 31,
+      "unique_source_groups": 1253,
+      "corrupted": 0
+    },
+    {
+      "crop": "tomato",
+      "disease": "healthy",
+      "total_images": 1998,
+      "original_images": 954,
+      "augmented_images": 1044,
+      "percent_augmented": 52.25,
+      "exact_duplicate_groups": 41,
+      "unique_source_groups": 954,
+      "corrupted": 0
+    }
+  ],
+  "verification_results": {
+    "check1_no_group_leakage": {
+      "status": "PASS",
+      "train_val_overlap": 0,
+      "train_test_overlap": 0,
+      "val_test_overlap": 0
+    },
+    "check2_no_exact_duplicate_leakage": {
+      "status": "PASS",
+      "sha_train_val_leak": 0,
+      "sha_train_test_leak": 0,
+      "sha_val_test_leak": 0
+    },
+    "check3_all_classes_represented": {
+      "status": "PASS",
+      "distribution": {
+        "potato_Early_blight": {
+          "test": 283,
+          "train": 1335,
+          "val": 380
+        },
+        "potato_Late_blight": {
+          "train": 1326,
+          "test": 355,
+          "val": 317
+        },
+        "potato_healthy": {
+          "train": 1336,
+          "val": 264,
+          "test": 398
+        },
+        "tomato_Early_blight": {
+          "train": 1353,
+          "val": 344,
+          "test": 301
+        },
+        "tomato_Late_blight": {
+          "train": 1474,
+          "test": 265,
+          "val": 259
+        },
+        "tomato_healthy": {
+          "train": 1432,
+          "test": 270,
+          "val": 296
+        }
+      }
+    },
+    "check4_deterministic_reproducibility": {
+      "status": "PASS"
+    }
+  },
+  "split_summary": {
+    "train_images": 8256,
+    "val_images": 1860,
+    "test_images": 1872,
+    "total_unique_source_groups": 3971
+  }
+}

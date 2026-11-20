@@ -1,0 +1,39 @@
+{
+  "species_expert": {
+    "num_classes": 2,
+    "label_to_index": {
+      "potato": 0,
+      "tomato": 1
+    },
+    "index_to_label": {
+      "0": "Potato",
+      "1": "Tomato"
+    }
+  },
+  "potato_expert": {
+    "num_classes": 3,
+    "label_to_index": {
+      "Early_blight": 0,
+      "Late_blight": 1,
+      "healthy": 2
+    },
+    "index_to_label": {
+      "0": "Early Blight",
+      "1": "Late Blight",
+      "2": "Healthy"
+    }
+  },
+  "tomato_expert": {
+    "num_classes": 3,
+    "label_to_index": {
+      "Early_blight": 0,
+      "Late_blight": 1,
+      "healthy": 2
+    },
+    "index_to_label": {
+      "0": "Early Blight",
+      "1": "Late Blight",
+      "2": "Healthy"
+    }
+  }
+}

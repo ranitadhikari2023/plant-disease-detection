@@ -1,0 +1,44 @@
+{
+  "random_seed": 42,
+  "image_size": [224, 224],
+  "batch_size_phase1": 16,
+  "batch_size_phase2": 8,
+  "phase1": {
+    "description": "Warmup classification head and CBAM attention with frozen MobileNetV2 backbone",
+    "learning_rate": 0.0001,
+    "epochs": 10,
+    "unfreeze_base": false
+  },
+  "phase2": {
+    "description": "Deep fine-tuning of upper 40 layers of MobileNetV2 with frozen BatchNorm",
+    "learning_rate": 0.00001,
+    "epochs": 10,
+    "unfreeze_top_n_layers": 40,
+    "freeze_batch_norm": true
+  },
+  "callbacks": {
+    "early_stopping": {
+      "monitor": "val_loss",
+      "patience": 4,
+      "restore_best_weights": true
+    },
+    "reduce_lr_on_plateau": {
+      "monitor": "val_loss",
+      "factor": 0.5,
+      "patience": 2,
+      "min_lr": 0.000001
+    },
+    "model_checkpoint": {
+      "monitor": "val_loss",
+      "save_best_only": true
+    }
+  },
+  "manifests": {
+    "master_specimen": "audit/specimen_manifest.csv",
+    "train_specimen": "audit/train_specimen_manifest.csv",
+    "val_specimen": "audit/validation_specimen_manifest.csv",
+    "test_specimen": "audit/test_specimen_manifest.csv"
+  },
+  "output_models_dir": "models/v2",
+  "logs_dir": "training/logs"
+}

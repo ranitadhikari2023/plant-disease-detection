@@ -1,0 +1,10 @@
+# Core Deep Learning, Inference, Training & Data Pipeline
+tensorflow
+numpy
+pillow
+matplotlib
+psutil
+
+# Optional: MLOps Model Deployment & ONNX Export
+tf2onnx
+onnxruntime

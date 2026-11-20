@@ -1,0 +1,53 @@
+{
+  "total_specimens": 3971,
+  "split_counts": {
+    "train": 2776,
+    "val": 592,
+    "test": 603
+  },
+  "selection_reasons": {
+    "canonical_original_specimen": 3953,
+    "standalone_cluster_full_res_gblr1_rep": 10,
+    "canonical_original_specimen_merged_pair_rep": 8
+  },
+  "class_distribution": {
+    "potato_Early_blight": 558,
+    "potato_healthy": 90,
+    "potato_Late_blight": 558,
+    "tomato_Early_blight": 558,
+    "tomato_healthy": 954,
+    "tomato_Late_blight": 1253
+  },
+  "class_split_distribution": {
+    "potato_Early_blight": {
+      "train": 390,
+      "val": 83,
+      "test": 85
+    },
+    "potato_healthy": {
+      "train": 62,
+      "val": 13,
+      "test": 15
+    },
+    "potato_Late_blight": {
+      "train": 390,
+      "val": 83,
+      "test": 85
+    },
+    "tomato_Early_blight": {
+      "train": 390,
+      "val": 83,
+      "test": 85
+    },
+    "tomato_healthy": {
+      "train": 667,
+      "test": 144,
+      "val": 143
+    },
+    "tomato_Late_blight": {
+      "train": 877,
+      "test": 189,
+      "val": 187
+    }
+  }
+}
