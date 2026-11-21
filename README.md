@@ -3,8 +3,10 @@
 [![Python 3.10](https://img.shields.io/badge/Python-3.10-3776AB.svg?logo=python&logoColor=white)](https://www.python.org/)
 [![TensorFlow 2.21](https://img.shields.io/badge/TensorFlow-2.21.0-FF6F00.svg?logo=tensorflow&logoColor=white)](https://www.tensorflow.org/)
 [![Keras 3](https://img.shields.io/badge/Keras-3.12.1-D00000.svg?logo=keras&logoColor=white)](https://keras.io/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.143.0-009688.svg?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
 [![ONNX Runtime](https://img.shields.io/badge/ONNX_Runtime-1.20.0-005CED.svg?logo=onnx&logoColor=white)](https://onnxruntime.ai/)
 [![Pytest 8.3](https://img.shields.io/badge/Pytest-8.3.5-0A9EDC.svg?logo=pytest&logoColor=white)](https://pytest.org/)
+[![Tests Passing](https://img.shields.io/badge/Tests-46%20Passed-brightgreen.svg)]()
 
 Production-grade hierarchical deep learning system for high-consequence agricultural foliar pathology in Solanaceous crops (*Solanum tuberosum* and *Solanum lycopersicum*). Built with **MobileNetV2**, **Convolutional Block Attention Module (CBAM)**, **Dual Confidence Safety Gates**, and **ONNX Runtime** deployment graphs.
 
@@ -20,7 +22,8 @@ Production-grade hierarchical deep learning system for high-consequence agricult
   - *Late Blight Escalation Gate (90%):* Flags uncertain *Phytophthora infestans* predictions, suppressing reckless fungicide application and recommending isolation and 24–48h re-scouting.
 - **Defensive Preprocessing:** Handles RGB, RGBA (alpha-composited onto pure white to eliminate dark edge artifacts), CMYK, Grayscale, and NumPy array formats.
 - **Dual Runtime Deployment:** Supports native Keras 3 inference and headless, microsecond-latency ONNX Runtime CPU graphs.
-- **Enterprise Testing Infrastructure:** 32 automated Pytest unit and regression tests covering inference safety, data pipelines, and focal loss functions.
+- **Enterprise Testing Infrastructure:** 46 automated Pytest unit, regression, and API tests covering inference safety, data pipelines, focal loss functions, and web service contracts.
+- **LeafScan Web Application & REST API:** Dependency-free Vanilla HTML5/CSS3/JavaScript SPA served via FastAPI with live image upload, drag-and-drop, preview, local diagnosis history, and high-consequence safety visualization.
 
 ---
 
@@ -30,10 +33,12 @@ Production-grade hierarchical deep learning system for high-consequence agricult
 |---|---|---|
 | **Programming Language** | Python 3.10.0 (Windows `.venv`) / Python 3.12.3 (WSL) | Core runtime environment |
 | **Deep Learning Framework** | TensorFlow 2.21.0 / Keras 3.12.1 | Model training, serialization, and native inference |
+| **Web Framework & Server** | FastAPI 0.143.0 / Uvicorn 0.54.0 | REST API microservice and static asset server |
+| **Frontend Architecture** | Vanilla HTML5 / CSS3 / ES Modules JS | Self-contained, dependency-free responsive SPA (LeafScan) |
 | **Numerical Computing** | NumPy 2.2.6 | Array manipulation and tensor transformations |
 | **Image Processing** | Pillow (PIL) 12.1.1 | Image loading, format conversion, and bilinear resizing |
 | **Model Deployment** | ONNX 1.23.2 / ONNX Runtime 1.20.0 / tf2onnx 1.17.0 | High-performance CPU graph execution and validation |
-| **Testing & Quality** | Pytest 8.3.5 / Iniconfig 2.3.1 / Pluggy 1.7.0 | Automated unit testing and regression verification |
+| **Testing & Quality** | Pytest 8.3.5 / Iniconfig 2.3.1 / Pluggy 1.7.0 | Automated unit testing and regression verification (46 tests) |
 
 ---
 
@@ -331,6 +336,97 @@ python export_to_onnx.py
 
 ---
 
+## 10. LeafScan Web Application & FastAPI Service
+
+Plant Disease Detection V2 includes **LeafScan**, a dependency-free Single Page Application (SPA) backed by a high-throughput **FastAPI** REST microservice.
+
+### 10.1 Web Architecture Overview
+
+```text
+       LeafScan SPA (Browser)
+     [HTML5 + CSS3 + ES6 JS]
+                │
+                ▼ (Multipart Upload)
+        FastAPI Web Server
+       [POST /v2/diagnose]
+                │
+       Defensive Validation
+     (Max 10 MB, PIL Raster)
+                │
+                ▼ (Threadpool)
+    HierarchicalPredictorV2
+    [MobileNetV2 + CBAM + Gates]
+                │
+                ▼ (Structured JSON)
+    LeafScan Results Dashboard
+    [Meters, Safety Banners, History]
+```
+
+- **Frontend:** Pure Vanilla HTML5, CSS3, and modern JavaScript (ES Modules). **Zero external CDN dependencies**, no remote web fonts, no runtime npm/node dependencies.
+- **Backend:** FastAPI microservice with non-blocking CPU threadpool execution, defensive image validation, CORS controls, and static asset serving.
+- **Branding:** LeafScan agronomic deep green (`#1f6f43`) visual design system with accessible contrast and reduced-motion support.
+
+### 10.2 Frontend Directory Structure
+
+```text
+frontend/
+├── index.html              # Semantic single-page application shell
+├── css/
+│   ├── tokens.css          # Design system tokens, color scale, font stacks
+│   ├── layout.css          # App shell, responsive 720px breakpoint, view containers
+│   └── components.css      # Dropzone, preview, cards, meters, banners, accordion
+├── js/
+│   ├── api.js              # REST API client for /v2/diagnose and /health
+│   └── app.js              # SPA state controller, drag-drop, local history
+└── assets/
+    └── logo.svg            # LeafScan foliar reticle vector branding
+```
+
+### 10.3 Backend REST API Endpoints
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/health` | Lightweight status check (reports operational health without loading model weights) |
+| `POST` | `/v2/diagnose` | Accepts `multipart/form-data` with field `image` (JPEG, PNG, WebP ≤ 10 MB) |
+| `GET` | `/` | Serves the LeafScan SPA `index.html` |
+| `GET` | `/css/*`, `/js/*`, `/assets/*` | Serves self-hosted static styling, scripts, and SVG branding |
+
+Full API schema, request parameters, and status codes are documented in [docs/API_CONTRACT.md](file:///d:/plant-disease-detection/docs/API_CONTRACT.md).
+
+### 10.4 Hierarchical Safety Architecture & Statuses
+
+LeafScan maps backend confidence decisions to four explicit safety states:
+
+| Backend Safety Status | Visual Banner | Diagnostic Meaning & Advisory Protocol |
+|---|:---:|---|
+| `confident` | **Green** | Species $\ge 90\%$ and Disease $\ge 90\%$ (or non-Late Blight $\ge 70\%$). Confident screening. |
+| `species_uncertain` | **Slate** | Species $< 90\%$. System deliberately **abstains** from disease diagnosis to prevent cross-crop misdiagnosis. Suppresses chemical treatment. |
+| `late_blight_uncertain` | **Red** | Late Blight detected with confidence $< 90\%$. High-consequence uncertainty. **Suppresses premature systemic fungicide sprays**; recommends isolation and 24–48h re-scouting. |
+| `disease_uncertain` | **Amber** | General disease confidence $< 70\%$. Marginal confidence warning; advises physical field scouting. |
+
+### 10.5 Running the Web Application
+
+#### Windows (PowerShell)
+```powershell
+# 1. Activate virtual environment
+.venv\Scripts\Activate.ps1
+
+# 2. Start LeafScan web server
+uvicorn api.main:app --host 127.0.0.1 --port 8000 --reload
+```
+Open your browser to: **`http://127.0.0.1:8000`**
+
+#### WSL / Linux (Bash)
+```bash
+# 1. Activate isolated Linux virtual environment
+source ~/venvs/plant-disease-detection/bin/activate
+
+# 2. Start LeafScan web server
+uvicorn api.main:app --host 127.0.0.1 --port 8000 --reload
+```
+
+---
+
 ## 11. Model Training & Evaluation
 
 > [!IMPORTANT]
@@ -365,7 +461,7 @@ python training/evaluate_v2_system.py
 
 ## 12. Running Tests
 
-The test suite is powered by **Pytest** with 32 automated unit and regression tests.
+The test suite is powered by **Pytest** with **46 automated unit, regression, and API tests** (100% passing).
 
 ### 12.1 Run Full Test Suite
 
@@ -382,6 +478,9 @@ python -m pytest -q
 ### 12.3 Run Specific Test Suites by Marker
 
 ```bash
+# Run only FastAPI REST endpoints and service integration tests
+python -m pytest tests/test_api.py -v
+
 # Run only core inference and safety regression tests
 python -m pytest -m regression -v
 
@@ -390,6 +489,9 @@ python -m pytest -m pipeline -v
 
 # Run only loss function & class weighting unit tests
 python -m pytest -m losses -v
+
+# Run end-to-end integration smoke tests
+python -m pytest -m smoke -v
 ```
 
 ### 12.4 Preflight Hardware Audit & Model Artifact Verification
@@ -408,7 +510,7 @@ python training/verify_v2_artifacts.py
 
 1. **Educational & Decision-Support Tool:** This software is designed strictly as an educational diagnostic aid and agronomic screening tool. It does **not** replace laboratory microbiological assaying, PCR confirmation, or the expert on-site judgment of certified agricultural extension personnel.
 2. **Chemical Prescription Prohibition:** Under no circumstances does this system automatically recommend or prescribe restricted chemical pesticides or systemic fungicides. Ambiguous or low-confidence specimens explicitly trigger advisory warnings directing farmers to scout, isolate, and consult local extension services.
-3. **Current Interface Scope:** The system currently operates via Python library and CLI interfaces. REST API microservices (FastAPI), web interfaces (Streamlit), and containerized deployments (Docker) are scheduled for subsequent technical roadmap phases.
+3. **Current Interface Scope:** The system operates via the Python package, CLI interface (`predict_hierarchical_v2.py`), FastAPI REST API (`/v2/diagnose`), and the LeafScan Single Page Application (`http://127.0.0.1:8000`).
 
 ---
 
@@ -425,8 +527,12 @@ python training/verify_v2_artifacts.py
   - Migration of regression testing suite to Pytest (`32/32 tests passing`).
   - Dedicated unit test coverage for `training/data_pipeline.py` and `training/losses.py`.
   - Development dependencies isolated in `requirements-dev.txt`.
-- [ ] **Phase 3 — Microservice API & Cloud Deployment**
-  - Production FastAPI REST API microservice with health checks and OpenAPI docs.
-  - Interactive Streamlit web interface for visual diagnosis and leaf upload.
+- [x] **Phase 3 — Microservice API & LeafScan Web Application**
+  - Production FastAPI REST API microservice with health checks and OpenAPI docs (`/v2/diagnose`).
+  - Dependency-free Vanilla HTML5/CSS3/JavaScript SPA (LeafScan) with drag-and-drop and image preview.
+  - Dual confidence safety gate visual mapping (`confident`, `species_uncertain`, `late_blight_uncertain`, `disease_uncertain`).
+  - Client-side scan history management via `localStorage`.
+  - Automated API test suite expanding coverage to 46 automated tests (`46/46 passing`).
+- [ ] **Phase 4 — Cloud & Edge Containerization**
   - Multi-stage Docker containerization with ONNX Runtime CPU execution.
   - GitHub Actions CI/CD workflow for automated test execution on pull requests.
