@@ -70,7 +70,6 @@ const elements = {
   cameraInput: document.getElementById('camera-input'),
   btnBrowseFiles: document.getElementById('btn-browse-files'),
   btnTakePhoto: document.getElementById('btn-take-photo'),
-  btnTrySample: document.getElementById('btn-try-sample'),
 
   // State 2: Preview Panel
   previewPanel: document.getElementById('preview-panel'),
@@ -1224,12 +1223,7 @@ function setupEventListeners() {
     elements.cameraInput?.click();
   });
 
-  // Try Sample Specimen CTAs
-  elements.btnTrySample?.addEventListener('click', (e) => {
-    e.stopPropagation();
-    loadSampleLeaf();
-  });
-
+  // Load Sample in Empty Recent Scans
   elements.btnLoadSampleEmpty?.addEventListener('click', () => {
     loadSampleLeaf();
   });

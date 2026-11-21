@@ -23,7 +23,7 @@ Production-grade hierarchical deep learning system for high-consequence agricult
 - **Defensive Preprocessing:** Handles RGB, RGBA (alpha-composited onto pure white to eliminate dark edge artifacts), CMYK, Grayscale, and NumPy array formats.
 - **Dual Runtime Deployment:** Supports native Keras 3 inference and headless, microsecond-latency ONNX Runtime CPU graphs.
 - **Enterprise Testing Infrastructure:** 46 automated Pytest unit, regression, and API tests covering inference safety, data pipelines, focal loss functions, and web service contracts.
-- **LeafScan Web Application & REST API:** Dependency-free Vanilla HTML5/CSS3/JavaScript SPA served via FastAPI with live image upload, drag-and-drop, preview, local diagnosis history, and high-consequence safety visualization.
+- **LeafScan Web Application & REST API:** Dependency-free Vanilla HTML5/CSS3/JavaScript SPA served via FastAPI with multi-modal leaf image ingestion (Browse Files, Take Photo camera capture, and Drag-and-Drop), preview validation, local diagnosis history, and high-consequence safety visualization.
 
 ---
 
@@ -366,7 +366,14 @@ Plant Disease Detection V2 includes **LeafScan**, a dependency-free Single Page 
 - **Backend:** FastAPI microservice with non-blocking CPU threadpool execution, defensive image validation, CORS controls, and static asset serving.
 - **Branding:** LeafScan agronomic deep green (`#1f6f43`) visual design system with accessible contrast and reduced-motion support.
 
-### 10.2 Frontend Directory Structure
+### 10.2 Foliar Image Upload Workflow
+
+LeafScan provides three client-validated methods for submitting leaf specimens for pathology diagnosis:
+- **Browse Files:** Opens the native system file chooser dialog, accepting JPEG, PNG, and WebP raster images up to 10 MB.
+- **Take Photo:** Directly invokes the device camera via HTML5 media capture (`accept="image/*" capture="environment"`), optimized for responsive field scouting on smartphones and tablets.
+- **Drag-and-Drop:** Interactive upload dropzone supporting direct drag-and-drop file ingestion with visual hover states, automatic format validation, and dimension calculation before dispatch.
+
+### 10.3 Frontend Directory Structure
 
 ```text
 frontend/
@@ -382,7 +389,7 @@ frontend/
     └── logo.svg            # LeafScan foliar reticle vector branding
 ```
 
-### 10.3 Backend REST API Endpoints
+### 10.4 Backend REST API Endpoints
 
 | Method | Endpoint | Description |
 |---|---|---|
@@ -393,7 +400,7 @@ frontend/
 
 Full API schema, request parameters, and status codes are documented in [docs/API_CONTRACT.md](file:///d:/plant-disease-detection/docs/API_CONTRACT.md).
 
-### 10.4 Hierarchical Safety Architecture & Statuses
+### 10.5 Hierarchical Safety Architecture & Statuses
 
 LeafScan maps backend confidence decisions to four explicit safety states:
 
@@ -404,7 +411,7 @@ LeafScan maps backend confidence decisions to four explicit safety states:
 | `late_blight_uncertain` | **Red** | Late Blight detected with confidence $< 90\%$. High-consequence uncertainty. **Suppresses premature systemic fungicide sprays**; recommends isolation and 24–48h re-scouting. |
 | `disease_uncertain` | **Amber** | General disease confidence $< 70\%$. Marginal confidence warning; advises physical field scouting. |
 
-### 10.5 Running the Web Application
+### 10.6 Running the Web Application
 
 #### Windows (PowerShell)
 ```powershell
@@ -529,7 +536,7 @@ python training/verify_v2_artifacts.py
   - Development dependencies isolated in `requirements-dev.txt`.
 - [x] **Phase 3 — Microservice API & LeafScan Web Application**
   - Production FastAPI REST API microservice with health checks and OpenAPI docs (`/v2/diagnose`).
-  - Dependency-free Vanilla HTML5/CSS3/JavaScript SPA (LeafScan) with drag-and-drop and image preview.
+  - Dependency-free Vanilla HTML5/CSS3/JavaScript SPA (LeafScan) with Browse Files, Take Photo camera capture, drag-and-drop, and image preview.
   - Dual confidence safety gate visual mapping (`confident`, `species_uncertain`, `late_blight_uncertain`, `disease_uncertain`).
   - Client-side scan history management via `localStorage`.
   - Automated API test suite expanding coverage to 46 automated tests (`46/46 passing`).
