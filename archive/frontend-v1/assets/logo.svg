@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48" fill="none">
+  <!-- Outer leaf silhouette with subtle gradient -->
+  <defs>
+    <linearGradient id="leafGrad" x1="6" y1="42" x2="42" y2="6" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#154c2e"/>
+      <stop offset="60%" stop-color="#1f6f43"/>
+      <stop offset="100%" stop-color="#2e9e61"/>
+    </linearGradient>
+    <linearGradient id="scanGrad" x1="10" y1="24" x2="38" y2="24" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#55d48d" stop-opacity="0.1"/>
+      <stop offset="50%" stop-color="#55d48d" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#55d48d" stop-opacity="0.1"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Stylized Foliar Leaf Contour -->
+  <path d="M8 40C8 40 10 24 24 10C38 24 40 40 40 40C32 40 26 42 24 44C22 42 16 40 8 40Z" fill="url(#leafGrad)"/>
+  
+  <!-- Leaf Central Venation -->
+  <path d="M24 12V44" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-opacity="0.85"/>
+  
+  <!-- Secondary Lateral Veins -->
+  <path d="M24 20L32 26M24 28L34 34M24 20L16 26M24 28L14 34" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-opacity="0.6"/>
+  
+  <!-- CBAM Spatial & Channel Attention Nodes -->
+  <circle cx="24" cy="18" r="2.5" fill="#55d48d"/>
+  <circle cx="30" cy="27" r="2" fill="#a7f3d0"/>
+  <circle cx="18" cy="27" r="2" fill="#a7f3d0"/>
+  <circle cx="24" cy="32" r="2.5" fill="#55d48d"/>
+  
+  <!-- Scanning Reticle Line -->
+  <line x1="8" y1="24" x2="40" y2="24" stroke="url(#scanGrad)" stroke-width="2.5" stroke-linecap="round"/>
+</svg>

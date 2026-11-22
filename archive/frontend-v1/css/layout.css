@@ -4,7 +4,9 @@
    Mobile-First Architecture (Breakpoints: 768px, 1024px)
    ============================================================================== */
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -116,70 +118,6 @@ body {
   letter-spacing: 0.04em;
 }
 
-/* Header Center: Backend Connection Status Pill */
-.header-status-area {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.connection-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
-  border-radius: var(--radius-pill);
-  font-size: var(--text-xs);
-  font-weight: var(--font-medium);
-  border: 1px solid transparent;
-  transition: all var(--transition-normal);
-  user-select: none;
-}
-
-.connection-pill.status-online {
-  background-color: var(--status-online-bg);
-  border-color: var(--status-online-border);
-  color: var(--color-brand-dark);
-}
-
-.connection-pill.status-online .connection-dot {
-  background-color: var(--status-online);
-  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
-}
-
-.connection-pill.status-checking {
-  background-color: var(--status-checking-bg);
-  border-color: var(--status-checking-border);
-  color: var(--status-checking);
-}
-
-.connection-pill.status-checking .connection-dot {
-  background-color: var(--status-checking);
-  animation: pulseDot 1.5s infinite;
-}
-
-.connection-pill.status-offline {
-  background-color: var(--status-offline-bg);
-  border-color: var(--status-offline-border);
-  color: var(--status-offline);
-}
-
-.connection-pill.status-offline .connection-dot {
-  background-color: var(--status-offline);
-}
-
-.connection-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-@keyframes pulseDot {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.4; transform: scale(0.85); }
-}
-
 /* Navigation Bar */
 .app-nav {
   display: flex;
@@ -248,6 +186,7 @@ body {
     opacity: 0;
     transform: translateY(6px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -408,6 +347,7 @@ body {
 
 /* Responsive Breakpoints */
 @media (min-width: 768px) {
+
   .view-grid-2col,
   .workspace-grid {
     grid-template-columns: 1fr 1fr;
@@ -433,6 +373,7 @@ body {
 }
 
 @media (min-width: 1024px) {
+
   .view-grid-2col,
   .workspace-grid {
     grid-template-columns: 1.15fr 0.85fr;
@@ -458,15 +399,6 @@ body {
 @media (max-width: 767px) {
   .header-inner {
     padding: 0 var(--space-3);
-  }
-
-  .connection-pill {
-    padding: 2px 6px;
-    font-size: 11px;
-  }
-
-  .connection-text {
-    display: none;
   }
 
   .brand-title {
@@ -515,7 +447,8 @@ body {
   }
 
   body {
-    padding-bottom: 60px; /* Offset for sticky bar */
+    padding-bottom: 60px;
+    /* Offset for sticky bar */
   }
 }
 
@@ -563,7 +496,10 @@ body {
 
 /* Reduced Motion Mode */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;

@@ -34,6 +34,7 @@ const state = {
   isDiagnosing: false,
   lastResult: null,
   history: [],
+  isBackendHealthy: true,
   healthTimerId: null,
   analyzingStepTimerId: null
 };
@@ -46,10 +47,6 @@ const elements = {
   navBtnAbout: document.getElementById('nav-btn-about'),
   navBrandLogo: document.getElementById('nav-brand-logo'),
   ariaAnnouncer: document.getElementById('aria-status-announcer'),
-
-  // Header Connection Status Indicator
-  connectionIndicator: document.getElementById('connection-indicator'),
-  connectionStatusLabel: document.getElementById('connection-status-label'),
 
   // Views
   viewScan: document.getElementById('view-scan'),
@@ -242,43 +239,14 @@ function switchView(viewName) {
 // ============================================================================
 
 /**
- * Updates the backend connectivity pill in the header.
- * @param {'online'|'checking'|'offline'} status
- * @param {string} [customLabel]
- */
-function setConnectionStatus(status, customLabel) {
-  if (!elements.connectionIndicator || !elements.connectionStatusLabel) return;
-
-  elements.connectionIndicator.className = `connection-pill status-${status}`;
-
-  if (status === 'online') {
-    elements.connectionStatusLabel.textContent = customLabel || 'API Connected';
-    elements.connectionIndicator.title = 'Backend FastAPI service is online and healthy.';
-    elements.connectionIndicator.setAttribute('aria-label', 'API connection status: Connected');
-  } else if (status === 'checking') {
-    elements.connectionStatusLabel.textContent = customLabel || 'Connecting...';
-    elements.connectionIndicator.title = 'Checking API service connectivity...';
-    elements.connectionIndicator.setAttribute('aria-label', 'API connection status: Checking');
-  } else {
-    elements.connectionStatusLabel.textContent = customLabel || 'API Offline';
-    elements.connectionIndicator.title = 'Backend API is currently unreachable. Check local server (127.0.0.1:8000).';
-    elements.connectionIndicator.setAttribute('aria-label', 'API connection status: Offline');
-  }
-}
-
-/**
- * Probes the health check endpoint asynchronously without blocking the UI.
+ * Probes the health check endpoint asynchronously to validate backend connectivity.
  */
 async function pollBackendHealth() {
   try {
     const health = await checkHealth();
-    if (health && health.status === 'healthy') {
-      setConnectionStatus('online');
-    } else {
-      setConnectionStatus('offline');
-    }
+    state.isBackendHealthy = Boolean(health && health.status === 'healthy');
   } catch (err) {
-    setConnectionStatus('offline');
+    state.isBackendHealthy = false;
   }
 }
 
@@ -575,7 +543,6 @@ async function executeDiagnosis() {
   if (elements.uploadZone) elements.uploadZone.hidden = true;
   if (elements.workspaceAnalyzingCard) elements.workspaceAnalyzingCard.hidden = false;
 
-  setConnectionStatus('online', 'Analyzing Specimen...');
   startInferenceProgressIndicator();
 
   if (elements.ariaAnnouncer) {
@@ -594,7 +561,6 @@ async function executeDiagnosis() {
 
     // Render result dashboard
     renderDiagnosisResult(result);
-    setConnectionStatus('online', 'API Connected');
 
     // Transition to Results View
     switchView('result');
@@ -612,7 +578,6 @@ async function executeDiagnosis() {
     if (elements.workspaceAnalyzingCard) elements.workspaceAnalyzingCard.hidden = true;
     if (elements.previewPanel) elements.previewPanel.hidden = false;
 
-    setConnectionStatus('offline', 'Inference Failed');
     console.error('Diagnosis failure:', error);
 
     // Display non-blocking alert in workspace

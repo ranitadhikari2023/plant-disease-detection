@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="LeafScan — Hierarchical Plant Disease Detection V2 with MobileNetV2, CBAM Attention, and Dual Confidence Safety Gates for Solanaceous Crops.">
+  <title>LeafScan V2 — Hierarchical Plant Pathology Diagnosis</title>
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+
+<body>
+  <!-- Accessibility Skip Navigation -->
+  <a href="#main-content" class="skip-link">Skip to main diagnostic content</a>
+
+  <!-- Application Shell Header -->
+  <header class="app-header" role="banner">
+    <div class="header-inner">
+      <a class="brand-wrapper" id="nav-brand-logo" href="#" aria-label="LeafScan V2 Home">
+        <img src="assets/logo.svg" alt="" class="brand-logo" width="38" height="38" aria-hidden="true">
+        <div class="brand-text-block">
+          <span class="brand-title">LeafScan</span>
+          <span class="brand-badge">V2 · CBAM</span>
+        </div>
+      </a>
+
+      <!-- Global Navigation Pills -->
+      <nav class="app-nav" aria-label="Main Navigation">
+        <button type="button" class="nav-item active" data-view="scan" id="nav-btn-scan">
+          <span aria-hidden="true">🌿</span> Scan
+        </button>
+        <button type="button" class="nav-item" data-view="history" id="nav-btn-history">
+          <span aria-hidden="true">📋</span> History
+        </button>
+        <button type="button" class="nav-item" data-view="about" id="nav-btn-about">
+          <span aria-hidden="true">ℹ️</span> About
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Live ARIA Region for Screen Readers -->
+  <div id="aria-status-announcer" class="file-input-hidden" aria-live="polite" role="status"></div>
+
+  <!-- Main View Container -->
+  <main id="main-content" class="app-main" role="main">
+
+    <!-- ====================================================================
+         VIEW 1: SCAN VIEW (IMAGE UPLOAD, PROTOCOL & RECENT SCANS)
+         ==================================================================== -->
+    <section id="view-scan" class="view-panel" aria-labelledby="scan-section-heading">
+
+      <!-- SECTION 1: APPLICATION INTRODUCTION -->
+      <div class="section-intro">
+        <div class="section-header">
+          <div class="section-badge-row">
+            <span class="intro-chip">🌿 Solanaceae Specialist</span>
+            <span class="intro-chip">🎯 Dual Safety Gates (90% / 70%)</span>
+            <span class="intro-chip">🔍 CBAM Attention</span>
+            <span class="intro-chip">⚡ Opset 17 ONNX Ready</span>
+          </div>
+          <h1 id="scan-section-heading" class="section-title">Solanaceous Foliar Diagnosis</h1>
+          <p class="section-subtitle">
+            Dual-tier hierarchical screening for Potato and Tomato foliar blight using MobileNetV2 with CBAM attention.
+            Automated botanist species identification cascaded with pathology crop specialists.
+          </p>
+        </div>
+      </div>
+
+      <!-- SECTION 2: DIAGNOSTIC WORKSPACE (TWO-COLUMN DESKTOP LAYOUT) -->
+      <div class="view-grid-2col workspace-grid">
+
+        <!-- Left Column: Upload Area, Image Preview & Diagnostic Actions -->
+        <div class="upload-column">
+
+          <!-- Accessible In-Page Alert Container (for file validation errors) -->
+          <div id="upload-alert-box" class="upload-alert-box" hidden role="alert" aria-live="assertive">
+            <span class="alert-icon" aria-hidden="true">⚠️</span>
+            <div class="alert-content">
+              <strong class="alert-title" id="upload-alert-title">Invalid File Selection</strong>
+              <p class="alert-message" id="upload-alert-message">Please select a valid image file.</p>
+            </div>
+            <button type="button" class="alert-dismiss" id="btn-dismiss-alert"
+              aria-label="Dismiss error notification">✕</button>
+          </div>
+
+          <!-- STATE 1: File Dropzone (Idle State) -->
+          <div id="upload-zone" class="card dropzone" tabindex="0" role="region"
+            aria-label="Leaf Image Upload Dropzone. Drop file or press Enter to browse files.">
+
+            <!-- Standard File Input -->
+            <input type="file" id="leaf-input" class="file-input-hidden"
+              accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" aria-label="Upload leaf image file">
+
+            <!-- Dedicated Mobile Camera Capture Input -->
+            <input type="file" id="camera-input" class="file-input-hidden" accept="image/*" capture="environment"
+              aria-label="Take leaf photo with device camera">
+
+            <!-- Upload Visual Prompt -->
+            <div class="dropzone-icon-wrap" aria-hidden="true">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+              </svg>
+            </div>
+
+            <p class="dropzone-prompt">Drag &amp; drop a leaf photo here</p>
+            <p class="dropzone-subtext">Drag an image directly or use the actions below to select from your device.</p>
+
+            <!-- Explicit Primary and Secondary CTAs -->
+            <div class="dropzone-cta-group">
+              <button type="button" class="btn btn-primary btn-browse" id="btn-browse-files">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M3 15v4c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2v-4M17 9l-5-5-5 5M12 4v12" />
+                </svg>
+                Browse Files
+              </button>
+
+              <button type="button" class="btn btn-secondary btn-camera" id="btn-take-photo">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                  <circle cx="12" cy="13" r="4" />
+                </svg>
+                Take Photo
+              </button>
+            </div>
+
+            <!-- Upload Format Specifications -->
+            <div class="dropzone-footer">
+              <span class="file-format-badge">JPEG · PNG · WebP (Max 10 MB)</span>
+            </div>
+          </div>
+
+          <!-- STATE 2: Image Selected / Preview Panel -->
+          <div class="preview-panel card" id="preview-panel" hidden aria-live="polite">
+            <div class="preview-panel-header">
+              <span class="preview-status-pill">✓ Specimen Loaded</span>
+              <span class="preview-stage-label">Ready for Classification</span>
+            </div>
+
+            <!-- Preview Image Display -->
+            <div class="preview-panel__media">
+              <img id="preview-img" alt="Selected leaf preview" class="preview-display-img">
+            </div>
+
+            <!-- Details and Specifications -->
+            <div class="preview-panel__details">
+              <div class="preview-panel__info">
+                <h3 class="preview-panel__title" id="preview-name">Selected image</h3>
+                <div class="preview-panel__meta-row">
+                  <span class="meta-tag">
+                    <span class="meta-label">Size:</span>
+                    <strong id="preview-size">0 KB</strong>
+                  </span>
+                  <span class="meta-tag">
+                    <span class="meta-label">Dimensions:</span>
+                    <strong id="preview-dimensions">-- × -- px</strong>
+                  </span>
+                  <span class="meta-tag status-ready">
+                    <span class="meta-label">Validation:</span>
+                    <strong>Verified</strong>
+                  </span>
+                </div>
+              </div>
+
+              <!-- Workflow Actions -->
+              <div class="preview-panel__actions">
+                <button id="run-btn" type="button" class="btn btn-primary btn-run-diagnosis">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polygon points="5 3 19 12 5 21 5 3" />
+                  </svg>
+                  Run Diagnosis
+                </button>
+
+                <div class="preview-secondary-actions">
+                  <button id="change-btn" type="button" class="btn btn-secondary">
+                    Change
+                  </button>
+                  <button id="retake-btn" type="button" class="btn btn-secondary">
+                    Retake
+                  </button>
+                  <button id="clear-btn" type="button" class="btn btn--ghost">
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- STATE 3: Workspace Inference Loader (Displayed during active model execution) -->
+          <div id="workspace-analyzing-card" class="card workspace-analyzing-card" hidden aria-live="polite"
+            role="status">
+            <div class="analyzing-spinner-wrap">
+              <div class="spinner-outer" role="progressbar" aria-label="Diagnostic inference in progress"
+                aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+            <h3 class="analyzing-step-title" id="analyzing-step-title">Analyzing Foliar Specimen...</h3>
+            <p class="analyzing-step-desc" id="analyzing-step-desc">
+              Executing hierarchical two-tier MobileNetV2 + CBAM classification.
+            </p>
+            <div class="analyzing-progress-indeterminate">
+              <div class="indeterminate-bar"></div>
+            </div>
+            <div class="analyzing-badge-bar">
+              <span class="stage-pill">Tier 1: Species Expert</span>
+              <span class="stage-arrow">→</span>
+              <span class="stage-pill">Safety Gate 1</span>
+              <span class="stage-arrow">→</span>
+              <span class="stage-pill">Tier 2: CBAM Specialist</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right Column: Interactive Diagnostic Imaging Protocol -->
+        <div class="guidance-column">
+          <div class="card protocol-card">
+            <div class="card-header">
+              <div>
+                <h2 class="card-title">
+                  <span aria-hidden="true">📋</span> Diagnostic Imaging Protocol
+                </h2>
+                <span class="card-subtitle">Field Photography Quality Guidelines</span>
+              </div>
+              <span class="tag-badge protocol-badge">4 Guidelines</span>
+            </div>
+
+            <p class="protocol-intro">
+              Follow these scientific imaging standards to ensure optimal MobileNetV2 species identification and CBAM
+              lesion detection accuracy.
+            </p>
+
+            <!-- Collapsible Interactive Protocol Accordion -->
+            <div class="protocol-accordion" role="region" aria-label="Imaging Protocol Instructions">
+
+              <!-- Item 1: Single Leaf Focus -->
+              <div class="accordion-item expanded" id="protocol-item-1">
+                <button type="button" class="accordion-header" aria-expanded="true" aria-controls="protocol-body-1"
+                  id="protocol-btn-1">
+                  <div class="accordion-header-left">
+                    <span class="protocol-icon" aria-hidden="true">🌿</span>
+                    <div class="protocol-title-wrap">
+                      <span class="accordion-title">1. Single Leaf Focus</span>
+                      <span class="accordion-summary">Frame individual leaf; avoid background foliage</span>
+                    </div>
+                  </div>
+                  <span class="accordion-chevron" aria-hidden="true">▾</span>
+                </button>
+                <div class="accordion-body" id="protocol-body-1" role="region" aria-labelledby="protocol-btn-1">
+                  <p class="accordion-desc">
+                    Frame a single detached or attached foliar leaf filling the viewfinder. Avoid overlapping background
+                    foliage or soil clutter to prevent feature interference.
+                  </p>
+                  <div class="protocol-examples">
+                    <span class="example-pill good">✓ Good: Centered single leaf</span>
+                    <span class="example-pill avoid">✕ Avoid: Multi-leaf overlap</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Item 2: Diffuse Natural Daylight -->
+              <div class="accordion-item" id="protocol-item-2">
+                <button type="button" class="accordion-header" aria-expanded="false" aria-controls="protocol-body-2"
+                  id="protocol-btn-2">
+                  <div class="accordion-header-left">
+                    <span class="protocol-icon" aria-hidden="true">☀️</span>
+                    <div class="protocol-title-wrap">
+                      <span class="accordion-title">2. Diffuse Natural Daylight</span>
+                      <span class="accordion-summary">Ambient lighting; avoid flash washout</span>
+                    </div>
+                  </div>
+                  <span class="accordion-chevron" aria-hidden="true">▾</span>
+                </button>
+                <div class="accordion-body" id="protocol-body-2" role="region" aria-labelledby="protocol-btn-2" hidden>
+                  <p class="accordion-desc">
+                    Photograph in ambient open daylight or overcast shade. Avoid harsh direct sun glare, camera flash
+                    washouts, or deep cast shadows that obscure foliar chlorosis.
+                  </p>
+                  <div class="protocol-examples">
+                    <span class="example-pill good">✓ Good: Open shade / ambient light</span>
+                    <span class="example-pill avoid">✕ Avoid: Harsh flash glare</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Item 3: Clear Margins & Venation -->
+              <div class="accordion-item" id="protocol-item-3">
+                <button type="button" class="accordion-header" aria-expanded="false" aria-controls="protocol-body-3"
+                  id="protocol-btn-3">
+                  <div class="accordion-header-left">
+                    <span class="protocol-icon" aria-hidden="true">🔍</span>
+                    <div class="protocol-title-wrap">
+                      <span class="accordion-title">3. Clear Margins &amp; Venation</span>
+                      <span class="accordion-summary">Sharp leaf edges to maximize Tier 1 accuracy</span>
+                    </div>
+                  </div>
+                  <span class="accordion-chevron" aria-hidden="true">▾</span>
+                </button>
+                <div class="accordion-body" id="protocol-body-3" role="region" aria-labelledby="protocol-btn-3" hidden>
+                  <p class="accordion-desc">
+                    Ensure leaf borders and primary vein structures are sharp to maximize Tier 1 species identification
+                    accuracy (Potato vs Tomato) and pass Safety Gate 1.
+                  </p>
+                  <div class="protocol-examples">
+                    <span class="example-pill good">✓ Good: Sharp margin focus</span>
+                    <span class="example-pill avoid">✕ Avoid: Motion or lens blur</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Item 4: Include Lesions & Halo -->
+              <div class="accordion-item" id="protocol-item-4">
+                <button type="button" class="accordion-header" aria-expanded="false" aria-controls="protocol-body-4"
+                  id="protocol-btn-4">
+                  <div class="accordion-header-left">
+                    <span class="protocol-icon" aria-hidden="true">🎯</span>
+                    <div class="protocol-title-wrap">
+                      <span class="accordion-title">4. Include Lesions &amp; Halo</span>
+                      <span class="accordion-summary">Center target blight spots and chlorotic rings</span>
+                    </div>
+                  </div>
+                  <span class="accordion-chevron" aria-hidden="true">▾</span>
+                </button>
+                <div class="accordion-body" id="protocol-body-4" role="region" aria-labelledby="protocol-btn-4" hidden>
+                  <p class="accordion-desc">
+                    Center the suspected blight lesion, ensuring concentric necrotic rings (Early Blight) or
+                    water-soaked halos (Late Blight) are clearly visible for the CBAM attention module.
+                  </p>
+                  <div class="protocol-examples">
+                    <span class="example-pill good">✓ Good: Clear lesion halo</span>
+                    <span class="example-pill avoid">✕ Avoid: Cropped necrotic edges</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 3: RECENT SCANS / EXAMPLE RESULTS STRIP -->
+      <section class="recent-scans-section" id="section-recent-scans" aria-labelledby="recent-scans-heading">
+        <div class="recent-scans-header">
+          <div class="recent-scans-title-block">
+            <h2 id="recent-scans-heading" class="recent-scans-title">
+              <span aria-hidden="true">🕒</span> Recent Diagnoses
+            </h2>
+            <span class="recent-scans-badge" id="recent-scans-count">0 recorded</span>
+          </div>
+          <button type="button" id="btn-view-all-history" class="btn btn-secondary btn-sm">
+            View All History →
+          </button>
+        </div>
+
+        <!-- Recent Scans Cards Grid -->
+        <div id="recent-scans-grid" class="recent-scans-grid">
+          <!-- Dynamically populated or displays empty state -->
+        </div>
+
+        <!-- Empty State for Recent Scans -->
+        <div id="recent-scans-empty" class="card recent-empty-card">
+          <div class="recent-empty-icon" aria-hidden="true">🍃</div>
+          <h3 class="recent-empty-title">No previous diagnoses recorded yet</h3>
+          <p class="recent-empty-desc">
+            Diagnosed leaves will appear here with thumbnail previews, predicted pathogen classes, and confidence
+            metrics.
+          </p>
+          <div class="recent-empty-actions">
+            <button type="button" class="btn btn-secondary btn-sm" id="btn-load-sample-empty">
+              🌿 Load Sample Leaf (Potato Blight)
+            </button>
+          </div>
+        </div>
+      </section>
+
+    </section>
+
+    <!-- ====================================================================
+         VIEW 2: ANALYZING VIEW (FALLBACK STANDALONE PIPELINE CASCADE)
+         ==================================================================== -->
+    <section id="view-analyzing" class="view-panel" aria-labelledby="analyzing-heading" hidden>
+      <div class="analyzing-box">
+        <div class="spinner-outer" role="progressbar" aria-label="Diagnosis in progress" aria-valuemin="0"
+          aria-valuemax="100"></div>
+        <h2 id="analyzing-heading" class="analyzing-title">Analyzing Foliar Pathology...</h2>
+        <p class="analyzing-desc">Executing two-tier hierarchical deep learning pipeline with CBAM attention.</p>
+
+        <div class="pipeline-cascade" role="region" aria-label="Hierarchical Diagnostic Architecture">
+          <div class="pipeline-cascade-title">Two-Tier Inference Pipeline</div>
+
+          <div class="pipeline-stage">
+            <div class="stage-num" aria-hidden="true">1</div>
+            <div class="stage-info">
+              <div class="stage-title">Defensive Preprocessing</div>
+              <div class="stage-desc">RGB color normalization, alpha-compositing on white, bilinear 224×224 scaling.
+              </div>
+            </div>
+          </div>
+
+          <div class="pipeline-stage">
+            <div class="stage-num" aria-hidden="true">2</div>
+            <div class="stage-info">
+              <div class="stage-title">Tier 1: Botanist Species Classifier</div>
+              <div class="stage-desc">MobileNetV2 species expert distinguishing Solanum tuberosum vs Solanum
+                lycopersicum.</div>
+            </div>
+          </div>
+
+          <div class="pipeline-stage">
+            <div class="stage-num" aria-hidden="true">3</div>
+            <div class="stage-info">
+              <div class="stage-title">Safety Gate 1: Species Confidence Evaluation</div>
+              <div class="stage-desc">Strict 90% threshold. If uncertain, diagnostic engine deliberately abstains from
+                disease classification.</div>
+            </div>
+          </div>
+
+          <div class="pipeline-stage">
+            <div class="stage-num" aria-hidden="true">4</div>
+            <div class="stage-info">
+              <div class="stage-title">Tier 2: Crop Specialist with CBAM Attention</div>
+              <div class="stage-desc">Crop-specific network featuring Channel &amp; Spatial attention submodules for
+                necrotic lesion analysis.</div>
+            </div>
+          </div>
+
+          <div class="pipeline-stage">
+            <div class="stage-num" aria-hidden="true">5</div>
+            <div class="stage-info">
+              <div class="stage-title">Safety Gate 2: Late Blight Escalation</div>
+              <div class="stage-desc">Evaluates Phytophthora infestans risk; suppresses premature systemic chemical
+                fungicide advice if confidence &lt; 90%.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         VIEW 3: RESULT VIEW (COMPREHENSIVE POST-DIAGNOSIS DASHBOARD)
+         ==================================================================== -->
+    <section id="view-result" class="view-panel" aria-labelledby="result-section-heading" hidden>
+      <div class="section-header result-header-row">
+        <div>
+          <h1 id="result-section-heading" class="section-title">Diagnostic Pathology Report</h1>
+          <p id="result-timestamp" class="section-subtitle">Evaluated on --</p>
+        </div>
+        <div class="result-header-actions">
+          <button type="button" id="btn-result-new-scan" class="btn btn-primary">
+            <span aria-hidden="true">🌿</span> Analyze Another Leaf
+          </button>
+          <button type="button" id="btn-result-copy-summary" class="btn btn-secondary">
+            <span aria-hidden="true">📋</span> Copy Summary
+          </button>
+        </div>
+      </div>
+
+      <!-- A. Safety Status Banner (Mapped directly to backend safety_status) -->
+      <div id="safety-status-banner" class="status-banner confident" role="region" aria-label="Safety Status Banner">
+        <div id="status-icon" class="status-icon-wrap" aria-hidden="true">✓</div>
+        <div class="status-content">
+          <span id="status-pill" class="status-pill">Confident Diagnosis</span>
+          <h2 id="status-heading" class="status-heading">High Diagnostic Confidence</h2>
+          <p id="status-message" class="status-message">Predictions satisfy dual confidence safety gates.</p>
+          <ul id="status-warnings" class="status-warning-list" hidden></ul>
+        </div>
+      </div>
+
+      <!-- Two-Column Diagnostic Results Layout -->
+      <div class="result-layout-2col">
+
+        <!-- Left Column: Uploaded Specimen Visualization & Attention Details -->
+        <div class="result-specimen-column">
+          <!-- Specimen Preview Card -->
+          <div class="card specimen-preview-card">
+            <div class="card-header">
+              <h2 class="card-title">
+                <span aria-hidden="true">📸</span> Analyzed Foliar Specimen
+              </h2>
+              <span class="tag-badge" id="result-specimen-badge">Specimen Raster</span>
+            </div>
+
+            <div class="specimen-image-container">
+              <img id="result-specimen-img" alt="Analyzed leaf specimen image" class="result-specimen-image">
+            </div>
+
+            <div class="specimen-meta-block">
+              <div class="specimen-meta-item">
+                <span class="meta-label">Filename:</span>
+                <span class="meta-value" id="result-specimen-filename">specimen.jpg</span>
+              </div>
+              <div class="specimen-meta-item">
+                <span class="meta-label">Evaluation:</span>
+                <span class="meta-value" id="result-specimen-meta">224 × 224 RGB</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Explainability & CBAM Attention Information Card -->
+          <div class="card cbam-info-card">
+            <div class="card-header">
+              <h2 class="card-title">
+                <span aria-hidden="true">🔬</span> CBAM Attention Mechanism
+              </h2>
+              <span class="card-subtitle">Dual-Domain Feature Focus</span>
+            </div>
+            <p class="cbam-info-desc">
+              The crop specialist network processes foliar feature maps using a 206,258-parameter
+              <strong>Convolutional Block Attention Module</strong>:
+            </p>
+            <ul class="cbam-features-list">
+              <li>
+                <strong>Channel Attention:</strong> Inter-channel MLP filters out irrelevant healthy tissue to amplify
+                necrotic wavelength bands.
+              </li>
+              <li>
+                <strong>Spatial Attention:</strong> 7×7 convolution localizes target lesion halos and leaf margins
+                across the foliar lamina.
+              </li>
+            </ul>
+            <div class="cbam-note">
+              <em>Note: Predictions reflect verified dual-tier model logits. Grounded in actual model outputs without
+                synthetic overlays.</em>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Hierarchical Classification Findings -->
+        <div class="result-pathology-column">
+
+          <!-- B. Botanical Species Identification Card (Tier 1) -->
+          <div class="card" id="card-species">
+            <div class="card-header">
+              <div>
+                <h2 class="card-title">
+                  <span aria-hidden="true">🌱</span> Botanical Identification
+                </h2>
+                <span id="species-scientific-name" class="scientific-name">Solanum lycopersicum</span>
+              </div>
+              <span id="gate1-status-pill" class="tag-badge">Gate 1 Passed</span>
+            </div>
+
+            <div class="metric-highlight-block">
+              <div class="prediction-large-name" id="species-prediction-name">Tomato</div>
+              <div class="confidence-readout">
+                Confidence: <strong id="species-confidence-text">94.41%</strong>
+              </div>
+            </div>
+
+            <!-- Species Distribution Bars -->
+            <div class="probability-group" id="species-probability-group">
+              <div class="meter-row">
+                <div class="meter-header">
+                  <span class="meter-label">Potato (Solanum tuberosum)</span>
+                  <span class="meter-value" id="meter-val-potato">0.0%</span>
+                </div>
+                <div class="meter-track" role="meter" aria-label="Potato probability" aria-valuemin="0"
+                  aria-valuemax="100" id="meter-track-potato">
+                  <div class="meter-fill potato" id="meter-fill-potato" style="width: 0%;"></div>
+                </div>
+              </div>
+              <div class="meter-row">
+                <div class="meter-header">
+                  <span class="meter-label">Tomato (Solanum lycopersicum)</span>
+                  <span class="meter-value" id="meter-val-tomato">0.0%</span>
+                </div>
+                <div class="meter-track" role="meter" aria-label="Tomato probability" aria-valuemin="0"
+                  aria-valuemax="100" id="meter-track-tomato">
+                  <div class="meter-fill tomato" id="meter-fill-tomato" style="width: 0%;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- C. Disease Classification Card (Tier 2) -->
+          <div class="card" id="card-disease">
+            <div class="card-header">
+              <div>
+                <h2 class="card-title">
+                  <span aria-hidden="true">🔬</span> Foliar Pathology Specialist
+                </h2>
+                <span class="card-subtitle">Tier 2 CBAM Crop Specialist</span>
+              </div>
+              <span id="gate2-status-pill" class="tag-badge">Gate 2 Evaluated</span>
+            </div>
+
+            <!-- Normal State: Disease Predicted -->
+            <div id="disease-prediction-content">
+              <div class="metric-highlight-block">
+                <div class="prediction-large-name" id="disease-prediction-name">Late Blight</div>
+                <div class="confidence-readout">
+                  Specialist Confidence: <strong id="disease-confidence-text">69.64%</strong>
+                </div>
+              </div>
+
+              <!-- Disease Distribution Bars -->
+              <div class="probability-group" id="disease-probability-group">
+                <div class="meter-row">
+                  <div class="meter-header">
+                    <span class="meter-label">Early Blight (Alternaria solani)</span>
+                    <span class="meter-value" id="meter-val-early-blight">0.0%</span>
+                  </div>
+                  <div class="meter-track" role="meter" aria-label="Early Blight probability" aria-valuemin="0"
+                    aria-valuemax="100" id="meter-track-early-blight">
+                    <div class="meter-fill early-blight" id="meter-fill-early-blight" style="width: 0%;"></div>
+                  </div>
+                </div>
+
+                <div class="meter-row">
+                  <div class="meter-header">
+                    <span class="meter-label">Late Blight (Phytophthora infestans)</span>
+                    <span class="meter-value" id="meter-val-late-blight">0.0%</span>
+                  </div>
+                  <div class="meter-track" role="meter" aria-label="Late Blight probability" aria-valuemin="0"
+                    aria-valuemax="100" id="meter-track-late-blight">
+                    <div class="meter-fill late-blight" id="meter-fill-late-blight" style="width: 0%;"></div>
+                  </div>
+                </div>
+
+                <div class="meter-row">
+                  <div class="meter-header">
+                    <span class="meter-label">Healthy (No Foliar Blight)</span>
+                    <span class="meter-value" id="meter-val-healthy">0.0%</span>
+                  </div>
+                  <div class="meter-track" role="meter" aria-label="Healthy foliage probability" aria-valuemin="0"
+                    aria-valuemax="100" id="meter-track-healthy">
+                    <div class="meter-fill healthy" id="meter-fill-healthy" style="width: 0%;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Abstention State: Triggered when species confidence is below 90% -->
+            <div id="disease-abstained-content" hidden class="abstained-state-box">
+              <div class="abstained-title">Specialist Diagnosis Abstained</div>
+              <p class="abstained-desc">
+                Botanist confidence is below the 90% safety threshold. Crop disease classification was deliberately
+                withheld to prevent crop misdiagnosis.
+              </p>
+            </div>
+          </div>
+
+          <!-- D. Agronomic Advisory Card -->
+          <div class="card" id="card-advisory">
+            <div class="card-header">
+              <h2 class="card-title">
+                <span aria-hidden="true">📋</span> Actionable Agronomic Advisory
+              </h2>
+              <span class="card-subtitle">Decision Support Recommendation</span>
+            </div>
+            <div id="advisory-text-box" class="advisory-box">
+              Advisory details will appear here.
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- E. Technical Metadata (Collapsible) -->
+      <details class="technical-details">
+        <summary class="tech-summary">
+          <span>⚙️ Technical System Metadata &amp; Raw JSON</span>
+          <span aria-hidden="true">▾</span>
+        </summary>
+        <div class="tech-body">
+          <div class="tech-grid">
+            <div>
+              <div class="tech-item-label">Model Version</div>
+              <div class="tech-item-value" id="tech-val-version">v2</div>
+            </div>
+            <div>
+              <div class="tech-item-label">Architecture</div>
+              <div class="tech-item-value" id="tech-val-architecture">MobileNetV2 + CBAM</div>
+            </div>
+            <div>
+              <div class="tech-item-label">Inference Latency</div>
+              <div class="tech-item-value" id="tech-val-latency">-- ms</div>
+            </div>
+            <div>
+              <div class="tech-item-label">Safety Decision</div>
+              <div class="tech-item-value" id="tech-val-safety">--</div>
+            </div>
+          </div>
+
+          <div class="json-actions-row">
+            <span class="json-payload-label">API Response Payload:</span>
+            <button type="button" id="btn-copy-json" class="btn btn-secondary btn-xs">Copy JSON</button>
+          </div>
+          <pre id="tech-raw-json" class="json-container"><code>{}</code></pre>
+        </div>
+      </details>
+    </section>
+
+    <!-- ====================================================================
+         VIEW 4: HISTORY VIEW (LOCAL DIAGNOSIS LOG)
+         ==================================================================== -->
+    <section id="view-history" class="view-panel" aria-labelledby="history-section-heading" hidden>
+      <div class="section-header">
+        <h1 id="history-section-heading" class="section-title">Local Scan History</h1>
+        <p class="section-subtitle">Diagnostic records saved locally on this browser session.</p>
+      </div>
+
+      <div class="history-controls">
+        <span id="history-count" class="history-count-label">0 scans recorded</span>
+        <button type="button" id="btn-clear-history" class="btn btn-danger btn-sm" disabled>
+          Clear History
+        </button>
+      </div>
+
+      <!-- Empty State -->
+      <div id="history-empty" class="card empty-state">
+        <div class="empty-state-icon" aria-hidden="true">🍃</div>
+        <h2 class="empty-state-title">No diagnosis history yet</h2>
+        <p class="empty-state-desc">
+          Run a diagnosis on a leaf photo to record species, pathology, and confidence metrics locally.
+        </p>
+        <button type="button" id="btn-history-start-scan" class="btn btn-primary">
+          Start First Diagnosis
+        </button>
+      </div>
+
+      <!-- History List -->
+      <div id="history-items-container" class="history-list" hidden></div>
+    </section>
+
+    <!-- ====================================================================
+         VIEW 5: ABOUT VIEW (TECHNICAL & BOTANICAL ARCHITECTURE)
+         ==================================================================== -->
+    <section id="view-about" class="view-panel" aria-labelledby="about-section-heading" hidden>
+      <div class="section-header">
+        <h1 id="about-section-heading" class="section-title">About Plant Disease Detection V2</h1>
+        <p class="section-subtitle">Hierarchical Computer Vision Architecture for High-Consequence Agricultural Foliar
+          Pathology</p>
+      </div>
+
+      <div class="about-content">
+        <!-- 1. Two-Tier CNN Architecture -->
+        <article class="about-block">
+          <h3>1. Two-Tier Cascaded Architecture</h3>
+          <p>
+            Standard monolithic classification models frequently exhibit cross-crop pathology confusion (for example,
+            confusing Potato Early Blight with Tomato Early Blight). LeafScan V2 implements an explicit hierarchical
+            cascade:
+          </p>
+          <ul>
+            <li><strong>Tier 1 — Botanist Species Classifier:</strong> A dedicated MobileNetV2 network that identifies
+              whether the foliar specimen is <em>Solanum tuberosum</em> (Potato) or <em>Solanum lycopersicum</em>
+              (Tomato).</li>
+            <li><strong>Tier 2 — Crop Pathology Specialists:</strong> Two decoupled specialist networks (Potato Doctor
+              CBAM
+              and Tomato Doctor CBAM) trained exclusively on pathology within their biological host crop.</li>
+          </ul>
+        </article>
+
+        <!-- 2. CBAM Attention Mechanism -->
+        <article class="about-block">
+          <h3>2. Convolutional Block Attention Module (CBAM)</h3>
+          <p>
+            Agricultural disease lesions (such as early <em>Phytophthora</em> water-soaking or <em>Alternaria</em>
+            target spots) often
+            occupy less than 5% of the foliar surface area. LeafScan injects a <strong>206,258-parameter CBAM
+              submodule</strong>
+            into the terminal $7 \times 7 \times 1280$ feature maps of MobileNetV2:
+          </p>
+          <ul>
+            <li><strong>Channel Attention (206,160 parameters):</strong> Explores inter-channel relationships via
+              spatial
+              average and max pooling combined with a two-layer shared MLP (reduction ratio $r=16$) to amplify necrotic
+              spectral bands.</li>
+            <li><strong>Spatial Attention (98 parameters):</strong> Inter-spatial convolution ($7 \times 7$ kernel) over
+              channel-pooled
+              slices to localize necrotic lesions across the lamina regardless of scale.</li>
+          </ul>
+        </article>
+
+        <!-- 3. Dual Confidence Safety Gates -->
+        <article class="about-block">
+          <h3>3. Dual Confidence Safety Gates</h3>
+          <p>
+            To prevent dangerous or costly automated misdiagnoses, the backend enforces automated safety boundaries:
+          </p>
+          <table class="about-table">
+            <thead>
+              <tr>
+                <th>Safety Gate</th>
+                <th>Threshold</th>
+                <th>Behavior when Triggered</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Gate 1: Species Confidence</strong></td>
+                <td>90.0%</td>
+                <td>Abstains from disease classification. Suppresses chemical advice; requests clearer foliage photo.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Gate 2: Late Blight Escalation</strong></td>
+                <td>90.0%</td>
+                <td>Flags <em>Phytophthora infestans</em> uncertainty. Suppresses premature systemic fungicide sprays;
+                  recommends isolation and 24–48h field re-scouting.</td>
+              </tr>
+              <tr>
+                <td><strong>General Disease Confidence</strong></td>
+                <td>70.0%</td>
+                <td>Labels diagnosis as uncertain; advises physical field scouting prior to action.</td>
+              </tr>
+            </tbody>
+          </table>
+        </article>
+
+        <!-- 4. ONNX Runtime Edge Deployment -->
+        <article class="about-block">
+          <h3>4. ONNX Runtime Edge Deployment</h3>
+          <p>
+            All production V2 checkpoints are compiled into static Opset 17 computational graphs
+            (<code>models/onnx/v2/*.onnx</code>).
+            In verified CPU benchmark evaluations, ONNX Runtime execution demonstrated a <strong>52.6× to 59.2×
+              speedup</strong> over
+            native Python graphs, reducing per-image CPU inference from ~95 ms down to <strong>1.58 – 1.89 ms</strong>
+            with strict
+            numerical probability parity (maximum deviation: 1.67 × 10<sup>-6</sup>).
+          </p>
+        </article>
+
+        <!-- 5. Supported Classes & Pathogens -->
+        <article class="about-block">
+          <h3>5. Target Taxonomic Scope</h3>
+          <table class="about-table">
+            <thead>
+              <tr>
+                <th>Crop Host</th>
+                <th>Condition</th>
+                <th>Pathogen / Etiology</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Potato</strong> (<em>Solanum tuberosum</em>)</td>
+                <td>Early Blight</td>
+                <td><em>Alternaria solani</em></td>
+              </tr>
+              <tr>
+                <td><strong>Potato</strong> (<em>Solanum tuberosum</em>)</td>
+                <td>Late Blight</td>
+                <td><em>Phytophthora infestans</em> (Oomycete)</td>
+              </tr>
+              <tr>
+                <td><strong>Potato</strong> (<em>Solanum tuberosum</em>)</td>
+                <td>Healthy</td>
+                <td>Asymptomatic foliage</td>
+              </tr>
+              <tr>
+                <td><strong>Tomato</strong> (<em>Solanum lycopersicum</em>)</td>
+                <td>Early Blight</td>
+                <td><em>Alternaria solani</em></td>
+              </tr>
+              <tr>
+                <td><strong>Tomato</strong> (<em>Solanum lycopersicum</em>)</td>
+                <td>Late Blight</td>
+                <td><em>Phytophthora infestans</em></td>
+              </tr>
+              <tr>
+                <td><strong>Tomato</strong> (<em>Solanum lycopersicum</em>)</td>
+                <td>Healthy</td>
+                <td>Asymptomatic foliage</td>
+              </tr>
+            </tbody>
+          </table>
+        </article>
+
+        <!-- 6. Limitations & Advisory Statement -->
+        <article class="about-block advisory-limitation-block">
+          <h3 class="limitation-title">6. Operational Limitations</h3>
+          <p>
+            <strong>Laboratory vs. Field Conditions:</strong> These deep learning models were trained and benchmarked on
+            standardized laboratory imagery. Real-world agronomic conditions (dew, dust, mixed soil reflections,
+            pesticide residues,
+            complex field lighting) may reduce accuracy.
+          </p>
+          <p>
+            <strong>Decision Support Only:</strong> Predictions are automated screening recommendations intended for
+            educational and
+            decision-support purposes. They do NOT replace certified on-site plant pathology inspection or chemical
+            regulatory labels.
+          </p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <!-- Mobile Floating Quick-Upload Action Bar (Visible only on mobile scan view) -->
+  <aside id="mobile-quick-bar" class="mobile-quick-bar" aria-label="Mobile quick upload bar">
+    <button type="button" class="btn btn-primary btn-sm btn-quick-browse" id="btn-quick-browse">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        aria-hidden="true">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+        <polyline points="17 8 12 3 7 8"></polyline>
+        <line x1="12" y1="3" x2="12" y2="15"></line>
+      </svg>
+      Browse
+    </button>
+    <button type="button" class="btn btn-secondary btn-sm btn-quick-camera" id="btn-quick-camera">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        aria-hidden="true">
+        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+        <circle cx="12" cy="13" r="4" />
+      </svg>
+      Photo
+    </button>
+  </aside>
+
+  <!-- Application Shell Footer -->
+  <footer class="app-footer" role="contentinfo">
+    <div class="footer-inner">
+      <div class="footer-disclaimer">
+        <strong>Agricultural Advisory Notice:</strong> LeafScan V2 automated diagnostic predictions provide
+        decision-support
+        information only and do not replace professional on-site plant pathology diagnosis. Always consult certified
+        agricultural
+        extension officers and strictly adhere to locally registered pesticide label instructions.
+      </div>
+      <div class="footer-meta">
+        <span>LeafScan V2.0</span>
+        <span>•</span>
+        <span>MobileNetV2 + CBAM</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Application Entry Point (Vanilla ES Modules — Zero External Runtime Dependencies) -->
+  <script type="module" src="js/app.js"></script>
+</body>
+
+</html>
