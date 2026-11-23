@@ -8,15 +8,20 @@ plant-env/
 # Python cache and testing artifacts
 __pycache__/
 *.py[cod]
+*.pyd
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
 .coverage
 htmlcov/
 
-# Node dependencies and web test coverage
+# Node dependencies, build outputs, and web test coverage
 node_modules/
 coverage/
+.next/
+*.tsbuildinfo
+dist/
+.storybook-static/
 .playwright/
 test-results/
 playwright-report/
@@ -44,6 +49,7 @@ archive/v1/models/*.keras
 
 # Generated deployment artifacts
 *.onnx
+!models/bundles/v3/*.onnx
 *.tflite
 *.h5
 *.hdf5

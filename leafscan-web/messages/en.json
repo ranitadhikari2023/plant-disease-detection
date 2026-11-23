@@ -1,0 +1,57 @@
+{
+  "common": {
+    "appName": "LeafScan V3",
+    "tagline": "Botanical Field Console",
+    "nav": {
+      "diagnose": "Diagnose",
+      "history": "History",
+      "model": "Model Transparency",
+      "feedback": "Feedback"
+    },
+    "status": {
+      "online": "Online",
+      "offline": "Offline",
+      "ready": "Engine Ready",
+      "degraded": "Degraded",
+      "checking": "Checking Status"
+    },
+    "actions": {
+      "submit": "Submit",
+      "cancel": "Cancel",
+      "retry": "Retry",
+      "back": "Back",
+      "clear": "Clear All",
+      "copyId": "Copy Request ID",
+      "copied": "Copied!"
+    }
+  },
+  "diagnose": {
+    "title": "Foliar Diagnostic Screening",
+    "subtitle": "Two-tier hierarchical computer vision for Solanaceous foliar pathology",
+    "cameraBtn": "Capture with Camera",
+    "galleryBtn": "Browse Device",
+    "executeBtn": "Execute Diagnosis",
+    "serviceBusy": "Service busy. Retrying shortly...",
+    "offlineNotice": "You are offline. Submission queued."
+  },
+  "history": {
+    "title": "Field Diagnosis Ledger",
+    "subtitle": "Local on-device records stored securely in IndexedDB",
+    "empty": "No prior scans recorded on this device.",
+    "filterAll": "All Scans",
+    "filterConfident": "Confident",
+    "filterUncertain": "Uncertain / Abstained",
+    "clearConfirm": "Are you sure you want to clear all stored history?",
+    "offlineQueue": "Offline Queue (Pending Sync)"
+  },
+  "feedback": {
+    "title": "Field Validation Feedback",
+    "subtitle": "Report certified agronomist observations to assist model auditing",
+    "submitBtn": "Submit Diagnostic Feedback",
+    "successMsg": "Feedback successfully queued for expert audit."
+  },
+  "model": {
+    "title": "Model Transparency & Verification",
+    "subtitle": "Verified cryptographic bundle signatures and calibration metrics"
+  }
+}

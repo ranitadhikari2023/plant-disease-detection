@@ -1,0 +1,34 @@
+@theme {
+  --color-leaf-50: #f2f7f1;
+  --color-leaf-100: #e2ede0;
+  --color-leaf-200: #c5dbc1;
+  --color-leaf-300: #9fc198;
+  --color-leaf-400: #73a36a;
+  --color-leaf-500: #4e8544;
+  --color-leaf-600: #2f6b3a;
+  --color-leaf-700: #25542e;
+  --color-leaf-800: #1f4326;
+  --color-leaf-900: #1b3820;
+
+  --color-bark-50: #f7f8f7;
+  --color-bark-100: #edefed;
+  --color-bark-200: #daddda;
+  --color-bark-300: #bfc4bf;
+  --color-bark-400: #9da49e;
+  --color-bark-500: #5b665c;
+  --color-bark-600: #464f47;
+  --color-bark-700: #383f39;
+  --color-bark-800: #2a302b;
+  --color-bark-900: #1f2420;
+
+  --color-amber-500: #c98a1b;
+  --color-rust-600: #b23a2e;
+  --color-teal-500: #1f8a70;
+
+  --radius-lg: 1rem;
+  --shadow-float: 0 12px 32px -12px rgb(31 36 32 / 0.25);
+
+  --font-display: "Fraunces", serif;
+  --font-sans: "Geist Sans", system-ui, -apple-system, sans-serif;
+  --font-mono: "Geist Mono", monospace;
+}

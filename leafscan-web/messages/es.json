@@ -1,0 +1,57 @@
+{
+  "common": {
+    "appName": "LeafScan V3",
+    "tagline": "Consola de Campo Botánica",
+    "nav": {
+      "diagnose": "Diagnosticar",
+      "history": "Historial",
+      "model": "Transparencia del Modelo",
+      "feedback": "Comentarios"
+    },
+    "status": {
+      "online": "En línea",
+      "offline": "Desconectado",
+      "ready": "Motor Listo",
+      "degraded": "Degradado",
+      "checking": "Verificando"
+    },
+    "actions": {
+      "submit": "Enviar",
+      "cancel": "Cancelar",
+      "retry": "Reintentar",
+      "back": "Volver",
+      "clear": "Borrar todo",
+      "copyId": "Copiar ID de solicitud",
+      "copied": "¡Copiado!"
+    }
+  },
+  "diagnose": {
+    "title": "Detección y Diagnóstico Foliar",
+    "subtitle": "Visión por computadora jerárquica de dos niveles para patología foliar de solanáceas",
+    "cameraBtn": "Capturar con Cámara",
+    "galleryBtn": "Examinar Dispositivo",
+    "executeBtn": "Ejecutar Diagnóstico",
+    "serviceBusy": "Servidor ocupado. Reintentando en breve...",
+    "offlineNotice": "Sin conexión. Solicitud en cola."
+  },
+  "history": {
+    "title": "Registro de Diagnósticos de Campo",
+    "subtitle": "Registros locales almacenados de forma segura en IndexedDB",
+    "empty": "No hay escaneos previos registrados en este dispositivo.",
+    "filterAll": "Todos los escaneos",
+    "filterConfident": "Confiables",
+    "filterUncertain": "Inciertos / Abstenidos",
+    "clearConfirm": "¿Está seguro de que desea borrar todo el historial?",
+    "offlineQueue": "Cola sin conexión (Pendiente)"
+  },
+  "feedback": {
+    "title": "Comentarios de Validación de Campo",
+    "subtitle": "Informe observaciones agronómicas certificadas para auditar el modelo",
+    "submitBtn": "Enviar Comentarios de Diagnóstico",
+    "successMsg": "Comentarios registrados con éxito para auditoría."
+  },
+  "model": {
+    "title": "Transparencia y Verificación del Modelo",
+    "subtitle": "Firmas criptográficas verificadas del paquete y métricas de calibración"
+  }
+}

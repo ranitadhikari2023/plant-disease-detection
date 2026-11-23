@@ -1,0 +1,1517 @@
+[
+  {
+    "path": "test_images/sample_leaf.JPG",
+    "ground_truth": {
+      "crop": "tomato",
+      "disease_class": "Late_blight",
+      "source_group_id": "SAMPLE_LEAF"
+    },
+    "keras": {
+      "species": "Tomato",
+      "species_confidence": 0.9441,
+      "disease": "Late Blight",
+      "disease_confidence": 0.6964,
+      "safety_status": "late_blight_uncertain",
+      "species_probabilities": {
+        "Potato": 0.0559,
+        "Tomato": 0.9441
+      },
+      "probabilities": {
+        "Early Blight": 0.3019,
+        "Late Blight": 0.6964,
+        "Healthy": 0.0017
+      }
+    },
+    "onnx": {
+      "species": "Tomato",
+      "species_confidence": 0.9441,
+      "disease": "Late Blight",
+      "disease_confidence": 0.6964,
+      "safety_status": "late_blight_uncertain"
+    }
+  },
+  {
+    "path": "dataset/potato/Early_blight/potato_early_123.JPG",
+    "ground_truth": {
+      "crop": "potato",
+      "disease_class": "Early_blight",
+      "source_group_id": "POTATO_EARLY_BLIGHT_GRP_0007"
+    },
+    "keras": {
+      "species": "Potato",
+      "species_confidence": 0.9584,
+      "disease": "Early Blight",
+      "disease_confidence": 0.9982,
+      "safety_status": "confident",
+      "species_probabilities": {
+        "Potato": 0.9584,
+        "Tomato": 0.0416
+      },
+      "probabilities": {
+        "Early Blight": 0.9982,
+        "Late Blight": 0.0017,
+        "Healthy": 0.0001
+      }
+    },
+    "onnx": {
+      "species": "Potato",
+      "species_confidence": 0.9584,
+      "disease": "Early Blight",
+      "disease_confidence": 0.9982,
+      "safety_status": "confident"
+    }
+  },
+  {
+    "path": "dataset/potato/Early_blight/potato_early_355.JPG",
+    "ground_truth": {
+      "crop": "potato",
+      "disease_class": "Early_blight",
+      "source_group_id": "POTATO_EARLY_BLIGHT_GRP_0072"
+    },
+    "keras": {
+      "species": "Potato",
+      "species_confidence": 0.9999,
+      "disease": "Early Blight",
+      "disease_confidence": 0.9995,
+      "safety_status": "confident",
+      "species_probabilities": {
+        "Potato": 0.9999,
+        "Tomato": 0.0001
+      },
+      "probabilities": {
+        "Early Blight": 0.9995,
+        "Late Blight": 0.0005,
+        "Healthy": 0.0
+      }
+    },
+    "onnx": {
+      "species": "Potato",
+      "species_confidence": 0.9999,
+      "disease": "Early Blight",
+      "disease_confidence": 0.9995,
+      "safety_status": "confident"
+    }
+  },
+  {
+    "path": "dataset/potato/Early_blight/potato_early_478.JPG",
+    "ground_truth": {
+      "crop": "potato",
+      "disease_class": "Early_blight",
+      "source_group_id": "POTATO_EARLY_BLIGHT_GRP_0115"
+    },
+    "keras": {
+      "species": "Potato",
+      "species_confidence": 0.9998,
+      "disease": "Early Blight",
+      "disease_confidence": 0.9798,
+      "safety_status": "confident",
+      "species_probabilities": {
+        "Potato": 0.9998,
+        "Tomato": 0.0002
+      },
+      "probabilities": {
+        "Early Blight": 0.9798,
+        "Late Blight": 0.0201,
+        "Healthy": 0.0001
+      }
+    },
+    "onnx": {
+      "species": "Potato",
+      "species_confidence": 0.9998,
+      "disease": "Early Blight",
+      "disease_confidence": 0.9798,
+      "safety_status": "confident"
+    }
+  },
+  {
+    "path": "dataset/potato/Early_blight/potato_early_606.JPG",
+    "ground_truth": {
+      "crop": "potato",
+      "disease_class": "Early_blight",
+      "source_group_id": "POTATO_EARLY_BLIGHT_GRP_0182"
+    },
+    "keras": {
+      "species": "Potato",
+      "species_confidence": 0.9867,
+      "disease": "Early Blight",
+      "disease_confidence": 0.9998,
+      "safety_status": "confident",
+      "species_probabilities": {
+        "Potato": 0.9867,
+        "Tomato": 0.0133
+      },
+      "probabilities": {
+        "Early Blight": 0.9998,
+        "Late Blight": 0.0001,
+        "Healthy": 0.0001
+      }
+    },
+    "onnx": {
+      "species": "Potato",
+      "species_confidence": 0.9867,
+      "disease": "Early Blight",
+      "disease_confidence": 0.9998,
+      "safety_status": "confident"
+    }
+  },
+  {
+    "path": "dataset/potato/Early_blight/potato_early_683.JPG",
+    "ground_truth": {
+      "crop": "potato",
+      "disease_class": "Early_blight",
+      "source_group_id": "POTATO_EARLY_BLIGHT_GRP_0233"
+    },
+    "keras": {
+      "species": "Potato",
+      "species_confidence": 0.9961,
+      "disease": "Early Blight",
+      "disease_confidence": 0.9979,
+      "safety_status": "confident",
+      "species_probabilities": {
+        "Potato": 0.9961,
+        "Tomato": 0.0039
+      },
+      "probabilities": {
+        "Early Blight": 0.9979,
+        "Late Blight": 0.0021,
+        "Healthy": 0.0
+      }
+    },
+    "onnx": {
+      "species": "Potato",
+      "species_confidence": 0.9961,
+      "disease": "Early Blight",
+      "disease_confidence": 0.9979,
+      "safety_status": "confident"
+    }
+  },
+  {
+    "path": "dataset/potato/Early_blight/potato_early_759.JPG",
+    "ground_truth": {
+      "crop": "potato",
+      "disease_class": "Early_blight",
+      "source_group_id": "POTATO_EARLY_BLIGHT_GRP_0312"
+    },
+    "keras": {
+      "species": "Potato",
+      "species_confidence": 0.9985,
+      "disease": "Early Blight",
+      "disease_confidence": 0.9657,
+      "safety_status": "confident",
+      "species_probabilities": {
+        "Potato": 0.9985,
+        "Tomato": 0.0015
+      },
+      "probabilities": {
+        "Early Blight": 0.9657,
+        "Late Blight": 0.032,
+        "Healthy": 0.0022
+      }
+    },
+    "onnx": {
+      "species": "Potato",
+      "species_confidence": 0.9985,
+      "disease": "Early Blight",
+      "disease_confidence": 0.9657,
+      "safety_status": "confident"
+    }
+  },
+  {
+    "path": "dataset/potato/Early_blight/potato_early_814.JPG",
+    "ground_truth": {
+      "crop": "potato",
+      "disease_class": "Early_blight",
+      "source_group_id": "POTATO_EARLY_BLIGHT_GRP_0368"
+    },
+    "keras": {
+      "species": "Potato",
+      "species_confidence": 0.9999,
+      "disease": "Early Blight",
+      "disease_confidence": 0.9999,
+      "safety_status": "confident",
+      "species_probabilities": {
+        "Potato": 0.9999,
+        "Tomato": 0.0001
+      },
+      "probabilities": {
+        "Early Blight": 0.9999,
+        "Late Blight": 0.0001,
+        "Healthy": 0.0
+      }
+    },
+    "onnx": {
+      "species": "Potato",
+      "species_confidence": 0.9999,
+      "disease": "Early Blight",
+      "disease_confidence": 0.9999,
+      "safety_status": "confident"
+    }
+  },
+  {
+    "path": "dataset/potato/Early_blight/potato_early_888.JPG",
+    "ground_truth": {
+      "crop": "potato",
+      "disease_class": "Early_blight",
+      "source_group_id": "POTATO_EARLY_BLIGHT_GRP_0444"
+    },
+    "keras": {
+      "species": "Potato",
+      "species_confidence": 0.9962,
+      "disease": "Early Blight",
+      "disease_confidence": 0.9993,
+      "safety_status": "confident",
+      "species_probabilities": {
+        "Potato": 0.9962,
+        "Tomato": 0.0038
+      },
+      "probabilities": {
+        "Early Blight": 0.9993,
+        "Late Blight": 0.0007,
+        "Healthy": 0.0
+      }
+    },
+    "onnx": {
+      "species": "Potato",
+      "species_confidence": 0.9962,
+      "disease": "Early Blight",
+      "disease_confidence": 0.9993,
+      "safety_status": "confident"
+    }
+  },
+  {
+    "path": "dataset/potato/Late_blight/potato_late_116.JPG",
+    "ground_truth": {
+      "crop": "potato",
+      "disease_class": "Late_blight",
+      "source_group_id": "POTATO_LATE_BLIGHT_GRP_0006"
+    },
+    "keras": {
+      "species": "Potato",
+      "species_confidence": 0.9962,
+      "disease": "Late Blight",
+      "disease_confidence": 0.9916,
+      "safety_status": "confident",
+      "species_probabilities": {
+        "Potato": 0.9962,
+        "Tomato": 0.0038
+      },
+      "probabilities": {
+        "Early Blight": 0.0084,
+        "Late Blight": 0.9916,
+        "Healthy": 0.0
+      }
+    },
+    "onnx": {
+      "species": "Potato",
+      "species_confidence": 0.9962,
+      "disease": "Late Blight",
+      "disease_confidence": 0.9916,
+      "safety_status": "confident"
+    }
+  },
+  {
+    "path": "dataset/potato/Late_blight/potato_late_376.JPG",
+    "ground_truth": {
+      "crop": "potato",
+      "disease_class": "Late_blight",
+      "source_group_id": "POTATO_LATE_BLIGHT_GRP_0078"
+    },
+    "keras": {
+      "species": "Potato",
+      "species_confidence": 0.994,
+      "disease": "Late Blight",
+      "disease_confidence": 0.9999,
+      "safety_status": "confident",
+      "species_probabilities": {
+        "Potato": 0.994,
+        "Tomato": 0.006
+      },
+      "probabilities": {
+        "Early Blight": 0.0,
+        "Late Blight": 0.9999,
+        "Healthy": 0.0001
+      }
+    },
+    "onnx": {
+      "species": "Potato",
+      "species_confidence": 0.994,
+      "disease": "Late Blight",
+      "disease_confidence": 0.9999,
+      "safety_status": "confident"
+    }
+  },
+  {
+    "path": "dataset/potato/Late_blight/potato_late_519.JPG",
+    "ground_truth": {
+      "crop": "potato",
+      "disease_class": "Late_blight",
+      "source_group_id": "POTATO_LATE_BLIGHT_GRP_0137"
+    },
+    "keras": {
+      "species": "Potato",
+      "species_confidence": 0.9802,
+      "disease": "Late Blight",
+      "disease_confidence": 0.9957,
+      "safety_status": "confident",
+      "species_probabilities": {
+        "Potato": 0.9802,
+        "Tomato": 0.0198
+      },
+      "probabilities": {
+        "Early Blight": 0.0023,
+        "Late Blight": 0.9957,
+        "Healthy": 0.002
+      }
+    },
+    "onnx": {
+      "species": "Potato",
+      "species_confidence": 0.9802,
+      "disease": "Late Blight",
+      "disease_confidence": 0.9957,
+      "safety_status": "confident"
+    }
+  },
+  {
+    "path": "dataset/potato/Late_blight/potato_late_589.JPG",
+    "ground_truth": {
+      "crop": "potato",
+      "disease_class": "Late_blight",
+      "source_group_id": "POTATO_LATE_BLIGHT_GRP_0174"
+    },
+    "keras": {
+      "species": "Potato",
+      "species_confidence": 0.9909,
+      "disease": "Late Blight",
+      "disease_confidence": 0.9982,
+      "safety_status": "confident",
+      "species_probabilities": {
+        "Potato": 0.9909,
+        "Tomato": 0.0091
+      },
+      "probabilities": {
+        "Early Blight": 0.0003,
+        "Late Blight": 0.9982,
+        "Healthy": 0.0016
+      }
+    },
+    "onnx": {
+      "species": "Potato",
+      "species_confidence": 0.9909,
+      "disease": "Late Blight",
+      "disease_confidence": 0.9982,
+      "safety_status": "confident"
+    }
+  },
+  {
+    "path": "dataset/potato/Late_blight/potato_late_680.JPG",
+    "ground_truth": {
+      "crop": "potato",
+      "disease_class": "Late_blight",
+      "source_group_id": "POTATO_LATE_BLIGHT_GRP_0231"
+    },
+    "keras": {
+      "species": "Potato",
+      "species_confidence": 0.9979,
+      "disease": "Late Blight",
+      "disease_confidence": 0.9588,
+      "safety_status": "confident",
+      "species_probabilities": {
+        "Potato": 0.9979,
+        "Tomato": 0.0021
+      },
+      "probabilities": {
+        "Early Blight": 0.0004,
+        "Late Blight": 0.9588,
+        "Healthy": 0.0408
+      }
+    },
+    "onnx": {
+      "species": "Potato",
+      "species_confidence": 0.9979,
+      "disease": "Late Blight",
+      "disease_confidence": 0.9588,
+      "safety_status": "confident"
+    }
+  },
+  {
+    "path": "dataset/potato/Late_blight/potato_late_725.JPG",
+    "ground_truth": {
+      "crop": "potato",
+      "disease_class": "Late_blight",
+      "source_group_id": "POTATO_LATE_BLIGHT_GRP_0277"
+    },
+    "keras": {
+      "species": "Potato",
+      "species_confidence": 0.9998,
+      "disease": "Late Blight",
+      "disease_confidence": 0.9998,
+      "safety_status": "confident",
+      "species_probabilities": {
+        "Potato": 0.9998,
+        "Tomato": 0.0002
+      },
+      "probabilities": {
+        "Early Blight": 0.0,
+        "Late Blight": 0.9998,
+        "Healthy": 0.0002
+      }
+    },
+    "onnx": {
+      "species": "Potato",
+      "species_confidence": 0.9998,
+      "disease": "Late Blight",
+      "disease_confidence": 0.9998,
+      "safety_status": "confident"
+    }
+  },
+  {
+    "path": "dataset/potato/Late_blight/potato_late_811.JPG",
+    "ground_truth": {
+      "crop": "potato",
+      "disease_class": "Late_blight",
+      "source_group_id": "POTATO_LATE_BLIGHT_GRP_0366"
+    },
+    "keras": {
+      "species": "Potato",
+      "species_confidence": 0.9981,
+      "disease": "Late Blight",
+      "disease_confidence": 0.9039,
+      "safety_status": "confident",
+      "species_probabilities": {
+        "Potato": 0.9981,
+        "Tomato": 0.0019
+      },
+      "probabilities": {
+        "Early Blight": 0.096,
+        "Late Blight": 0.9039,
+        "Healthy": 0.0002
+      }
+    },
+    "onnx": {
+      "species": "Potato",
+      "species_confidence": 0.9981,
+      "disease": "Late Blight",
+      "disease_confidence": 0.9039,
+      "safety_status": "confident"
+    }
+  },
+  {
+    "path": "dataset/potato/Late_blight/potato_late_900.JPG",
+    "ground_truth": {
+      "crop": "potato",
+      "disease_class": "Late_blight",
+      "source_group_id": "POTATO_LATE_BLIGHT_GRP_0457"
+    },
+    "keras": {
+      "species": "Potato",
+      "species_confidence": 0.9898,
+      "disease": "Late Blight",
+      "disease_confidence": 0.9988,
+      "safety_status": "confident",
+      "species_probabilities": {
+        "Potato": 0.9898,
+        "Tomato": 0.0102
+      },
+      "probabilities": {
+        "Early Blight": 0.0011,
+        "Late Blight": 0.9988,
+        "Healthy": 0.0001
+      }
+    },
+    "onnx": {
+      "species": "Potato",
+      "species_confidence": 0.9898,
+      "disease": "Late Blight",
+      "disease_confidence": 0.9988,
+      "safety_status": "confident"
+    }
+  },
+  {
+    "path": "dataset/potato/healthy/potato_healthy_133.JPG",
+    "ground_truth": {
+      "crop": "potato",
+      "disease_class": "healthy",
+      "source_group_id": "POTATO_HEALTHY_GRP_0020"
+    },
+    "keras": {
+      "species": "Potato",
+      "species_confidence": 0.9794,
+      "disease": "Healthy",
+      "disease_confidence": 0.9977,
+      "safety_status": "confident",
+      "species_probabilities": {
+        "Potato": 0.9794,
+        "Tomato": 0.0206
+      },
+      "probabilities": {
+        "Early Blight": 0.0002,
+        "Late Blight": 0.0022,
+        "Healthy": 0.9977
+      }
+    },
+    "onnx": {
+      "species": "Potato",
+      "species_confidence": 0.9794,
+      "disease": "Healthy",
+      "disease_confidence": 0.9977,
+      "safety_status": "confident"
+    }
+  },
+  {
+    "path": "dataset/potato/healthy/potato_healthy_25.JPG",
+    "ground_truth": {
+      "crop": "potato",
+      "disease_class": "healthy",
+      "source_group_id": "POTATO_HEALTHY_GRP_0042"
+    },
+    "keras": {
+      "species": "Potato",
+      "species_confidence": 0.9954,
+      "disease": "Healthy",
+      "disease_confidence": 0.9993,
+      "safety_status": "confident",
+      "species_probabilities": {
+        "Potato": 0.9954,
+        "Tomato": 0.0046
+      },
+      "probabilities": {
+        "Early Blight": 0.0001,
+        "Late Blight": 0.0006,
+        "Healthy": 0.9993
+      }
+    },
+    "onnx": {
+      "species": "Potato",
+      "species_confidence": 0.9954,
+      "disease": "Healthy",
+      "disease_confidence": 0.9993,
+      "safety_status": "confident"
+    }
+  },
+  {
+    "path": "dataset/potato/healthy/potato_healthy_256_gblr_1.JPG",
+    "ground_truth": {
+      "crop": "potato",
+      "disease_class": "healthy",
+      "source_group_id": "POTATO_HEALTHY_GRP_0043"
+    },
+    "keras": {
+      "species": "Potato",
+      "species_confidence": 0.9925,
+      "disease": "Healthy",
+      "disease_confidence": 0.902,
+      "safety_status": "confident",
+      "species_probabilities": {
+        "Potato": 0.9925,
+        "Tomato": 0.0075
+      },
+      "probabilities": {
+        "Early Blight": 0.0001,
+        "Late Blight": 0.0979,
+        "Healthy": 0.902
+      }
+    },
+    "onnx": {
+      "species": "Potato",
+      "species_confidence": 0.9925,
+      "disease": "Healthy",
+      "disease_confidence": 0.902,
+      "safety_status": "confident"
+    }
+  },
+  {
+    "path": "dataset/potato/healthy/potato_healthy_26.JPG",
+    "ground_truth": {
+      "crop": "potato",
+      "disease_class": "healthy",
+      "source_group_id": "POTATO_HEALTHY_GRP_0045"
+    },
+    "keras": {
+      "species": "Potato",
+      "species_confidence": 0.9938,
+      "disease": "Healthy",
+      "disease_confidence": 0.9938,
+      "safety_status": "confident",
+      "species_probabilities": {
+        "Potato": 0.9938,
+        "Tomato": 0.0062
+      },
+      "probabilities": {
+        "Early Blight": 0.0,
+        "Late Blight": 0.0062,
+        "Healthy": 0.9938
+      }
+    },
+    "onnx": {
+      "species": "Potato",
+      "species_confidence": 0.9938,
+      "disease": "Healthy",
+      "disease_confidence": 0.9938,
+      "safety_status": "confident"
+    }
+  },
+  {
+    "path": "dataset/potato/healthy/potato_healthy_211_gblr_1.JPG",
+    "ground_truth": {
+      "crop": "potato",
+      "disease_class": "healthy",
+      "source_group_id": "POTATO_HEALTHY_GRP_0049"
+    },
+    "keras": {
+      "species": "Potato",
+      "species_confidence": 0.9906,
+      "disease": "Healthy",
+      "disease_confidence": 0.9484,
+      "safety_status": "confident",
+      "species_probabilities": {
+        "Potato": 0.9906,
+        "Tomato": 0.0094
+      },
+      "probabilities": {
+        "Early Blight": 0.0022,
+        "Late Blight": 0.0494,
+        "Healthy": 0.9484
+      }
+    },
+    "onnx": {
+      "species": "Potato",
+      "species_confidence": 0.9906,
+      "disease": "Healthy",
+      "disease_confidence": 0.9484,
+      "safety_status": "confident"
+    }
+  },
+  {
+    "path": "dataset/potato/healthy/potato_healthy_160_gblr_1.JPG",
+    "ground_truth": {
+      "crop": "potato",
+      "disease_class": "healthy",
+      "source_group_id": "POTATO_HEALTHY_GRP_0058"
+    },
+    "keras": {
+      "species": "Potato",
+      "species_confidence": 0.9999,
+      "disease": "Healthy",
+      "disease_confidence": 0.9826,
+      "safety_status": "confident",
+      "species_probabilities": {
+        "Potato": 0.9999,
+        "Tomato": 0.0001
+      },
+      "probabilities": {
+        "Early Blight": 0.0012,
+        "Late Blight": 0.0162,
+        "Healthy": 0.9826
+      }
+    },
+    "onnx": {
+      "species": "Potato",
+      "species_confidence": 0.9999,
+      "disease": "Healthy",
+      "disease_confidence": 0.9826,
+      "safety_status": "confident"
+    }
+  },
+  {
+    "path": "dataset/potato/healthy/potato_healthy_164_gblr_1.JPG",
+    "ground_truth": {
+      "crop": "potato",
+      "disease_class": "healthy",
+      "source_group_id": "POTATO_HEALTHY_GRP_0059"
+    },
+    "keras": {
+      "species": "Potato",
+      "species_confidence": 0.9989,
+      "disease": "Healthy",
+      "disease_confidence": 0.996,
+      "safety_status": "confident",
+      "species_probabilities": {
+        "Potato": 0.9989,
+        "Tomato": 0.0011
+      },
+      "probabilities": {
+        "Early Blight": 0.0005,
+        "Late Blight": 0.0034,
+        "Healthy": 0.996
+      }
+    },
+    "onnx": {
+      "species": "Potato",
+      "species_confidence": 0.9989,
+      "disease": "Healthy",
+      "disease_confidence": 0.996,
+      "safety_status": "confident"
+    }
+  },
+  {
+    "path": "dataset/potato/healthy/potato_healthy_41.JPG",
+    "ground_truth": {
+      "crop": "potato",
+      "disease_class": "healthy",
+      "source_group_id": "POTATO_HEALTHY_GRP_0062"
+    },
+    "keras": {
+      "species": "Potato",
+      "species_confidence": 0.9797,
+      "disease": "Healthy",
+      "disease_confidence": 0.9928,
+      "safety_status": "confident",
+      "species_probabilities": {
+        "Potato": 0.9797,
+        "Tomato": 0.0203
+      },
+      "probabilities": {
+        "Early Blight": 0.0001,
+        "Late Blight": 0.007,
+        "Healthy": 0.9928
+      }
+    },
+    "onnx": {
+      "species": "Potato",
+      "species_confidence": 0.9797,
+      "disease": "Healthy",
+      "disease_confidence": 0.9928,
+      "safety_status": "confident"
+    }
+  },
+  {
+    "path": "dataset/tomato/Early_blight/tomato_early_124.JPG",
+    "ground_truth": {
+      "crop": "tomato",
+      "disease_class": "Early_blight",
+      "source_group_id": "TOMATO_EARLY_BLIGHT_GRP_0009"
+    },
+    "keras": {
+      "species": "Tomato",
+      "species_confidence": 1.0,
+      "disease": "Early Blight",
+      "disease_confidence": 0.9224,
+      "safety_status": "confident",
+      "species_probabilities": {
+        "Potato": 0.0,
+        "Tomato": 1.0
+      },
+      "probabilities": {
+        "Early Blight": 0.9224,
+        "Late Blight": 0.0755,
+        "Healthy": 0.002
+      }
+    },
+    "onnx": {
+      "species": "Tomato",
+      "species_confidence": 1.0,
+      "disease": "Early Blight",
+      "disease_confidence": 0.9224,
+      "safety_status": "confident"
+    }
+  },
+  {
+    "path": "dataset/tomato/Early_blight/tomato_early_40.JPG",
+    "ground_truth": {
+      "crop": "tomato",
+      "disease_class": "Early_blight",
+      "source_group_id": "TOMATO_EARLY_BLIGHT_GRP_0085"
+    },
+    "keras": {
+      "species": "Tomato",
+      "species_confidence": 0.9996,
+      "disease": "Early Blight",
+      "disease_confidence": 0.5076,
+      "safety_status": "disease_uncertain",
+      "species_probabilities": {
+        "Potato": 0.0004,
+        "Tomato": 0.9996
+      },
+      "probabilities": {
+        "Early Blight": 0.5076,
+        "Late Blight": 0.4921,
+        "Healthy": 0.0003
+      }
+    },
+    "onnx": {
+      "species": "Tomato",
+      "species_confidence": 0.9996,
+      "disease": "Early Blight",
+      "disease_confidence": 0.5076,
+      "safety_status": "disease_uncertain"
+    }
+  },
+  {
+    "path": "dataset/tomato/Early_blight/tomato_early_56.JPG",
+    "ground_truth": {
+      "crop": "tomato",
+      "disease_class": "Early_blight",
+      "source_group_id": "TOMATO_EARLY_BLIGHT_GRP_0159"
+    },
+    "keras": {
+      "species": "Tomato",
+      "species_confidence": 0.787,
+      "disease": null,
+      "disease_confidence": null,
+      "safety_status": "species_uncertain",
+      "species_probabilities": {
+        "Potato": 0.213,
+        "Tomato": 0.787
+      },
+      "probabilities": {}
+    },
+    "onnx": {
+      "species": "Tomato",
+      "species_confidence": 0.787,
+      "disease": null,
+      "disease_confidence": null,
+      "safety_status": "species_uncertain"
+    }
+  },
+  {
+    "path": "dataset/tomato/Early_blight/tomato_early_675.JPG",
+    "ground_truth": {
+      "crop": "tomato",
+      "disease_class": "Early_blight",
+      "source_group_id": "TOMATO_EARLY_BLIGHT_GRP_0225"
+    },
+    "keras": {
+      "species": "Tomato",
+      "species_confidence": 0.9998,
+      "disease": "Early Blight",
+      "disease_confidence": 0.9447,
+      "safety_status": "confident",
+      "species_probabilities": {
+        "Potato": 0.0002,
+        "Tomato": 0.9998
+      },
+      "probabilities": {
+        "Early Blight": 0.9447,
+        "Late Blight": 0.0539,
+        "Healthy": 0.0014
+      }
+    },
+    "onnx": {
+      "species": "Tomato",
+      "species_confidence": 0.9998,
+      "disease": "Early Blight",
+      "disease_confidence": 0.9447,
+      "safety_status": "confident"
+    }
+  },
+  {
+    "path": "dataset/tomato/Early_blight/tomato_early_725.JPG",
+    "ground_truth": {
+      "crop": "tomato",
+      "disease_class": "Early_blight",
+      "source_group_id": "TOMATO_EARLY_BLIGHT_GRP_0277"
+    },
+    "keras": {
+      "species": "Tomato",
+      "species_confidence": 0.9994,
+      "disease": "Early Blight",
+      "disease_confidence": 0.8892,
+      "safety_status": "confident",
+      "species_probabilities": {
+        "Potato": 0.0006,
+        "Tomato": 0.9994
+      },
+      "probabilities": {
+        "Early Blight": 0.8892,
+        "Late Blight": 0.1074,
+        "Healthy": 0.0034
+      }
+    },
+    "onnx": {
+      "species": "Tomato",
+      "species_confidence": 0.9994,
+      "disease": "Early Blight",
+      "disease_confidence": 0.8892,
+      "safety_status": "confident"
+    }
+  },
+  {
+    "path": "dataset/tomato/Early_blight/tomato_early_80.JPG",
+    "ground_truth": {
+      "crop": "tomato",
+      "disease_class": "Early_blight",
+      "source_group_id": "TOMATO_EARLY_BLIGHT_GRP_0354"
+    },
+    "keras": {
+      "species": "Tomato",
+      "species_confidence": 0.989,
+      "disease": "Early Blight",
+      "disease_confidence": 0.9246,
+      "safety_status": "confident",
+      "species_probabilities": {
+        "Potato": 0.011,
+        "Tomato": 0.989
+      },
+      "probabilities": {
+        "Early Blight": 0.9246,
+        "Late Blight": 0.0754,
+        "Healthy": 0.0
+      }
+    },
+    "onnx": {
+      "species": "Tomato",
+      "species_confidence": 0.989,
+      "disease": "Early Blight",
+      "disease_confidence": 0.9246,
+      "safety_status": "confident"
+    }
+  },
+  {
+    "path": "dataset/tomato/Early_blight/tomato_early_850.JPG",
+    "ground_truth": {
+      "crop": "tomato",
+      "disease_class": "Early_blight",
+      "source_group_id": "TOMATO_EARLY_BLIGHT_GRP_0406"
+    },
+    "keras": {
+      "species": "Tomato",
+      "species_confidence": 0.9996,
+      "disease": "Early Blight",
+      "disease_confidence": 0.8093,
+      "safety_status": "confident",
+      "species_probabilities": {
+        "Potato": 0.0004,
+        "Tomato": 0.9996
+      },
+      "probabilities": {
+        "Early Blight": 0.8093,
+        "Late Blight": 0.188,
+        "Healthy": 0.0027
+      }
+    },
+    "onnx": {
+      "species": "Tomato",
+      "species_confidence": 0.9996,
+      "disease": "Early Blight",
+      "disease_confidence": 0.8093,
+      "safety_status": "confident"
+    }
+  },
+  {
+    "path": "dataset/tomato/Early_blight/tomato_early_914.JPG",
+    "ground_truth": {
+      "crop": "tomato",
+      "disease_class": "Early_blight",
+      "source_group_id": "TOMATO_EARLY_BLIGHT_GRP_0471"
+    },
+    "keras": {
+      "species": "Tomato",
+      "species_confidence": 0.9998,
+      "disease": "Early Blight",
+      "disease_confidence": 0.6752,
+      "safety_status": "disease_uncertain",
+      "species_probabilities": {
+        "Potato": 0.0002,
+        "Tomato": 0.9998
+      },
+      "probabilities": {
+        "Early Blight": 0.6752,
+        "Late Blight": 0.3201,
+        "Healthy": 0.0047
+      }
+    },
+    "onnx": {
+      "species": "Tomato",
+      "species_confidence": 0.9998,
+      "disease": "Early Blight",
+      "disease_confidence": 0.6752,
+      "safety_status": "disease_uncertain"
+    }
+  },
+  {
+    "path": "dataset/tomato/Late_blight/tomato_late_1003.JPG",
+    "ground_truth": {
+      "crop": "tomato",
+      "disease_class": "Late_blight",
+      "source_group_id": "TOMATO_LATE_BLIGHT_GRP_0004"
+    },
+    "keras": {
+      "species": "Tomato",
+      "species_confidence": 0.9995,
+      "disease": "Late Blight",
+      "disease_confidence": 0.4923,
+      "safety_status": "late_blight_uncertain",
+      "species_probabilities": {
+        "Potato": 0.0005,
+        "Tomato": 0.9995
+      },
+      "probabilities": {
+        "Early Blight": 0.2754,
+        "Late Blight": 0.4923,
+        "Healthy": 0.2323
+      }
+    },
+    "onnx": {
+      "species": "Tomato",
+      "species_confidence": 0.9995,
+      "disease": "Late Blight",
+      "disease_confidence": 0.4923,
+      "safety_status": "late_blight_uncertain"
+    }
+  },
+  {
+    "path": "dataset/tomato/Late_blight/tomato_late_1174.JPG",
+    "ground_truth": {
+      "crop": "tomato",
+      "disease_class": "Late_blight",
+      "source_group_id": "TOMATO_LATE_BLIGHT_GRP_0174"
+    },
+    "keras": {
+      "species": "Tomato",
+      "species_confidence": 0.9997,
+      "disease": "Late Blight",
+      "disease_confidence": 0.9985,
+      "safety_status": "confident",
+      "species_probabilities": {
+        "Potato": 0.0003,
+        "Tomato": 0.9997
+      },
+      "probabilities": {
+        "Early Blight": 0.0015,
+        "Late Blight": 0.9985,
+        "Healthy": 0.0
+      }
+    },
+    "onnx": {
+      "species": "Tomato",
+      "species_confidence": 0.9997,
+      "disease": "Late Blight",
+      "disease_confidence": 0.9985,
+      "safety_status": "confident"
+    }
+  },
+  {
+    "path": "dataset/tomato/Late_blight/tomato_late_1308.JPG",
+    "ground_truth": {
+      "crop": "tomato",
+      "disease_class": "Late_blight",
+      "source_group_id": "TOMATO_LATE_BLIGHT_GRP_0308"
+    },
+    "keras": {
+      "species": "Tomato",
+      "species_confidence": 1.0,
+      "disease": "Late Blight",
+      "disease_confidence": 0.9994,
+      "safety_status": "confident",
+      "species_probabilities": {
+        "Potato": 0.0,
+        "Tomato": 1.0
+      },
+      "probabilities": {
+        "Early Blight": 0.0005,
+        "Late Blight": 0.9994,
+        "Healthy": 0.0001
+      }
+    },
+    "onnx": {
+      "species": "Tomato",
+      "species_confidence": 1.0,
+      "disease": "Late Blight",
+      "disease_confidence": 0.9994,
+      "safety_status": "confident"
+    }
+  },
+  {
+    "path": "dataset/tomato/Late_blight/tomato_late_1491.JPG",
+    "ground_truth": {
+      "crop": "tomato",
+      "disease_class": "Late_blight",
+      "source_group_id": "TOMATO_LATE_BLIGHT_GRP_0490"
+    },
+    "keras": {
+      "species": "Tomato",
+      "species_confidence": 0.9722,
+      "disease": "Late Blight",
+      "disease_confidence": 0.9359,
+      "safety_status": "confident",
+      "species_probabilities": {
+        "Potato": 0.0278,
+        "Tomato": 0.9722
+      },
+      "probabilities": {
+        "Early Blight": 0.064,
+        "Late Blight": 0.9359,
+        "Healthy": 0.0001
+      }
+    },
+    "onnx": {
+      "species": "Tomato",
+      "species_confidence": 0.9722,
+      "disease": "Late Blight",
+      "disease_confidence": 0.9359,
+      "safety_status": "confident"
+    }
+  },
+  {
+    "path": "dataset/tomato/Late_blight/tomato_late_1676.JPG",
+    "ground_truth": {
+      "crop": "tomato",
+      "disease_class": "Late_blight",
+      "source_group_id": "TOMATO_LATE_BLIGHT_GRP_0673"
+    },
+    "keras": {
+      "species": "Tomato",
+      "species_confidence": 0.9999,
+      "disease": "Late Blight",
+      "disease_confidence": 0.8007,
+      "safety_status": "late_blight_uncertain",
+      "species_probabilities": {
+        "Potato": 0.0001,
+        "Tomato": 0.9999
+      },
+      "probabilities": {
+        "Early Blight": 0.1988,
+        "Late Blight": 0.8007,
+        "Healthy": 0.0005
+      }
+    },
+    "onnx": {
+      "species": "Tomato",
+      "species_confidence": 0.9999,
+      "disease": "Late Blight",
+      "disease_confidence": 0.8007,
+      "safety_status": "late_blight_uncertain"
+    }
+  },
+  {
+    "path": "dataset/tomato/Late_blight/tomato_late_1771.JPG",
+    "ground_truth": {
+      "crop": "tomato",
+      "disease_class": "Late_blight",
+      "source_group_id": "TOMATO_LATE_BLIGHT_GRP_0766"
+    },
+    "keras": {
+      "species": "Potato",
+      "species_confidence": 0.9114,
+      "disease": "Late Blight",
+      "disease_confidence": 0.9874,
+      "safety_status": "confident",
+      "species_probabilities": {
+        "Potato": 0.9114,
+        "Tomato": 0.0886
+      },
+      "probabilities": {
+        "Early Blight": 0.0058,
+        "Late Blight": 0.9874,
+        "Healthy": 0.0068
+      }
+    },
+    "onnx": {
+      "species": "Potato",
+      "species_confidence": 0.9114,
+      "disease": "Late Blight",
+      "disease_confidence": 0.9874,
+      "safety_status": "confident"
+    }
+  },
+  {
+    "path": "dataset/tomato/Late_blight/tomato_late_1908.JPG",
+    "ground_truth": {
+      "crop": "tomato",
+      "disease_class": "Late_blight",
+      "source_group_id": "TOMATO_LATE_BLIGHT_GRP_0903"
+    },
+    "keras": {
+      "species": "Tomato",
+      "species_confidence": 0.9117,
+      "disease": "Late Blight",
+      "disease_confidence": 0.9901,
+      "safety_status": "confident",
+      "species_probabilities": {
+        "Potato": 0.0883,
+        "Tomato": 0.9117
+      },
+      "probabilities": {
+        "Early Blight": 0.0098,
+        "Late Blight": 0.9901,
+        "Healthy": 0.0001
+      }
+    },
+    "onnx": {
+      "species": "Tomato",
+      "species_confidence": 0.9117,
+      "disease": "Late Blight",
+      "disease_confidence": 0.9901,
+      "safety_status": "confident"
+    }
+  },
+  {
+    "path": "dataset/tomato/Late_blight/tomato_late_705.JPG",
+    "ground_truth": {
+      "crop": "tomato",
+      "disease_class": "Late_blight",
+      "source_group_id": "TOMATO_LATE_BLIGHT_GRP_1074"
+    },
+    "keras": {
+      "species": "Tomato",
+      "species_confidence": 0.9966,
+      "disease": "Healthy",
+      "disease_confidence": 0.9842,
+      "safety_status": "confident",
+      "species_probabilities": {
+        "Potato": 0.0034,
+        "Tomato": 0.9966
+      },
+      "probabilities": {
+        "Early Blight": 0.0043,
+        "Late Blight": 0.0115,
+        "Healthy": 0.9842
+      }
+    },
+    "onnx": {
+      "species": "Tomato",
+      "species_confidence": 0.9966,
+      "disease": "Healthy",
+      "disease_confidence": 0.9842,
+      "safety_status": "confident"
+    }
+  },
+  {
+    "path": "dataset/tomato/healthy/tomato_healthy_1005.JPG",
+    "ground_truth": {
+      "crop": "tomato",
+      "disease_class": "healthy",
+      "source_group_id": "TOMATO_HEALTHY_GRP_0006"
+    },
+    "keras": {
+      "species": "Tomato",
+      "species_confidence": 0.9984,
+      "disease": "Healthy",
+      "disease_confidence": 0.9969,
+      "safety_status": "confident",
+      "species_probabilities": {
+        "Potato": 0.0016,
+        "Tomato": 0.9984
+      },
+      "probabilities": {
+        "Early Blight": 0.0016,
+        "Late Blight": 0.0016,
+        "Healthy": 0.9969
+      }
+    },
+    "onnx": {
+      "species": "Tomato",
+      "species_confidence": 0.9984,
+      "disease": "Healthy",
+      "disease_confidence": 0.9969,
+      "safety_status": "confident"
+    }
+  },
+  {
+    "path": "dataset/tomato/healthy/tomato_healthy_1135.JPG",
+    "ground_truth": {
+      "crop": "tomato",
+      "disease_class": "healthy",
+      "source_group_id": "TOMATO_HEALTHY_GRP_0136"
+    },
+    "keras": {
+      "species": "Tomato",
+      "species_confidence": 0.9993,
+      "disease": "Healthy",
+      "disease_confidence": 0.9998,
+      "safety_status": "confident",
+      "species_probabilities": {
+        "Potato": 0.0007,
+        "Tomato": 0.9993
+      },
+      "probabilities": {
+        "Early Blight": 0.0002,
+        "Late Blight": 0.0001,
+        "Healthy": 0.9998
+      }
+    },
+    "onnx": {
+      "species": "Tomato",
+      "species_confidence": 0.9993,
+      "disease": "Healthy",
+      "disease_confidence": 0.9998,
+      "safety_status": "confident"
+    }
+  },
+  {
+    "path": "dataset/tomato/healthy/tomato_healthy_1275.JPG",
+    "ground_truth": {
+      "crop": "tomato",
+      "disease_class": "healthy",
+      "source_group_id": "TOMATO_HEALTHY_GRP_0276"
+    },
+    "keras": {
+      "species": "Tomato",
+      "species_confidence": 0.9999,
+      "disease": "Healthy",
+      "disease_confidence": 0.9994,
+      "safety_status": "confident",
+      "species_probabilities": {
+        "Potato": 0.0001,
+        "Tomato": 0.9999
+      },
+      "probabilities": {
+        "Early Blight": 0.0005,
+        "Late Blight": 0.0001,
+        "Healthy": 0.9994
+      }
+    },
+    "onnx": {
+      "species": "Tomato",
+      "species_confidence": 0.9999,
+      "disease": "Healthy",
+      "disease_confidence": 0.9994,
+      "safety_status": "confident"
+    }
+  },
+  {
+    "path": "dataset/tomato/healthy/tomato_healthy_1338.JPG",
+    "ground_truth": {
+      "crop": "tomato",
+      "disease_class": "healthy",
+      "source_group_id": "TOMATO_HEALTHY_GRP_0338"
+    },
+    "keras": {
+      "species": "Tomato",
+      "species_confidence": 0.9999,
+      "disease": "Healthy",
+      "disease_confidence": 0.9999,
+      "safety_status": "confident",
+      "species_probabilities": {
+        "Potato": 0.0001,
+        "Tomato": 0.9999
+      },
+      "probabilities": {
+        "Early Blight": 0.0001,
+        "Late Blight": 0.0,
+        "Healthy": 0.9999
+      }
+    },
+    "onnx": {
+      "species": "Tomato",
+      "species_confidence": 0.9999,
+      "disease": "Healthy",
+      "disease_confidence": 0.9999,
+      "safety_status": "confident"
+    }
+  },
+  {
+    "path": "dataset/tomato/healthy/tomato_healthy_1441.JPG",
+    "ground_truth": {
+      "crop": "tomato",
+      "disease_class": "healthy",
+      "source_group_id": "TOMATO_HEALTHY_GRP_0441"
+    },
+    "keras": {
+      "species": "Tomato",
+      "species_confidence": 0.9998,
+      "disease": "Healthy",
+      "disease_confidence": 0.9984,
+      "safety_status": "confident",
+      "species_probabilities": {
+        "Potato": 0.0002,
+        "Tomato": 0.9998
+      },
+      "probabilities": {
+        "Early Blight": 0.0015,
+        "Late Blight": 0.0001,
+        "Healthy": 0.9984
+      }
+    },
+    "onnx": {
+      "species": "Tomato",
+      "species_confidence": 0.9998,
+      "disease": "Healthy",
+      "disease_confidence": 0.9984,
+      "safety_status": "confident"
+    }
+  },
+  {
+    "path": "dataset/tomato/healthy/tomato_healthy_1569.JPG",
+    "ground_truth": {
+      "crop": "tomato",
+      "disease_class": "healthy",
+      "source_group_id": "TOMATO_HEALTHY_GRP_0569"
+    },
+    "keras": {
+      "species": "Tomato",
+      "species_confidence": 0.9422,
+      "disease": "Healthy",
+      "disease_confidence": 0.9985,
+      "safety_status": "confident",
+      "species_probabilities": {
+        "Potato": 0.0578,
+        "Tomato": 0.9422
+      },
+      "probabilities": {
+        "Early Blight": 0.0003,
+        "Late Blight": 0.0012,
+        "Healthy": 0.9985
+      }
+    },
+    "onnx": {
+      "species": "Tomato",
+      "species_confidence": 0.9422,
+      "disease": "Healthy",
+      "disease_confidence": 0.9985,
+      "safety_status": "confident"
+    }
+  },
+  {
+    "path": "dataset/tomato/healthy/tomato_healthy_742.JPG",
+    "ground_truth": {
+      "crop": "tomato",
+      "disease_class": "healthy",
+      "source_group_id": "TOMATO_HEALTHY_GRP_0697"
+    },
+    "keras": {
+      "species": "Tomato",
+      "species_confidence": 0.9999,
+      "disease": "Healthy",
+      "disease_confidence": 0.9997,
+      "safety_status": "confident",
+      "species_probabilities": {
+        "Potato": 0.0001,
+        "Tomato": 0.9999
+      },
+      "probabilities": {
+        "Early Blight": 0.0002,
+        "Late Blight": 0.0001,
+        "Healthy": 0.9997
+      }
+    },
+    "onnx": {
+      "species": "Tomato",
+      "species_confidence": 0.9999,
+      "disease": "Healthy",
+      "disease_confidence": 0.9997,
+      "safety_status": "confident"
+    }
+  },
+  {
+    "path": "dataset/tomato/healthy/tomato_healthy_869.JPG",
+    "ground_truth": {
+      "crop": "tomato",
+      "disease_class": "healthy",
+      "source_group_id": "TOMATO_HEALTHY_GRP_0824"
+    },
+    "keras": {
+      "species": "Tomato",
+      "species_confidence": 1.0,
+      "disease": "Healthy",
+      "disease_confidence": 0.9993,
+      "safety_status": "confident",
+      "species_probabilities": {
+        "Potato": 0.0,
+        "Tomato": 1.0
+      },
+      "probabilities": {
+        "Early Blight": 0.0005,
+        "Late Blight": 0.0002,
+        "Healthy": 0.9993
+      }
+    },
+    "onnx": {
+      "species": "Tomato",
+      "species_confidence": 1.0,
+      "disease": "Healthy",
+      "disease_confidence": 0.9993,
+      "safety_status": "confident"
+    }
+  }
+]

@@ -1,0 +1,429 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "LeafScan V3 \u2014 Plant Disease Detection API",
+    "description": "Hierarchical Two-Tier Foliar Screening with CBAM Attention for Solanaceous Crops (LeafScan V3 Production Engine)",
+    "version": "3.0.0"
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": ["System & Observability"],
+        "summary": "Lightweight Liveness Check",
+        "description": "Lightweight health check endpoint.\nReports operational status and model caching state without triggering model deserialization.\nPreserves exact backward-compatible contract for existing tests and monitoring.",
+        "operationId": "health_check_health_get",
+        "parameters": [
+          {
+            "name": "request_app_state",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "title": "Request App State"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Health Check Health Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ready": {
+      "get": {
+        "tags": ["System & Observability"],
+        "summary": "Readiness Probe",
+        "description": "Readiness endpoint for container orchestrators (Docker / Kubernetes).\nVerifies that model sessions are initialized, bundle is verified, and engine is operational.",
+        "operationId": "readiness_check_ready_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Readiness Check Ready Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/model": {
+      "get": {
+        "tags": ["System & Observability"],
+        "summary": "Active Model Information & Telemetry",
+        "description": "Returns read-only operational specifications and verified checksums for the active model bundle.",
+        "operationId": "model_info_v2_model_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Model Info V2 Model Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/metrics": {
+      "get": {
+        "tags": ["System & Observability"],
+        "summary": "Prometheus Metrics Exposition",
+        "description": "Exposes operational runtime metrics in standard Prometheus text format.",
+        "operationId": "prometheus_metrics_metrics_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/diagnose": {
+      "post": {
+        "tags": ["Diagnosis"],
+        "summary": "Execute Hierarchical Foliar Diagnosis",
+        "description": "Receives an uploaded leaf photograph and executes two-tier hierarchical screening:\n  1. Defensive payload size and image format verification.\n  2. Tier 1: Botanist Species Classification (Potato vs Tomato).\n  3. Safety Gate 1: 90% species confidence evaluation (abstains on uncertainty).\n  4. Tier 2: CBAM Crop Specialist (Early Blight, Late Blight, Healthy).\n  5. Safety Gate 2: 90% Late Blight escalation & 70% general disease threshold.",
+        "operationId": "diagnose_leaf_v2_diagnose_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_diagnose_leaf_v2_diagnose_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Diagnose Leaf V2 Diagnose Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
+    },
+    "/v2/feedback": {
+      "post": {
+        "tags": ["Feedback"],
+        "summary": "Submit Diagnostic Feedback",
+        "description": "Records field feedback or certified pathologist annotations regarding a diagnosis.\nEnforces idempotency and ensures unverified submissions are marked for human-in-the-loop audit.",
+        "operationId": "submit_feedback_v2_feedback_post",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FeedbackRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeedbackResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/": {
+      "get": {
+        "tags": ["Frontend"],
+        "summary": "Serve LeafScan SPA",
+        "operationId": "serve_index__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Body_diagnose_leaf_v2_diagnose_post": {
+        "properties": {
+          "image": {
+            "type": "string",
+            "contentMediaType": "application/octet-stream",
+            "title": "Image"
+          }
+        },
+        "type": "object",
+        "required": ["image"],
+        "title": "Body_diagnose_leaf_v2_diagnose_post"
+      },
+      "FeedbackRequest": {
+        "properties": {
+          "request_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Request Id",
+            "description": "Original request ID from diagnostic response"
+          },
+          "predicted_species": {
+            "type": "string",
+            "title": "Predicted Species",
+            "description": "Species predicted by the model"
+          },
+          "predicted_disease": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Predicted Disease",
+            "description": "Disease predicted by the model"
+          },
+          "observed_species": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Observed Species",
+            "description": "User or field agent observed species"
+          },
+          "observed_disease": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Observed Disease",
+            "description": "User or field agent observed disease"
+          },
+          "feedback_type": {
+            "type": "string",
+            "title": "Feedback Type",
+            "description": "Feedback classification: agree, disagree, unclear, expert_verified",
+            "default": "agree"
+          },
+          "agronomic_notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Agronomic Notes",
+            "description": "Additional field observations or laboratory results"
+          },
+          "idempotency_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Idempotency Key",
+            "description": "Idempotent transaction token"
+          }
+        },
+        "type": "object",
+        "required": ["predicted_species"],
+        "title": "FeedbackRequest"
+      },
+      "FeedbackResponse": {
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "title": "Success"
+          },
+          "feedback_id": {
+            "type": "string",
+            "title": "Feedback Id"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "idempotency_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Idempotency Key"
+          }
+        },
+        "type": "object",
+        "required": ["success", "feedback_id", "status", "message"],
+        "title": "FeedbackResponse"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": ["loc", "msg", "type"],
+        "title": "ValidationError"
+      }
+    },
+    "securitySchemes": {
+      "APIKeyHeader": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
+      }
+    }
+  }
+}

@@ -1,84 +1,186 @@
-# LeafScan V2 — API Contract Specification
-**Plant Disease Detection — Production V2**  
-*Document Version:* 2.0.0  
-*Base Path:* `/`  
-*Protocol:* HTTP/1.1, HTTP/2  
-*Content Type:* JSON (`application/json`), Multipart Form Data (`multipart/form-data`)
+# LeafScan V3 — REST API Contract Specification
+
+**Document Version:** 3.0.0  
+**Status:** Active Production Contract  
+**Protocol:** HTTP/1.1, HTTP/2  
+**Content Types:** `application/json`, `multipart/form-data`, `text/plain`  
 
 ---
 
-## 1. Overview
+## 1. Overview & Compatibility Guarantee
 
-The LeafScan V2 Web API provides high-throughput, low-latency REST endpoints for high-consequence agricultural plant pathology screening in Solanaceous crops (*Solanum tuberosum* and *Solanum lycopersicum*). It connects directly to the production two-tier hierarchical deep learning engine (`HierarchicalPredictorV2`) featuring MobileNetV2, Convolutional Block Attention Module (CBAM), and dual confidence safety gates.
+The LeafScan V3 Web API exposes high-throughput, low-latency REST endpoints for foliar disease screening in Solanaceous crops (*Solanum tuberosum* - Potato, and *Solanum lycopersicum* - Tomato).
+
+### Invariant Contract Rules
+1. **100% Invariant Response Fields:** All response fields existing in V2 (`success`, `model_version`, `plant_species`, `species_confidence`, `disease`, `disease_confidence`, `diagnosis`, `safety_status`, `safety_warnings`, `advisory`, `species_probabilities`, `probabilities`, `metadata`) are preserved with exact key names, types, and rounding policies.
+2. **Additive Metadata Only:** Additive response telemetry (`request_id`, `model_bundle`) is placed within the `metadata` dictionary or HTTP headers, never modifying existing key paths.
+3. **Deterministic Error Envelope:** Error responses always follow the standard `{success: false, model_version: "v2", ... error: {type, message, code}}` schema.
 
 ---
 
-## 2. Authentication & Authorization
+## 2. Authentication & Headers
 
-All endpoints in the local diagnostic service run without API key authentication in the default deployment. CORS is configured for same-origin browser access and local development interfaces (`http://127.0.0.1:8000`, `http://localhost:8000`, `http://127.0.0.1:3000`, `http://localhost:3000`).
+| Header | Type | Description |
+|---|---|---|
+| `X-Request-ID` | String (Optional) | Client-supplied tracing identifier. If omitted, the server generates a unique ID (`req_<12 hex>`) and returns it in the response header. |
+| `X-API-Key` | String (Optional) | Required only when `LEAFSCAN_API_KEY_AUTH_ENABLED=true`. Authenticates integrator via SHA-256 hash comparison. |
 
 ---
 
-## 3. Endpoints
-
-### 3.1 System Health Check
+## 3. Endpoint Inventory
 
 ```http
-GET /health
+GET  /health
+GET  /ready
+GET  /v2/model
+GET  /metrics
+POST /v2/diagnose
+GET  /
+GET  /index.html
+GET  /css/{path}
+GET  /js/{path}
+GET  /assets/{path}
 ```
 
-#### Purpose
-Lightweight probe for container liveness, readiness, and monitoring. Reports operational status and model caching telemetry without triggering heavy model deserialization if not yet cached.
+---
 
-#### Request Headers
-| Header | Value | Description |
-|---|---|---|
-| `Accept` | `application/json` | Preferred response format |
+## 4. Endpoint Specifications
 
-#### Response (200 OK)
+### 4.1 System Liveness Check (`GET /health`)
+Lightweight liveness probe for basic process reachability. Does not execute model deserialization.
+
+**Response (200 OK):**
 ```json
 {
   "status": "healthy",
   "model_version": "v2",
   "architecture": "MobileNetV2 + CBAM Attention",
-  "models_loaded": false
+  "models_loaded": true
 }
 ```
 
-#### Response Field Definitions
-| Field | Type | Description |
-|---|---|---|
-| `status` | string | Operational state (`"healthy"`) |
-| `model_version` | string | Target model suite iteration (`"v2"`) |
-| `architecture` | string | Underlying network backbone specification |
-| `models_loaded` | boolean | `true` if deep learning model weights are actively resident in memory |
-
 ---
 
-### 3.2 Hierarchical Diagnostic Screening
+### 4.2 System Readiness Probe (`GET /ready`)
+Readiness probe verifying that model sessions are warmed up, cryptographic hashes match the manifest, and the inference engine is operational.
 
-```http
-POST /v2/diagnose
+**Response (200 OK):**
+```json
+{
+  "status": "ready",
+  "bundle_version": "v3.0.0",
+  "engine": "OnnxEngine",
+  "execution_provider": "CPUExecutionProvider",
+  "models_verified": [
+    "species_expert",
+    "potato_expert",
+    "tomato_expert"
+  ]
+}
 ```
 
-#### Purpose
-Accepts an uploaded foliar leaf photograph, executes defensive validation and resizing to \(224 \times 224 \times 3\), passes the image through Tier 1 Botanist Species classification, evaluates Safety Gate 1, routes to the appropriate Tier 2 CBAM Specialist, evaluates Safety Gate 2, and returns actionable agronomic decision-support telemetry.
-
-#### Request Format
-- **Content-Type:** `multipart/form-data`
-- **Maximum Payload Size:** 10 MB (10,485,760 bytes)
-- **Supported Image Formats:** JPEG (`image/jpeg`), PNG (`image/png`), WebP (`image/webp`)
-
-#### Form Parameters
-| Field Name | Type | Required | Description |
-|---|---|:---:|---|
-| `image` | binary file | **YES** | Raw image file of the leaf specimen |
+**Response (503 Service Unavailable):** Returned if the model bundle failed verification or sessions are uninitialized.
 
 ---
 
-#### Successful Diagnostic Response (200 OK)
+### 4.3 Model Bundle Information (`GET /v2/model`)
+Returns read-only operational telemetry, input specifications, safety gate thresholds, and evaluation metrics for the active release bundle.
 
-##### Case A: High-Confidence Diagnosis (`confident`)
+**Response (200 OK):**
+```json
+{
+  "bundle_name": "LeafScan Hierarchical Solanaceous Diagnosis Bundle",
+  "bundle_version": "v3.0.0",
+  "runtime": "onnxruntime",
+  "opset": 17,
+  "disclaimer": "This deep learning model provides automated screening assistance...",
+  "models": {
+    "species_expert": {
+      "filename": "species_expert.onnx",
+      "architecture": "MobileNetV2",
+      "sha256": "eb3dd0cc145620406cdf37f3f1f7581634a67a5675cf82b04f85183305afa912",
+      "classes": ["Potato", "Tomato"],
+      "input_node": "input_tensor",
+      "output_node": "species_output"
+    },
+    "potato_expert": {
+      "filename": "potato_expert.onnx",
+      "architecture": "MobileNetV2 + CBAM Attention",
+      "sha256": "5c4d6b39fcf760c9b052c832aa37948c1ca297692f9c17de5c63b7eb208d15ef",
+      "classes": ["Early Blight", "Late Blight", "Healthy"],
+      "input_node": "input_tensor",
+      "output_node": "disease_output"
+    },
+    "tomato_expert": {
+      "filename": "tomato_expert.onnx",
+      "architecture": "MobileNetV2 + CBAM Attention",
+      "sha256": "68a08551ca9b3e25d2d9569d67350ffeda30bdfb89666e7b1313b6016ca91d45",
+      "classes": ["Early Blight", "Late Blight", "Healthy"],
+      "input_node": "input_tensor",
+      "output_node": "disease_output"
+    }
+  },
+  "safety_gates": {
+    "species_confidence_threshold": 0.90,
+    "late_blight_confidence_threshold": 0.90,
+    "general_disease_confidence_threshold": 0.70
+  },
+  "input_spec": {
+    "image_size": [224, 224],
+    "channels": 3,
+    "color_mode": "RGB",
+    "dtype": "float32",
+    "rescaling_range": [0.0, 255.0],
+    "max_decoded_pixels": 40000000,
+    "interpolation": "bilinear",
+    "alpha_matting_background": [255, 255, 255]
+  },
+  "engine_info": {
+    "name": "OnnxEngine",
+    "provider": "CPUExecutionProvider",
+    "intra_op_threads": 2,
+    "inter_op_threads": 1
+  },
+  "metrics": {
+    "species_expert": {"accuracy": 0.9801, "macro_f1": 0.9767},
+    "potato_expert": {"accuracy": 0.9784, "macro_f1": 0.9673},
+    "tomato_expert": {"accuracy": 0.8995, "macro_f1": 0.8870}
+  }
+}
+```
+
+---
+
+### 4.4 Prometheus Metrics (`GET /metrics`)
+Exposes live operational metrics formatted for Prometheus scrapers and Grafana dashboards.
+
+**Response (200 OK, `text/plain`):**
+```text
+# HELP leafscan_requests_total Total HTTP requests handled
+# TYPE leafscan_requests_total counter
+leafscan_requests_total{endpoint="/v2/diagnose",status="200"} 42
+# HELP leafscan_model_load_duration_ms Model initialization duration in milliseconds
+# TYPE leafscan_model_load_duration_ms gauge
+leafscan_model_load_duration_ms{bundle="v3.0.0"} 163.17
+# HELP leafscan_inference_latency_ms Inference latency summary in milliseconds
+# TYPE leafscan_inference_latency_ms summary
+leafscan_inference_latency_ms{quantile="0.5"} 16.98
+leafscan_inference_latency_ms{quantile="0.95"} 20.16
+leafscan_inference_latency_ms{quantile="0.99"} 21.48
+```
+
+---
+
+### 4.5 Hierarchical Foliar Diagnosis (`POST /v2/diagnose`)
+Consumes a leaf photograph, normalizes EXIF orientation, applies white alpha-matting, executes two-tier ONNX screening, enforces safety gates, and returns diagnostic results.
+
+**Request:**
+- **Method:** `POST`
+- **Content-Type:** `multipart/form-data`
+- **Field Name:** `image` (binary file)
+- **Limits:** Byte size `<= 10 MB`, format in `{"JPEG", "PNG", "WEBP"}`, decoded pixels `<= 40 MP`.
+
+#### Successful Response: Confirmed Diagnosis (200 OK)
 ```json
 {
   "success": true,
@@ -90,7 +192,7 @@ Accepts an uploaded foliar leaf photograph, executes defensive validation and re
   "diagnosis": "Potato - Early Blight",
   "safety_status": "confident",
   "safety_warnings": [],
-  "advisory": "EARLY BLIGHT DETECTED: Symptoms are characteristic of Early Blight (Alternaria solani) with high diagnostic confidence. Recommended management options: prune lower senescent leaves to minimize soil-splash inoculation; ensure proper plant spacing for canopy drying. If chemical control is warranted, consult certified agricultural extension guidelines for locally approved preventive fungicides.",
+  "advisory": "EARLY BLIGHT DETECTED: Symptoms are characteristic of Early Blight (Alternaria solani)...",
   "species_probabilities": {
     "Potato": 0.9850,
     "Tomato": 0.0150
@@ -101,40 +203,44 @@ Accepts an uploaded foliar leaf photograph, executes defensive validation and re
     "Healthy": 0.0050
   },
   "metadata": {
-    "execution_time_ms": 1184.32,
-    "architecture": "MobileNetV2 + CBAM Attention"
+    "execution_time_ms": 17.20,
+    "architecture": "MobileNetV2 + CBAM Attention",
+    "model_bundle": "v3.0.0",
+    "request_id": "req_8a7d1f2c"
   }
 }
 ```
 
-##### Case B: Species Uncertain Abstention (`species_uncertain` — Gate 1 Triggered)
+#### Successful Response: Species Uncertain (200 OK, Abstained)
 ```json
 {
   "success": true,
   "model_version": "v2",
   "plant_species": "Tomato",
-  "species_confidence": 0.7420,
+  "species_confidence": 0.7245,
   "disease": null,
   "disease_confidence": null,
   "diagnosis": "Tomato (Abstained - Species Uncertain)",
   "safety_status": "species_uncertain",
   "safety_warnings": [
-    "Species confidence (74.20%) is below the safety threshold (90%). Disease classification abstained to prevent crop misdiagnosis."
+    "Species confidence (72.45%) is below the safety threshold (90%). Disease classification abstained to prevent crop misdiagnosis."
   ],
   "advisory": "SPECIES UNCERTAINTY: Automated botanist confidence is below the safety threshold (<90%). Specimen disease diagnosis has been abstained to avoid crop misdiagnosis. Provide a clear, well-lit photograph showing leaf margins and venation, or submit a sample to an accredited agricultural extension laboratory. Do NOT apply chemical treatments to unverified plant species.",
   "species_probabilities": {
-    "Potato": 0.2580,
-    "Tomato": 0.7420
+    "Potato": 0.2755,
+    "Tomato": 0.7245
   },
   "probabilities": {},
   "metadata": {
-    "execution_time_ms": 38.90,
-    "architecture": "MobileNetV2 + CBAM Attention"
+    "execution_time_ms": 9.45,
+    "architecture": "MobileNetV2 + CBAM Attention",
+    "model_bundle": "v3.0.0",
+    "request_id": "req_f82e3b1a"
   }
 }
 ```
 
-##### Case C: Late Blight Uncertainty Escalation (`late_blight_uncertain` — Gate 2 Triggered)
+#### Successful Response: Late Blight Uncertainty (200 OK, High-Consequence Warning)
 ```json
 {
   "success": true,
@@ -159,115 +265,26 @@ Accepts an uploaded foliar leaf photograph, executes defensive validation and re
     "Healthy": 0.0017
   },
   "metadata": {
-    "execution_time_ms": 1225.97,
-    "architecture": "MobileNetV2 + CBAM Attention"
+    "execution_time_ms": 18.52,
+    "architecture": "MobileNetV2 + CBAM Attention",
+    "model_bundle": "v3.0.0",
+    "request_id": "req_a1c2e3f4"
   }
 }
 ```
 
 ---
 
-## 4. Response Field Schema & Nullability
+## 5. Machine-Readable Error Codes & HTTP Status
 
-| Field | Type | Nullable | Description |
-|---|---|:---:|---|
-| `success` | boolean | No | `true` if inference completed successfully |
-| `model_version` | string | No | Deep learning architecture release identifier (`"v2"`) |
-| `plant_species` | string | Yes | Predicted botanical species (`"Potato"` or `"Tomato"`) |
-| `species_confidence`| float | No | Softmax probability for identified species \([0.0, 1.0]\) |
-| `disease` | string | **Yes** | Identified pathology condition. **`null` if Gate 1 abstains.** |
-| `disease_confidence`| float | **Yes** | Specialist softmax confidence. **`null` if Gate 1 abstains.** |
-| `diagnosis` | string | No | Human-readable composite diagnosis label |
-| `safety_status` | string | No | One of: `"confident"`, `"species_uncertain"`, `"late_blight_uncertain"`, `"disease_uncertain"`, `"error"` |
-| `safety_warnings` | string[] | No | Array of active diagnostic and safety alerts |
-| `advisory` | string | No | Actionable agronomic recommendation and risk mitigation instructions |
-| `species_probabilities` | object | No | Key-value pairs of species softmax probabilities |
-| `probabilities` | object | No | Key-value pairs of disease softmax probabilities. **Empty `{}` if Gate 1 abstains.** |
-| `metadata` | object | No | Nested execution telemetry |
-| `metadata.execution_time_ms` | float | Yes | CPU inference latency in milliseconds |
-| `metadata.architecture` | string | No | Model architecture summary string |
-
----
-
-## 5. HTTP Error Codes & Schemas
-
-| HTTP Status | Error Type | Trigger Condition |
+| HTTP Status | Machine Error Code | Trigger Condition |
 |---|---|---|
-| `400 Bad Request` | Client Error | Empty upload payload, unreadable stream, or damaged raster image |
-| `413 Payload Too Large` | Client Error | Uploaded file size exceeds the 10 MB maximum limit |
-| `415 Unsupported Media Type` | Client Error | Image is not JPEG, PNG, or WebP (e.g. BMP, TIFF, GIF, PDF) |
-| `422 Unprocessable Entity` | Validation Error | Missing required multipart form field `image` |
-| `500 Internal Server Error` | Server Error | Unhandled neural network or inference pipeline execution exception |
-
-#### Standard Validation Error Body (`400`, `413`, `415`, `422`)
-```json
-{
-  "detail": "Unsupported image format 'BMP'. Allowed formats: JPEG, PNG, WEBP."
-}
-```
-
-#### Structured Server Error Body (`500`)
-```json
-{
-  "success": false,
-  "model_version": "v2",
-  "plant_species": null,
-  "species_confidence": 0.0,
-  "disease": null,
-  "disease_confidence": 0.0,
-  "diagnosis": "Error",
-  "safety_status": "error",
-  "safety_warnings": [
-    "InferenceExecutionError: Diagnostic inference encountered an internal error. Please check image framing and retry."
-  ],
-  "advisory": "Inference could not be completed. Please check image validity and file path.",
-  "species_probabilities": {},
-  "probabilities": {},
-  "error": {
-    "type": "InferenceExecutionError",
-    "message": "Diagnostic inference encountered an internal error. Please check image framing and retry."
-  }
-}
-```
-
----
-
-## 6. Implementation Code Examples
-
-### cURL
-```bash
-# Health check
-curl -X GET http://127.0.0.1:8000/health
-
-# Diagnosis screening
-curl -X POST http://127.0.0.1:8000/v2/diagnose \
-     -F "image=@test_images/sample_leaf.JPG"
-```
-
-### JavaScript Fetch
-```javascript
-const formData = new FormData();
-formData.append('image', fileInput.files[0]);
-
-const response = await fetch('/v2/diagnose', {
-  method: 'POST',
-  body: formData
-});
-
-const report = await response.json();
-console.log(`Diagnosis: ${report.diagnosis} (${report.safety_status})`);
-```
-
-### Python Requests
-```python
-import requests
-
-url = "http://127.0.0.1:8000/v2/diagnose"
-with open("test_images/sample_leaf.JPG", "rb") as f:
-    response = requests.post(url, files={"image": ("sample_leaf.JPG", f, "image/jpeg")})
-
-data = response.json()
-print("Species:", data["plant_species"], f"({data['species_confidence']*100:.1f}%)")
-print("Disease:", data["disease"])
-print("Advisory:", data["advisory"])
-```
+| `400 Bad Request` | `invalid_image` | Missing file, empty upload (0 bytes), or corrupt image raster bytes. |
+| `400 Bad Request` | `image_too_large_pixels` | Decoded image exceeds 40,000,000 pixels (decompression bomb protection). |
+| `413 Content Too Large` | `file_too_large` | Upload stream exceeds 10 MB payload limit. |
+| `415 Unsupported Media Type` | `unsupported_format` | Format is not JPEG, PNG, or WebP. |
+| `422 Unprocessable Content` | `poor_image_quality` | Image fails blur or lighting quality checks (when enabled). |
+| `429 Too Many Requests` | `rate_limit_exceeded` | Client IP exceeds configured requests per minute (default: 60/min). Contains `Retry-After`. |
+| `503 Service Unavailable` | `overloaded` | Server inference concurrency is saturated. Contains `Retry-After: 1`. |
+| `503 Service Unavailable` | `model_unavailable` | Model bundle is corrupt, unverified, or uninitialized. |
+| `500 Internal Server Error` | `inference_error` | Unhandled internal exception masked safely without path exposure. |

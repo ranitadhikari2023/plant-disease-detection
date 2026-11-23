@@ -1,0 +1,112 @@
+{
+  "bundle_version": "v3.0.0",
+  "created_at": "2026-11-23T20:30:00Z",
+  "name": "LeafScan Hierarchical Solanaceous Diagnosis Bundle",
+  "description": "Production ONNX models with CBAM attention and two-tier safety gating for Potato and Tomato pathology.",
+  "runtime": "onnxruntime",
+  "opset": 17,
+  "disclaimer": "This deep learning model provides automated screening assistance for educational and decision-support purposes only. It does not replace professional on-site plant pathology diagnosis. Always consult certified agricultural extension officers and strictly follow locally registered pesticide label instructions prior to chemical applications.",
+  "models": {
+    "species_expert": {
+      "filename": "species_expert.onnx",
+      "sha256": "eb3dd0cc145620406cdf37f3f1f7581634a67a5675cf82b04f85183305afa912",
+      "architecture": "MobileNetV2",
+      "num_classes": 2,
+      "input_name": "input_tensor",
+      "input_shape": [null, 224, 224, 3],
+      "output_name": "species_output",
+      "output_shape": [null, 2],
+      "index_to_label": {
+        "0": "Potato",
+        "1": "Tomato"
+      },
+      "label_to_index": {
+        "Potato": 0,
+        "Tomato": 1
+      }
+    },
+    "potato_expert": {
+      "filename": "potato_expert.onnx",
+      "sha256": "5c4d6b39fcf760c9b052c832aa37948c1ca297692f9c17de5c63b7eb208d15ef",
+      "architecture": "MobileNetV2 + CBAM Attention",
+      "num_classes": 3,
+      "input_name": "input_tensor",
+      "input_shape": [null, 224, 224, 3],
+      "output_name": "disease_output",
+      "output_shape": [null, 3],
+      "index_to_label": {
+        "0": "Early Blight",
+        "1": "Late Blight",
+        "2": "Healthy"
+      },
+      "label_to_index": {
+        "Early Blight": 0,
+        "Late Blight": 1,
+        "Healthy": 2
+      }
+    },
+    "tomato_expert": {
+      "filename": "tomato_expert.onnx",
+      "sha256": "68a08551ca9b3e25d2d9569d67350ffeda30bdfb89666e7b1313b6016ca91d45",
+      "architecture": "MobileNetV2 + CBAM Attention",
+      "num_classes": 3,
+      "input_name": "input_tensor",
+      "input_shape": [null, 224, 224, 3],
+      "output_name": "disease_output",
+      "output_shape": [null, 3],
+      "index_to_label": {
+        "0": "Early Blight",
+        "1": "Late Blight",
+        "2": "Healthy"
+      },
+      "label_to_index": {
+        "Early Blight": 0,
+        "Late Blight": 1,
+        "Healthy": 2
+      }
+    }
+  },
+  "input_spec": {
+    "image_size": [224, 224],
+    "channels": 3,
+    "color_mode": "RGB",
+    "dtype": "float32",
+    "rescaling_range": [0.0, 255.0],
+    "max_decoded_pixels": 40000000,
+    "interpolation": "bilinear",
+    "alpha_matting_background": [255, 255, 255]
+  },
+  "safety_gates": {
+    "species_confidence_threshold": 0.90,
+    "late_blight_confidence_threshold": 0.90,
+    "general_disease_confidence_threshold": 0.70
+  },
+  "advisories": {
+    "species_uncertain": "SPECIES UNCERTAINTY: Automated botanist confidence is below the safety threshold (<90%). Specimen disease diagnosis has been abstained to avoid crop misdiagnosis. Provide a clear, well-lit photograph showing leaf margins and venation, or submit a sample to an accredited agricultural extension laboratory. Do NOT apply chemical treatments to unverified plant species.",
+    "late_blight_uncertain": "LATE BLIGHT UNCERTAINTY: Folio symptoms indicate potential early lesions, but diagnostic confidence is below the high-consequence threshold (<90%). Lesions may indicate mechanical injury, environmental necrosis, or early Alternaria spots. DO NOT apply aggressive systemic fungicides at this stage. Isolate specimen, monitor closely, and re-inspect within 24 to 48 hours. Consult a certified agronomic consultant if symptoms expand.",
+    "late_blight_confirmed": "LATE BLIGHT DETECTED: Symptoms are characteristic of Late Blight (Phytophthora infestans) with high diagnostic confidence. Under humid conditions, late blight can cause rapid defoliation. Recommended management options: remove and safely bag severely infected foliage; avoid overhead irrigation. Review registered protective or systemic fungicides with your local extension agent and follow label rates strictly.",
+    "early_blight_confirmed": "EARLY BLIGHT DETECTED: Symptoms are characteristic of Early Blight (Alternaria solani) with high diagnostic confidence. Recommended management options: prune lower senescent leaves to minimize soil-splash inoculation; ensure proper plant spacing for canopy drying. If chemical control is warranted, consult certified agricultural extension guidelines for locally approved preventive fungicides.",
+    "healthy_confirmed": "NO FOLIAR BLIGHT DETECTED: The specimen displays healthy foliar tissue without apparent Early Blight or Late Blight lesions. Note: This assessment evaluates foliar blight symptoms visible in the photograph and does not guarantee absence of latent, viral, or soil-borne pathogens. Maintain standard sanitation, drip irrigation, and regular field scouting.",
+    "general_disease_uncertain": "MARGINAL DIAGNOSTIC CONFIDENCE: Classification confidence is below 70%. Visual symptoms are ambiguous. Re-photograph the leaf in diffuse daylight and monitor for further lesion development before initiating any management actions.",
+    "out_of_scope": "OUT OF SCOPE SPECIMEN: The input leaf could not be reliably verified as Potato (Solanum tuberosum) or Tomato (Solanum lycopersicum), or the image is out-of-distribution. Consult a local agricultural extension officer or certified agronomist for non-Solanaceous pathology."
+  },
+  "calibration": {
+    "species_temperature": 1.0,
+    "potato_temperature": 1.0,
+    "tomato_temperature": 1.0
+  },
+  "metrics": {
+    "species_expert": {
+      "accuracy": 0.9801,
+      "macro_f1": 0.9767
+    },
+    "potato_expert": {
+      "accuracy": 0.9784,
+      "macro_f1": 0.9673
+    },
+    "tomato_expert": {
+      "accuracy": 0.8995,
+      "macro_f1": 0.8870
+    }
+  }
+}

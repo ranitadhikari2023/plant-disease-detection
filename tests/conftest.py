@@ -12,21 +12,29 @@ import numpy as np
 import pytest
 from PIL import Image
 
-# Ensure root directory is on Python path
+# Ensure root directory and src directory are on Python path
 import sys
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(PROJECT_ROOT))
+if str(PROJECT_ROOT / "src") not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT / "src"))
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-
-import tensorflow as tf
-from inference.model_loader import unload_models
 
 
 @pytest.fixture(autouse=True)
 def clean_model_cache():
-    """Ensures model singleton cache is cleared before and after each test."""
-    unload_models()
+    """Ensures model singleton cache is cleared before and after each test without eager TF imports."""
+    try:
+        from inference.model_loader import unload_models
+        unload_models()
+    except (ImportError, Exception):
+        pass
     yield
-    unload_models()
+    try:
+        from inference.model_loader import unload_models
+        unload_models()
+    except (ImportError, Exception):
+        pass
 
 
 @pytest.fixture

@@ -15,9 +15,24 @@ from pathlib import Path
 sys.path.insert(0, os.path.abspath("."))
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
-import tensorflow as tf
-from training.models import CBAM, ChannelAttention, SpatialAttention
-from training.losses import SparseCategoricalFocalLoss
+_tf = None
+_CBAM = None
+_ChannelAttention = None
+_SpatialAttention = None
+_SparseCategoricalFocalLoss = None
+
+def _ensure_tf():
+    global _tf, _CBAM, _ChannelAttention, _SpatialAttention, _SparseCategoricalFocalLoss
+    if _tf is None:
+        import tensorflow as tf
+        from training.models import CBAM, ChannelAttention, SpatialAttention
+        from training.losses import SparseCategoricalFocalLoss
+        _tf = tf
+        _CBAM = CBAM
+        _ChannelAttention = ChannelAttention
+        _SpatialAttention = SpatialAttention
+        _SparseCategoricalFocalLoss = SparseCategoricalFocalLoss
+    return _tf, _CBAM, _ChannelAttention, _SpatialAttention, _SparseCategoricalFocalLoss
 
 # Global model cache and thread lock
 _MODEL_LOCK = threading.Lock()
@@ -30,11 +45,12 @@ _CACHED_MODELS = {
 
 def get_custom_objects():
     """Returns registration dictionary for Keras 3 deserialization."""
+    tf, cbam, ca, sa, loss = _ensure_tf()
     return {
-        'CBAM': CBAM,
-        'ChannelAttention': ChannelAttention,
-        'SpatialAttention': SpatialAttention,
-        'SparseCategoricalFocalLoss': SparseCategoricalFocalLoss,
+        'CBAM': cbam,
+        'ChannelAttention': ca,
+        'SpatialAttention': sa,
+        'SparseCategoricalFocalLoss': loss,
         'preprocess_input': tf.keras.applications.mobilenet_v2.preprocess_input
     }
 
@@ -61,6 +77,7 @@ def load_v2_model_file(model_path, custom_objs):
         raise ValueError(f"Model file '{model_path}' is empty or corrupted (0 bytes).")
 
     try:
+        tf, *_ = _ensure_tf()
         model = tf.keras.models.load_model(
             str(p),
             custom_objects=custom_objs,
