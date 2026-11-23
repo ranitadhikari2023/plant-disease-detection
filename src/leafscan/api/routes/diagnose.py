@@ -4,14 +4,15 @@ Diagnostic inference route for LeafScan V3.
 Preserves complete backward compatibility with existing web frontend and API consumers.
 """
 
-from typing import Dict, Any, Optional
-from fastapi import APIRouter, UploadFile, File, Depends, HTTPException, Request, status
+from typing import Any
+
+from fastapi import APIRouter, Depends, File, HTTPException, Request, UploadFile, status
 from fastapi.responses import JSONResponse
 
 from leafscan.api.dependencies import get_diagnosis_service, verify_api_key
-from leafscan.services.diagnosis_service import DiagnosisService
-from leafscan.core.exceptions import ImageIntakeError, PayloadTooLargeError, UnsupportedFormatError
+from leafscan.core.exceptions import ImageIntakeError, UnsupportedFormatError
 from leafscan.core.logging import logger
+from leafscan.services.diagnosis_service import DiagnosisService
 
 router = APIRouter(tags=["Diagnosis"])
 
@@ -21,8 +22,8 @@ def diagnose_leaf(
     request: Request,
     image: UploadFile = File(...),
     service: DiagnosisService = Depends(get_diagnosis_service),
-    api_key: Optional[str] = Depends(verify_api_key)
-) -> Dict[str, Any]:
+    api_key: str | None = Depends(verify_api_key),
+) -> dict[str, Any]:
     """
     Receives an uploaded leaf photograph and executes two-tier hierarchical screening:
       1. Defensive payload size and image format verification.
@@ -34,8 +35,7 @@ def diagnose_leaf(
     # 1. Validate file presence
     if not image or not image.filename:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="No image file provided in upload field 'image'."
+            status_code=status.HTTP_400_BAD_REQUEST, detail="No image file provided in upload field 'image'."
         )
 
     # 2. Defensive read up to max_upload_size_bytes + 1
@@ -45,21 +45,17 @@ def diagnose_leaf(
     except Exception as e:
         logger.error(f"Failed to read uploaded stream: {e}")
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Could not read uploaded file content."
-        )
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Could not read uploaded file content."
+        ) from e
 
     if len(file_bytes) > max_bytes:
         raise HTTPException(
             status_code=getattr(status, "HTTP_413_CONTENT_TOO_LARGE", 413),
-            detail=f"File exceeds maximum size limit of {max_bytes // (1024 * 1024)} MB."
+            detail=f"File exceeds maximum size limit of {max_bytes // (1024 * 1024)} MB.",
         )
 
     if len(file_bytes) == 0:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Uploaded file is empty (0 bytes)."
-        )
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Uploaded file is empty (0 bytes).")
 
     req_id = getattr(request.state, "request_id", None)
 
@@ -68,19 +64,13 @@ def diagnose_leaf(
         result = service.diagnose(file_bytes, request_id=req_id)
         return result
     except UnsupportedFormatError as ufe:
-        raise HTTPException(
-            status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
-            detail=ufe.message
-        )
+        raise HTTPException(status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE, detail=ufe.message) from ufe
     except ImageIntakeError as iie:
-        raise HTTPException(
-            status_code=iie.status_code,
-            detail=iie.message
-        )
+        raise HTTPException(status_code=iie.status_code, detail=iie.message) from iie
     except HTTPException:
         raise
     except Exception as exc:
-        logger.error(f"Inference pipeline execution error: {type(exc).__name__}: {str(exc)}", exc_info=True)
+        logger.error(f"Inference pipeline execution error: {type(exc).__name__}: {exc!s}", exc_info=True)
         return JSONResponse(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             content={
@@ -92,13 +82,15 @@ def diagnose_leaf(
                 "disease_confidence": 0.0,
                 "diagnosis": "Error",
                 "safety_status": "error",
-                "safety_warnings": ["InferenceExecutionError: Diagnostic inference encountered an internal error. Please check image framing and retry."],
+                "safety_warnings": [
+                    "InferenceExecutionError: Diagnostic inference encountered an internal error. Please check image framing and retry."
+                ],
                 "advisory": "Diagnostic inference encountered an internal error. Please check image framing and retry.",
                 "species_probabilities": {},
                 "probabilities": {},
                 "error": {
                     "type": "InferenceExecutionError",
-                    "message": "Diagnostic inference encountered an internal error. Please check image framing and retry."
-                }
-            }
+                    "message": "Diagnostic inference encountered an internal error. Please check image framing and retry.",
+                },
+            },
         )

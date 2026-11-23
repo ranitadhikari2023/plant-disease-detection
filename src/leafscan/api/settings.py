@@ -5,21 +5,23 @@ Compatible with pydantic-settings when available, with automatic fallback to pyd
 """
 
 import os
-from pathlib import Path
-from typing import List, Optional
+
 from pydantic import Field
 
 try:
     from pydantic_settings import BaseSettings, SettingsConfigDict
+
     HAS_PYDANTIC_SETTINGS = True
 except ImportError:
     from pydantic import BaseModel as BaseSettings
+
     SettingsConfigDict = None
     HAS_PYDANTIC_SETTINGS = False
 
 
 class Settings(BaseSettings):
     """LeafScan V3 Configuration Schema."""
+
     app_env: str = Field(default="production", description="Environment: development, staging, production")
     app_title: str = Field(default="LeafScan V3 — Plant Disease Detection API")
     app_version: str = Field(default="3.0.0")
@@ -27,12 +29,12 @@ class Settings(BaseSettings):
     port: int = Field(default=8000)
 
     # CORS
-    cors_origins: List[str] = Field(
+    cors_origins: list[str] = Field(
         default_factory=lambda: [
             "http://127.0.0.1:8000",
             "http://localhost:8000",
             "http://127.0.0.1:3000",
-            "http://localhost:3000"
+            "http://localhost:3000",
         ]
     )
 
@@ -50,13 +52,15 @@ class Settings(BaseSettings):
     inter_op_threads: int = Field(default=1)
 
     # Concurrency & Rate Limiting
-    max_concurrent_inferences: int = Field(default=4, description="Max concurrent inference calls before 503 load shedding")
+    max_concurrent_inferences: int = Field(
+        default=4, description="Max concurrent inference calls before 503 load shedding"
+    )
     rate_limit_per_minute: int = Field(default=60, description="Allowed requests per minute per IP")
     rate_limiting_enabled: bool = Field(default=True)
 
     # Integrator API Keys (hashed verification)
     api_key_auth_enabled: bool = Field(default=False)
-    authorized_api_key_hashes: List[str] = Field(default_factory=list)
+    authorized_api_key_hashes: list[str] = Field(default_factory=list)
 
     # Logging & Telemetry
     log_level: str = Field(default="INFO")
@@ -64,12 +68,10 @@ class Settings(BaseSettings):
 
     if HAS_PYDANTIC_SETTINGS and SettingsConfigDict:
         model_config = SettingsConfigDict(
-            env_prefix="LEAFSCAN_",
-            env_file=".env",
-            env_file_encoding="utf-8",
-            extra="ignore"
+            env_prefix="LEAFSCAN_", env_file=".env", env_file_encoding="utf-8", extra="ignore"
         )
     else:
+
         def __init__(self, **data):
             # Load environment overrides manually when pydantic_settings is not installed
             prefix = "LEAFSCAN_"
@@ -79,13 +81,13 @@ class Settings(BaseSettings):
                 if env_key in os.environ:
                     val = os.environ[env_key]
                     target_type = self.__annotations__.get(field_name)
-                    if target_type == int:
+                    if target_type is int:
                         env_data[field_name] = int(val)
-                    elif target_type == float:
+                    elif target_type is float:
                         env_data[field_name] = float(val)
-                    elif target_type == bool:
+                    elif target_type is bool:
                         env_data[field_name] = val.lower() in ("true", "1", "yes")
-                    elif target_type == List[str]:
+                    elif target_type == list[str]:
                         env_data[field_name] = [item.strip() for item in val.split(",")]
                     else:
                         env_data[field_name] = val
@@ -93,7 +95,8 @@ class Settings(BaseSettings):
             super().__init__(**env_data)
 
 
-_SETTINGS_INSTANCE: Optional[Settings] = None
+_SETTINGS_INSTANCE: Settings | None = None
+
 
 def get_settings() -> Settings:
     """Returns singleton settings instance."""

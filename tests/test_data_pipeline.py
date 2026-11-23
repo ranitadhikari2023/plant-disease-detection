@@ -5,13 +5,11 @@ Validates manifest parsing, crop filtering, error handling, image decoding,
 tensor output formatting, batching behavior, and augmentation integration.
 """
 
-import os
 import csv
-from pathlib import Path
+
 import numpy as np
 import pytest
 import tensorflow as tf
-from PIL import Image
 
 from training.data_pipeline import build_manifest_dataset, load_class_mappings
 
@@ -31,29 +29,13 @@ def test_load_class_mappings():
 
     # Check potato expert
     assert mappings["potato_expert"]["num_classes"] == 3
-    assert mappings["potato_expert"]["label_to_index"] == {
-        "Early_blight": 0,
-        "Late_blight": 1,
-        "healthy": 2
-    }
-    assert mappings["potato_expert"]["index_to_label"] == {
-        "0": "Early Blight",
-        "1": "Late Blight",
-        "2": "Healthy"
-    }
+    assert mappings["potato_expert"]["label_to_index"] == {"Early_blight": 0, "Late_blight": 1, "healthy": 2}
+    assert mappings["potato_expert"]["index_to_label"] == {"0": "Early Blight", "1": "Late Blight", "2": "Healthy"}
 
     # Check tomato expert
     assert mappings["tomato_expert"]["num_classes"] == 3
-    assert mappings["tomato_expert"]["label_to_index"] == {
-        "Early_blight": 0,
-        "Late_blight": 1,
-        "healthy": 2
-    }
-    assert mappings["tomato_expert"]["index_to_label"] == {
-        "0": "Early Blight",
-        "1": "Late Blight",
-        "2": "Healthy"
-    }
+    assert mappings["tomato_expert"]["label_to_index"] == {"Early_blight": 0, "Late_blight": 1, "healthy": 2}
+    assert mappings["tomato_expert"]["index_to_label"] == {"0": "Early Blight", "1": "Late Blight", "2": "Healthy"}
 
 
 @pytest.mark.pipeline
@@ -61,10 +43,7 @@ def test_valid_manifest_loading_species_expert(synthetic_manifest_factory):
     """Verify loading species expert dataset from a valid manifest."""
     manifest_path = synthetic_manifest_factory()
     ds, n_samples = build_manifest_dataset(
-        manifest_path=manifest_path,
-        model_type="species_expert",
-        batch_size=2,
-        is_training=False
+        manifest_path=manifest_path, model_type="species_expert", batch_size=2, is_training=False
     )
 
     assert n_samples == 6
@@ -86,11 +65,7 @@ def test_valid_manifest_loading_crop_specialists(synthetic_manifest_factory):
 
     # Potato specialist
     ds_pot, n_pot = build_manifest_dataset(
-        manifest_path=manifest_path,
-        model_type="potato_expert",
-        crop_filter="potato",
-        batch_size=3,
-        is_training=False
+        manifest_path=manifest_path, model_type="potato_expert", crop_filter="potato", batch_size=3, is_training=False
     )
     assert n_pot == 3
     for images, labels in ds_pot:
@@ -99,11 +74,7 @@ def test_valid_manifest_loading_crop_specialists(synthetic_manifest_factory):
 
     # Tomato specialist
     ds_tom, n_tom = build_manifest_dataset(
-        manifest_path=manifest_path,
-        model_type="tomato_expert",
-        crop_filter="tomato",
-        batch_size=3,
-        is_training=False
+        manifest_path=manifest_path, model_type="tomato_expert", crop_filter="tomato", batch_size=3, is_training=False
     )
     assert n_tom == 3
     for images, labels in ds_tom:
@@ -160,11 +131,13 @@ def test_unrecognized_class_label(tmp_path, synthetic_jpeg_factory):
     with open(bad_csv, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=["relative_image_path", "crop", "disease_class"])
         writer.writeheader()
-        writer.writerow({
-            "relative_image_path": img_p,
-            "crop": "potato",
-            "disease_class": "Alien_Fungus"  # Invalid label
-        })
+        writer.writerow(
+            {
+                "relative_image_path": img_p,
+                "crop": "potato",
+                "disease_class": "Alien_Fungus",  # Invalid label
+            }
+        )
 
     with pytest.raises(KeyError):
         build_manifest_dataset(str(bad_csv), model_type="potato_expert", crop_filter="potato")
@@ -200,7 +173,7 @@ def test_dataset_batching_and_partial_remainder(synthetic_manifest_factory):
     ds, n_samples = build_manifest_dataset(
         manifest_path=manifest_path,
         batch_size=4,  # 6 / 4 = 1 batch of 4 + 1 batch of 2
-        is_training=False
+        is_training=False,
     )
     batches = list(ds)
     assert len(batches) == 2
@@ -232,10 +205,7 @@ def test_augmentation_model_integration(synthetic_manifest_factory):
 
     aug_model = OffsetAugmentation()
     ds, _ = build_manifest_dataset(
-        manifest_path=manifest_path,
-        batch_size=2,
-        is_training=True,
-        augmentation_model=aug_model
+        manifest_path=manifest_path, batch_size=2, is_training=True, augmentation_model=aug_model
     )
 
     batch_images, _ = next(iter(ds))

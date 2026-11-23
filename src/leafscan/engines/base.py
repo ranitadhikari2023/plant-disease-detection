@@ -3,8 +3,9 @@ src/leafscan/engines/base.py
 Runtime-independent inference interface and abstractions.
 """
 
-from typing import Protocol, Dict, Any, Optional, runtime_checkable
 from dataclasses import dataclass
+from typing import Any, Protocol, runtime_checkable
+
 import numpy as np
 
 
@@ -15,7 +16,7 @@ class EngineInfo:
     execution_provider: str
     intra_op_threads: int
     inter_op_threads: int
-    models_loaded: Dict[str, Any]
+    models_loaded: dict[str, Any]
 
 
 @dataclass(frozen=True)

@@ -5,7 +5,6 @@ Cryptographic verification for LeafScan Model Bundles.
 
 import hashlib
 from pathlib import Path
-from typing import Dict
 
 from leafscan.bundle.manifest import BundleManifest
 from leafscan.core.exceptions import ChecksumMismatchError, ModelBundleError
@@ -23,7 +22,7 @@ def compute_file_sha256(path: Path) -> str:
     return h.hexdigest().lower()
 
 
-def verify_bundle_integrity(bundle_dir: Path, manifest: BundleManifest) -> Dict[str, str]:
+def verify_bundle_integrity(bundle_dir: Path, manifest: BundleManifest) -> dict[str, str]:
     """
     Verifies that all model artifacts referenced in the manifest exist on disk
     and match their cryptographic SHA-256 checksums exactly.
@@ -39,7 +38,7 @@ def verify_bundle_integrity(bundle_dir: Path, manifest: BundleManifest) -> Dict[
         if not model_path.exists():
             raise ModelBundleError(
                 f"Missing model artifact '{spec.filename}' in bundle directory '{bundle_dir}'.",
-                details={"model_key": key, "expected_path": str(model_path)}
+                details={"model_key": key, "expected_path": str(model_path)},
             )
 
         actual_hash = compute_file_sha256(model_path)

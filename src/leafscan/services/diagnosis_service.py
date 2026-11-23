@@ -5,17 +5,17 @@ Coordinates Image Intake, Inference Engine, Safety Guard, and canonical JSON res
 """
 
 import time
-from typing import Dict, Any, Union, Optional
 from pathlib import Path
-from PIL import Image
+from typing import Any
+
 import numpy as np
+from PIL import Image
 
 from leafscan.bundle.loader import ModelBundle
+from leafscan.core.telemetry import metrics
 from leafscan.engines.base import InferenceEngine
 from leafscan.services.image_intake import ImageIntake
-from leafscan.services.safety_guard import SafetyGuard, SafetyDecision
-from leafscan.core.telemetry import metrics
-from leafscan.core.logging import logger
+from leafscan.services.safety_guard import SafetyDecision, SafetyGuard
 
 
 class DiagnosisService:
@@ -25,8 +25,8 @@ class DiagnosisService:
         self,
         bundle: ModelBundle,
         engine: InferenceEngine,
-        image_intake: Optional[ImageIntake] = None,
-        safety_guard: Optional[SafetyGuard] = None
+        image_intake: ImageIntake | None = None,
+        safety_guard: SafetyGuard | None = None,
     ):
         self.bundle = bundle
         self.engine = engine
@@ -35,10 +35,8 @@ class DiagnosisService:
         self.manifest = bundle.manifest
 
     def diagnose(
-        self,
-        image_source: Union[bytes, str, Path, Image.Image, np.ndarray],
-        request_id: Optional[str] = None
-    ) -> Dict[str, Any]:
+        self, image_source: bytes | str | Path | Image.Image | np.ndarray, request_id: str | None = None
+    ) -> dict[str, Any]:
         """
         Executes end-to-end two-tier foliar diagnosis.
 
@@ -82,7 +80,7 @@ class DiagnosisService:
                 disease_probabilities={},
                 safety_decision=gate1_decision,
                 elapsed_ms=elapsed_ms,
-                request_id=request_id
+                request_id=request_id,
             )
 
         # Step 4: Tier 2 - Crop Specialist
@@ -114,21 +112,21 @@ class DiagnosisService:
             disease_probabilities=disease_probs,
             safety_decision=gate2_decision,
             elapsed_ms=elapsed_ms,
-            request_id=request_id
+            request_id=request_id,
         )
 
     def _build_response(
         self,
         plant_species: str,
         species_confidence: float,
-        species_probabilities: Dict[str, float],
-        disease: Optional[str],
-        disease_confidence: Optional[float],
-        disease_probabilities: Dict[str, float],
+        species_probabilities: dict[str, float],
+        disease: str | None,
+        disease_confidence: float | None,
+        disease_probabilities: dict[str, float],
         safety_decision: SafetyDecision,
         elapsed_ms: float,
-        request_id: Optional[str] = None
-    ) -> Dict[str, Any]:
+        request_id: str | None = None,
+    ) -> dict[str, Any]:
         """Builds exact backward-compatible JSON schema."""
         if disease:
             diagnosis_str = f"{plant_species} - {disease}"
@@ -137,10 +135,10 @@ class DiagnosisService:
         else:
             diagnosis_str = f"{plant_species} (Abstained)"
 
-        meta: Dict[str, Any] = {
+        meta: dict[str, Any] = {
             "execution_time_ms": round(float(elapsed_ms), 2),
             "architecture": "MobileNetV2 + CBAM Attention",
-            "model_bundle": self.manifest.bundle_version
+            "model_bundle": self.manifest.bundle_version,
         }
         if safety_decision.prediction_set is not None:
             meta["prediction_set"] = safety_decision.prediction_set
@@ -159,6 +157,8 @@ class DiagnosisService:
             "safety_warnings": safety_decision.safety_warnings,
             "advisory": safety_decision.advisory,
             "species_probabilities": {k: round(float(v), 4) for k, v in species_probabilities.items()},
-            "probabilities": {k: round(float(v), 4) for k, v in disease_probabilities.items()} if disease_probabilities else {},
-            "metadata": meta
+            "probabilities": {k: round(float(v), 4) for k, v in disease_probabilities.items()}
+            if disease_probabilities
+            else {},
+            "metadata": meta,
         }

@@ -3,16 +3,10 @@ src/leafscan/services/calibration.py
 Temperature scaling and Expected Calibration Error (ECE) measurement for LeafScan V3.
 """
 
-from typing import Tuple, Optional
 import numpy as np
 
 
-def compute_ece(
-    confidences: np.ndarray,
-    predictions: np.ndarray,
-    ground_truth: np.ndarray,
-    n_bins: int = 10
-) -> float:
+def compute_ece(confidences: np.ndarray, predictions: np.ndarray, ground_truth: np.ndarray, n_bins: int = 10) -> float:
     """
     Computes Expected Calibration Error (ECE) across uniform confidence bins.
 
@@ -20,7 +14,6 @@ def compute_ece(
     """
     bin_boundaries = np.linspace(0.0, 1.0, n_bins + 1)
     ece = 0.0
-    n = len(confidences)
 
     for i in range(n_bins):
         in_bin = (confidences > bin_boundaries[i]) & (confidences <= bin_boundaries[i + 1])

@@ -9,31 +9,31 @@ Verification suite for LeafScan V3 Production Serving Engine:
 """
 
 import io
-import sys
 import json
-import pytest
-import numpy as np
-from PIL import Image
+import sys
 from pathlib import Path
+
+import numpy as np
+import pytest
+from PIL import Image
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT / "src") not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
+from leafscan.api.settings import Settings
 from leafscan.bundle.loader import load_model_bundle
 from leafscan.bundle.verification import compute_file_sha256
-from leafscan.engines.onnx_engine import OnnxEngine
-from leafscan.services.diagnosis_service import DiagnosisService
-from leafscan.services.image_intake import ImageIntake
-from leafscan.services.safety_guard import SafetyGuard
 from leafscan.core.exceptions import (
     ChecksumMismatchError,
     PayloadTooLargeError,
     PixelLimitExceededError,
-    UnsupportedFormatError
+    UnsupportedFormatError,
 )
-from leafscan.api.app import create_app
-from leafscan.api.settings import Settings
+from leafscan.engines.onnx_engine import OnnxEngine
+from leafscan.services.diagnosis_service import DiagnosisService
+from leafscan.services.image_intake import ImageIntake
+from leafscan.services.safety_guard import SafetyGuard
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
@@ -100,11 +100,15 @@ def test_golden_dataset_onnx_parity(service):
     golden_path = PROJECT_ROOT / "tests/fixtures/golden_test_dataset.json"
     assert golden_path.exists(), "golden_test_dataset.json missing"
 
-    with open(golden_path, "r", encoding="utf-8") as f:
+    with open(golden_path, encoding="utf-8") as f:
         golden_cases = json.load(f)
 
     for case in golden_cases:
         img_path = PROJECT_ROOT / case["path"]
+        if not img_path.exists():
+            alt_path = PROJECT_ROOT / "tests/fixtures/golden_images" / Path(case["path"]).name
+            if alt_path.exists():
+                img_path = alt_path
         assert img_path.exists(), f"Golden image {img_path} not found"
 
         res = service.diagnose(str(img_path))
@@ -130,8 +134,7 @@ def test_golden_dataset_onnx_parity(service):
 @pytest.mark.api
 def test_v3_api_health_ready_model_endpoints(bundle, engine):
     """Verifies /health, /ready, /v2/model, and /metrics on the V3 application."""
-    from leafscan.api.routes.health import health_check, readiness_check, model_info, prometheus_metrics
-    from leafscan.api.settings import Settings
+    from leafscan.api.routes.health import health_check, model_info, prometheus_metrics, readiness_check
 
     test_settings = Settings(verify_bundle_checksums=True, log_json=False)
 
@@ -188,7 +191,7 @@ def test_image_intake_defensive_bounds():
 @pytest.mark.regression
 def test_calibration_and_ece():
     """Verifies Expected Calibration Error (ECE) calculation and temperature scaling."""
-    from leafscan.services.calibration import compute_ece, TemperatureScaler
+    from leafscan.services.calibration import TemperatureScaler, compute_ece
 
     # Synthetic well-calibrated vs miscalibrated data
     confs = np.array([0.9, 0.8, 0.7, 0.6, 0.9, 0.8])
@@ -231,7 +234,7 @@ def test_conformal_prediction_rules():
 @pytest.mark.api
 def test_feedback_submission_and_idempotency():
     """Verifies POST /v2/feedback endpoint and idempotent transaction key handling."""
-    from leafscan.api.routes.feedback import submit_feedback, FeedbackRequest
+    from leafscan.api.routes.feedback import FeedbackRequest, submit_feedback
 
     req = FeedbackRequest(
         request_id="req_test_123",
@@ -241,7 +244,7 @@ def test_feedback_submission_and_idempotency():
         observed_disease="Late Blight",
         feedback_type="agree",
         agronomic_notes="Symptoms confirmed by on-site field agent.",
-        idempotency_key="tx-idem-999"
+        idempotency_key="tx-idem-999",
     )
 
     resp1 = submit_feedback(payload=req, idempotency_key="tx-idem-999")
@@ -263,13 +266,13 @@ def test_ood_detection_and_out_of_scope_rejection(bundle):
     # Low-confidence / high-entropy species prediction
     ambiguous_probs = {"Potato": 0.51, "Tomato": 0.49}
     is_uncertain, decision = guard.evaluate_species_gate(
-        species_name="Potato",
-        species_conf=0.51,
-        species_probs=ambiguous_probs
+        species_name="Potato", species_conf=0.51, species_probs=ambiguous_probs
     )
 
     assert is_uncertain is True
     assert decision.safety_status == "out_of_scope"
-    assert "out_of_scope" in decision.safety_warnings[0].lower() or "out-of-scope" in decision.safety_warnings[0].lower()
+    assert (
+        "out_of_scope" in decision.safety_warnings[0].lower() or "out-of-scope" in decision.safety_warnings[0].lower()
+    )
     assert "OUT OF SCOPE" in decision.advisory
     assert decision.disease_abstained is True

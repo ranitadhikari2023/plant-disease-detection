@@ -5,20 +5,21 @@ Provides reusable specimen image paths, clean model caching fixtures,
 and synthetic dataset generators for pipeline and loss testing.
 """
 
-import os
 import csv
-from pathlib import Path
-import numpy as np
-import pytest
-from PIL import Image
+import os
 
 # Ensure root directory and src directory are on Python path
 import sys
+from pathlib import Path
+
+import pytest
+from PIL import Image
+
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 if str(PROJECT_ROOT / "src") not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT / "src"))
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 
 
 @pytest.fixture(autouse=True)
@@ -26,12 +27,14 @@ def clean_model_cache():
     """Ensures model singleton cache is cleared before and after each test without eager TF imports."""
     try:
         from inference.model_loader import unload_models
+
         unload_models()
     except (ImportError, Exception):
         pass
     yield
     try:
         from inference.model_loader import unload_models
+
         unload_models()
     except (ImportError, Exception):
         pass
@@ -52,6 +55,7 @@ def synthetic_jpeg_factory(tmp_path):
     """
     Factory fixture to generate temporary valid JPEG images with custom dimensions and colors.
     """
+
     def _create_jpeg(filename="leaf.jpg", size=(256, 256), color=(60, 140, 50), mode="RGB"):
         img_dir = tmp_path / "images"
         img_dir.mkdir(parents=True, exist_ok=True)
@@ -73,13 +77,14 @@ def synthetic_manifest_factory(tmp_path, synthetic_jpeg_factory):
     """
     Factory fixture to create temporary CSV manifests with synthetic images for pipeline testing.
     """
+
     def _create_manifest(
         rows=None,
         filename="test_manifest.csv",
         corrupt_image=False,
         missing_image=False,
         include_headers=True,
-        headers=None
+        headers=None,
     ):
         manifest_file = tmp_path / filename
 
@@ -90,7 +95,7 @@ def synthetic_manifest_factory(tmp_path, synthetic_jpeg_factory):
                 "crop",
                 "disease_class",
                 "original_or_augmented",
-                "assigned_split"
+                "assigned_split",
             ]
 
         if rows is None:
@@ -116,14 +121,16 @@ def synthetic_manifest_factory(tmp_path, synthetic_jpeg_factory):
                 else:
                     img_path = synthetic_jpeg_factory(filename=fname)
 
-                rows.append({
-                    "source_group_id": gid,
-                    "relative_image_path": img_path,
-                    "crop": crop,
-                    "disease_class": dis,
-                    "original_or_augmented": "original",
-                    "assigned_split": "train"
-                })
+                rows.append(
+                    {
+                        "source_group_id": gid,
+                        "relative_image_path": img_path,
+                        "crop": crop,
+                        "disease_class": dis,
+                        "original_or_augmented": "original",
+                        "assigned_split": "train",
+                    }
+                )
 
         with open(manifest_file, "w", newline="", encoding="utf-8") as f:
             if include_headers:

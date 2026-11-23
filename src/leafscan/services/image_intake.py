@@ -6,16 +6,16 @@ Enforces EXIF transposition, pixel limits, white matting, quality screening, and
 
 import io
 from pathlib import Path
-from typing import Tuple, Union, Optional
+
 import numpy as np
 from PIL import Image, ImageOps
 
 from leafscan.core.exceptions import (
     ImageIntakeError,
     PayloadTooLargeError,
-    UnsupportedFormatError,
     PixelLimitExceededError,
-    PoorImageQualityError
+    PoorImageQualityError,
+    UnsupportedFormatError,
 )
 
 # Set Pillow decompression bomb maximum
@@ -28,11 +28,11 @@ class ImageIntake:
     def __init__(
         self,
         max_upload_bytes: int = 10 * 1024 * 1024,  # 10 MB
-        allowed_formats: Optional[set] = None,
-        max_decoded_pixels: int = 40_000_000,      # 40 Megapixels
-        target_size: Tuple[int, int] = (224, 224),
+        allowed_formats: set | None = None,
+        max_decoded_pixels: int = 40_000_000,  # 40 Megapixels
+        target_size: tuple[int, int] = (224, 224),
         enable_quality_checks: bool = False,
-        blur_threshold: float = 30.0
+        blur_threshold: float = 30.0,
     ):
         self.max_upload_bytes = max_upload_bytes
         self.allowed_formats = allowed_formats or {"JPEG", "PNG", "WEBP"}
@@ -48,7 +48,7 @@ class ImageIntake:
         if len(raw_bytes) > self.max_upload_bytes:
             raise PayloadTooLargeError(self.max_upload_bytes, len(raw_bytes))
 
-    def decode_and_orient(self, source: Union[bytes, str, Path, Image.Image, np.ndarray]) -> Image.Image:
+    def decode_and_orient(self, source: bytes | str | Path | Image.Image | np.ndarray) -> Image.Image:
         """
         Decodes raw bytes or converts existing representations into a clean PIL Image.
         Normalizes EXIF orientation and enforces pixel dimension limits.
@@ -62,7 +62,9 @@ class ImageIntake:
                     raw_bytes = f.read()
                 return self.decode_and_orient(raw_bytes)
             except Exception as e:
-                raise ImageIntakeError(f"Unable to read image from '{p}': {e}", error_code="invalid_image", status_code=400) from e
+                raise ImageIntakeError(
+                    f"Unable to read image from '{p}': {e}", error_code="invalid_image", status_code=400
+                ) from e
 
         if isinstance(source, np.ndarray):
             # Convert numpy array to PIL Image
@@ -101,11 +103,17 @@ class ImageIntake:
             except ImageIntakeError:
                 raise
             except Image.DecompressionBombError:
-                raise PixelLimitExceededError(0, self.max_decoded_pixels)
+                raise PixelLimitExceededError(0, self.max_decoded_pixels) from None
             except Exception as e:
-                raise ImageIntakeError("Invalid or corrupted image payload. Unable to decode image raster.", error_code="invalid_image", status_code=400) from e
+                raise ImageIntakeError(
+                    "Invalid or corrupted image payload. Unable to decode image raster.",
+                    error_code="invalid_image",
+                    status_code=400,
+                ) from e
         else:
-            raise ImageIntakeError(f"Unsupported source type: {type(source).__name__}", error_code="invalid_image", status_code=400)
+            raise ImageIntakeError(
+                f"Unsupported source type: {type(source).__name__}", error_code="invalid_image", status_code=400
+            )
 
         # Normalize EXIF orientation if present
         try:
@@ -132,20 +140,30 @@ class ImageIntake:
         if mean_val < 15.0:
             raise PoorImageQualityError("Image is extremely dark / underexposed", details={"mean_brightness": mean_val})
         if mean_val > 245.0:
-            raise PoorImageQualityError("Image is completely washed out / overexposed", details={"mean_brightness": mean_val})
+            raise PoorImageQualityError(
+                "Image is completely washed out / overexposed", details={"mean_brightness": mean_val}
+            )
 
         # Fast 3x3 Laplacian variance blur check
         # [-1, -1, -1], [-1, 8, -1], [-1, -1, -1]
         lap = (
-            arr[:-2, :-2] * -1 + arr[:-2, 1:-1] * -1 + arr[:-2, 2:] * -1 +
-            arr[1:-1, :-2] * -1 + arr[1:-1, 1:-1] * 8 + arr[1:-1, 2:] * -1 +
-            arr[2:, :-2] * -1 + arr[2:, 1:-1] * -1 + arr[2:, 2:] * -1
+            arr[:-2, :-2] * -1
+            + arr[:-2, 1:-1] * -1
+            + arr[:-2, 2:] * -1
+            + arr[1:-1, :-2] * -1
+            + arr[1:-1, 1:-1] * 8
+            + arr[1:-1, 2:] * -1
+            + arr[2:, :-2] * -1
+            + arr[2:, 1:-1] * -1
+            + arr[2:, 2:] * -1
         )
         lap_var = float(np.var(lap))
         if lap_var < self.blur_threshold:
-            raise PoorImageQualityError("Image is severely blurred", details={"laplacian_variance": lap_var, "threshold": self.blur_threshold})
+            raise PoorImageQualityError(
+                "Image is severely blurred", details={"laplacian_variance": lap_var, "threshold": self.blur_threshold}
+            )
 
-    def process(self, source: Union[bytes, str, Path, Image.Image, np.ndarray]) -> Tuple[np.ndarray, Image.Image]:
+    def process(self, source: bytes | str | Path | Image.Image | np.ndarray) -> tuple[np.ndarray, Image.Image]:
         """
         Executes full intake and normalization:
           1. Decodes and transposes EXIF.

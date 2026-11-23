@@ -31,7 +31,7 @@
     }
   },
   {
-    "path": "dataset/potato/Early_blight/potato_early_123.JPG",
+    "path": "tests/fixtures/golden_images/potato_early_123.JPG",
     "ground_truth": {
       "crop": "potato",
       "disease_class": "Early_blight",
@@ -62,7 +62,7 @@
     }
   },
   {
-    "path": "dataset/potato/Early_blight/potato_early_355.JPG",
+    "path": "tests/fixtures/golden_images/potato_early_355.JPG",
     "ground_truth": {
       "crop": "potato",
       "disease_class": "Early_blight",
@@ -93,7 +93,7 @@
     }
   },
   {
-    "path": "dataset/potato/Early_blight/potato_early_478.JPG",
+    "path": "tests/fixtures/golden_images/potato_early_478.JPG",
     "ground_truth": {
       "crop": "potato",
       "disease_class": "Early_blight",
@@ -124,7 +124,7 @@
     }
   },
   {
-    "path": "dataset/potato/Early_blight/potato_early_606.JPG",
+    "path": "tests/fixtures/golden_images/potato_early_606.JPG",
     "ground_truth": {
       "crop": "potato",
       "disease_class": "Early_blight",
@@ -155,7 +155,7 @@
     }
   },
   {
-    "path": "dataset/potato/Early_blight/potato_early_683.JPG",
+    "path": "tests/fixtures/golden_images/potato_early_683.JPG",
     "ground_truth": {
       "crop": "potato",
       "disease_class": "Early_blight",
@@ -186,7 +186,7 @@
     }
   },
   {
-    "path": "dataset/potato/Early_blight/potato_early_759.JPG",
+    "path": "tests/fixtures/golden_images/potato_early_759.JPG",
     "ground_truth": {
       "crop": "potato",
       "disease_class": "Early_blight",
@@ -217,7 +217,7 @@
     }
   },
   {
-    "path": "dataset/potato/Early_blight/potato_early_814.JPG",
+    "path": "tests/fixtures/golden_images/potato_early_814.JPG",
     "ground_truth": {
       "crop": "potato",
       "disease_class": "Early_blight",
@@ -248,7 +248,7 @@
     }
   },
   {
-    "path": "dataset/potato/Early_blight/potato_early_888.JPG",
+    "path": "tests/fixtures/golden_images/potato_early_888.JPG",
     "ground_truth": {
       "crop": "potato",
       "disease_class": "Early_blight",
@@ -279,7 +279,7 @@
     }
   },
   {
-    "path": "dataset/potato/Late_blight/potato_late_116.JPG",
+    "path": "tests/fixtures/golden_images/potato_late_116.JPG",
     "ground_truth": {
       "crop": "potato",
       "disease_class": "Late_blight",
@@ -310,7 +310,7 @@
     }
   },
   {
-    "path": "dataset/potato/Late_blight/potato_late_376.JPG",
+    "path": "tests/fixtures/golden_images/potato_late_376.JPG",
     "ground_truth": {
       "crop": "potato",
       "disease_class": "Late_blight",
@@ -341,7 +341,7 @@
     }
   },
   {
-    "path": "dataset/potato/Late_blight/potato_late_519.JPG",
+    "path": "tests/fixtures/golden_images/potato_late_519.JPG",
     "ground_truth": {
       "crop": "potato",
       "disease_class": "Late_blight",
@@ -372,7 +372,7 @@
     }
   },
   {
-    "path": "dataset/potato/Late_blight/potato_late_589.JPG",
+    "path": "tests/fixtures/golden_images/potato_late_589.JPG",
     "ground_truth": {
       "crop": "potato",
       "disease_class": "Late_blight",
@@ -403,7 +403,7 @@
     }
   },
   {
-    "path": "dataset/potato/Late_blight/potato_late_680.JPG",
+    "path": "tests/fixtures/golden_images/potato_late_680.JPG",
     "ground_truth": {
       "crop": "potato",
       "disease_class": "Late_blight",
@@ -434,7 +434,7 @@
     }
   },
   {
-    "path": "dataset/potato/Late_blight/potato_late_725.JPG",
+    "path": "tests/fixtures/golden_images/potato_late_725.JPG",
     "ground_truth": {
       "crop": "potato",
       "disease_class": "Late_blight",
@@ -465,7 +465,7 @@
     }
   },
   {
-    "path": "dataset/potato/Late_blight/potato_late_811.JPG",
+    "path": "tests/fixtures/golden_images/potato_late_811.JPG",
     "ground_truth": {
       "crop": "potato",
       "disease_class": "Late_blight",
@@ -496,7 +496,7 @@
     }
   },
   {
-    "path": "dataset/potato/Late_blight/potato_late_900.JPG",
+    "path": "tests/fixtures/golden_images/potato_late_900.JPG",
     "ground_truth": {
       "crop": "potato",
       "disease_class": "Late_blight",
@@ -527,7 +527,7 @@
     }
   },
   {
-    "path": "dataset/potato/healthy/potato_healthy_133.JPG",
+    "path": "tests/fixtures/golden_images/potato_healthy_133.JPG",
     "ground_truth": {
       "crop": "potato",
       "disease_class": "healthy",
@@ -558,7 +558,7 @@
     }
   },
   {
-    "path": "dataset/potato/healthy/potato_healthy_25.JPG",
+    "path": "tests/fixtures/golden_images/potato_healthy_25.JPG",
     "ground_truth": {
       "crop": "potato",
       "disease_class": "healthy",
@@ -589,7 +589,7 @@
     }
   },
   {
-    "path": "dataset/potato/healthy/potato_healthy_256_gblr_1.JPG",
+    "path": "tests/fixtures/golden_images/potato_healthy_256_gblr_1.JPG",
     "ground_truth": {
       "crop": "potato",
       "disease_class": "healthy",
@@ -620,7 +620,7 @@
     }
   },
   {
-    "path": "dataset/potato/healthy/potato_healthy_26.JPG",
+    "path": "tests/fixtures/golden_images/potato_healthy_26.JPG",
     "ground_truth": {
       "crop": "potato",
       "disease_class": "healthy",
@@ -651,7 +651,7 @@
     }
   },
   {
-    "path": "dataset/potato/healthy/potato_healthy_211_gblr_1.JPG",
+    "path": "tests/fixtures/golden_images/potato_healthy_211_gblr_1.JPG",
     "ground_truth": {
       "crop": "potato",
       "disease_class": "healthy",
@@ -682,7 +682,7 @@
     }
   },
   {
-    "path": "dataset/potato/healthy/potato_healthy_160_gblr_1.JPG",
+    "path": "tests/fixtures/golden_images/potato_healthy_160_gblr_1.JPG",
     "ground_truth": {
       "crop": "potato",
       "disease_class": "healthy",
@@ -713,7 +713,7 @@
     }
   },
   {
-    "path": "dataset/potato/healthy/potato_healthy_164_gblr_1.JPG",
+    "path": "tests/fixtures/golden_images/potato_healthy_164_gblr_1.JPG",
     "ground_truth": {
       "crop": "potato",
       "disease_class": "healthy",
@@ -744,7 +744,7 @@
     }
   },
   {
-    "path": "dataset/potato/healthy/potato_healthy_41.JPG",
+    "path": "tests/fixtures/golden_images/potato_healthy_41.JPG",
     "ground_truth": {
       "crop": "potato",
       "disease_class": "healthy",
@@ -775,7 +775,7 @@
     }
   },
   {
-    "path": "dataset/tomato/Early_blight/tomato_early_124.JPG",
+    "path": "tests/fixtures/golden_images/tomato_early_124.JPG",
     "ground_truth": {
       "crop": "tomato",
       "disease_class": "Early_blight",
@@ -806,7 +806,7 @@
     }
   },
   {
-    "path": "dataset/tomato/Early_blight/tomato_early_40.JPG",
+    "path": "tests/fixtures/golden_images/tomato_early_40.JPG",
     "ground_truth": {
       "crop": "tomato",
       "disease_class": "Early_blight",
@@ -837,7 +837,7 @@
     }
   },
   {
-    "path": "dataset/tomato/Early_blight/tomato_early_56.JPG",
+    "path": "tests/fixtures/golden_images/tomato_early_56.JPG",
     "ground_truth": {
       "crop": "tomato",
       "disease_class": "Early_blight",
@@ -864,7 +864,7 @@
     }
   },
   {
-    "path": "dataset/tomato/Early_blight/tomato_early_675.JPG",
+    "path": "tests/fixtures/golden_images/tomato_early_675.JPG",
     "ground_truth": {
       "crop": "tomato",
       "disease_class": "Early_blight",
@@ -895,7 +895,7 @@
     }
   },
   {
-    "path": "dataset/tomato/Early_blight/tomato_early_725.JPG",
+    "path": "tests/fixtures/golden_images/tomato_early_725.JPG",
     "ground_truth": {
       "crop": "tomato",
       "disease_class": "Early_blight",
@@ -926,7 +926,7 @@
     }
   },
   {
-    "path": "dataset/tomato/Early_blight/tomato_early_80.JPG",
+    "path": "tests/fixtures/golden_images/tomato_early_80.JPG",
     "ground_truth": {
       "crop": "tomato",
       "disease_class": "Early_blight",
@@ -957,7 +957,7 @@
     }
   },
   {
-    "path": "dataset/tomato/Early_blight/tomato_early_850.JPG",
+    "path": "tests/fixtures/golden_images/tomato_early_850.JPG",
     "ground_truth": {
       "crop": "tomato",
       "disease_class": "Early_blight",
@@ -988,7 +988,7 @@
     }
   },
   {
-    "path": "dataset/tomato/Early_blight/tomato_early_914.JPG",
+    "path": "tests/fixtures/golden_images/tomato_early_914.JPG",
     "ground_truth": {
       "crop": "tomato",
       "disease_class": "Early_blight",
@@ -1019,7 +1019,7 @@
     }
   },
   {
-    "path": "dataset/tomato/Late_blight/tomato_late_1003.JPG",
+    "path": "tests/fixtures/golden_images/tomato_late_1003.JPG",
     "ground_truth": {
       "crop": "tomato",
       "disease_class": "Late_blight",
@@ -1050,7 +1050,7 @@
     }
   },
   {
-    "path": "dataset/tomato/Late_blight/tomato_late_1174.JPG",
+    "path": "tests/fixtures/golden_images/tomato_late_1174.JPG",
     "ground_truth": {
       "crop": "tomato",
       "disease_class": "Late_blight",
@@ -1081,7 +1081,7 @@
     }
   },
   {
-    "path": "dataset/tomato/Late_blight/tomato_late_1308.JPG",
+    "path": "tests/fixtures/golden_images/tomato_late_1308.JPG",
     "ground_truth": {
       "crop": "tomato",
       "disease_class": "Late_blight",
@@ -1112,7 +1112,7 @@
     }
   },
   {
-    "path": "dataset/tomato/Late_blight/tomato_late_1491.JPG",
+    "path": "tests/fixtures/golden_images/tomato_late_1491.JPG",
     "ground_truth": {
       "crop": "tomato",
       "disease_class": "Late_blight",
@@ -1143,7 +1143,7 @@
     }
   },
   {
-    "path": "dataset/tomato/Late_blight/tomato_late_1676.JPG",
+    "path": "tests/fixtures/golden_images/tomato_late_1676.JPG",
     "ground_truth": {
       "crop": "tomato",
       "disease_class": "Late_blight",
@@ -1174,7 +1174,7 @@
     }
   },
   {
-    "path": "dataset/tomato/Late_blight/tomato_late_1771.JPG",
+    "path": "tests/fixtures/golden_images/tomato_late_1771.JPG",
     "ground_truth": {
       "crop": "tomato",
       "disease_class": "Late_blight",
@@ -1205,7 +1205,7 @@
     }
   },
   {
-    "path": "dataset/tomato/Late_blight/tomato_late_1908.JPG",
+    "path": "tests/fixtures/golden_images/tomato_late_1908.JPG",
     "ground_truth": {
       "crop": "tomato",
       "disease_class": "Late_blight",
@@ -1236,7 +1236,7 @@
     }
   },
   {
-    "path": "dataset/tomato/Late_blight/tomato_late_705.JPG",
+    "path": "tests/fixtures/golden_images/tomato_late_705.JPG",
     "ground_truth": {
       "crop": "tomato",
       "disease_class": "Late_blight",
@@ -1267,7 +1267,7 @@
     }
   },
   {
-    "path": "dataset/tomato/healthy/tomato_healthy_1005.JPG",
+    "path": "tests/fixtures/golden_images/tomato_healthy_1005.JPG",
     "ground_truth": {
       "crop": "tomato",
       "disease_class": "healthy",
@@ -1298,7 +1298,7 @@
     }
   },
   {
-    "path": "dataset/tomato/healthy/tomato_healthy_1135.JPG",
+    "path": "tests/fixtures/golden_images/tomato_healthy_1135.JPG",
     "ground_truth": {
       "crop": "tomato",
       "disease_class": "healthy",
@@ -1329,7 +1329,7 @@
     }
   },
   {
-    "path": "dataset/tomato/healthy/tomato_healthy_1275.JPG",
+    "path": "tests/fixtures/golden_images/tomato_healthy_1275.JPG",
     "ground_truth": {
       "crop": "tomato",
       "disease_class": "healthy",
@@ -1360,7 +1360,7 @@
     }
   },
   {
-    "path": "dataset/tomato/healthy/tomato_healthy_1338.JPG",
+    "path": "tests/fixtures/golden_images/tomato_healthy_1338.JPG",
     "ground_truth": {
       "crop": "tomato",
       "disease_class": "healthy",
@@ -1391,7 +1391,7 @@
     }
   },
   {
-    "path": "dataset/tomato/healthy/tomato_healthy_1441.JPG",
+    "path": "tests/fixtures/golden_images/tomato_healthy_1441.JPG",
     "ground_truth": {
       "crop": "tomato",
       "disease_class": "healthy",
@@ -1422,7 +1422,7 @@
     }
   },
   {
-    "path": "dataset/tomato/healthy/tomato_healthy_1569.JPG",
+    "path": "tests/fixtures/golden_images/tomato_healthy_1569.JPG",
     "ground_truth": {
       "crop": "tomato",
       "disease_class": "healthy",
@@ -1453,7 +1453,7 @@
     }
   },
   {
-    "path": "dataset/tomato/healthy/tomato_healthy_742.JPG",
+    "path": "tests/fixtures/golden_images/tomato_healthy_742.JPG",
     "ground_truth": {
       "crop": "tomato",
       "disease_class": "healthy",
@@ -1484,7 +1484,7 @@
     }
   },
   {
-    "path": "dataset/tomato/healthy/tomato_healthy_869.JPG",
+    "path": "tests/fixtures/golden_images/tomato_healthy_869.JPG",
     "ground_truth": {
       "crop": "tomato",
       "disease_class": "healthy",

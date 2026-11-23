@@ -4,26 +4,21 @@ FastAPI Application Factory with lifespan management for LeafScan V3.
 """
 
 import time
-from pathlib import Path
-from typing import Optional
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
+from leafscan.api.middleware import BoundedConcurrencyMiddleware, RequestIdMiddleware
+from leafscan.api.routes import diagnose, feedback, health
 from leafscan.api.settings import Settings, get_settings
-from leafscan.api.middleware import (
-    RequestIdMiddleware,
-    BoundedConcurrencyMiddleware,
-    ExceptionMaskingMiddleware
-)
-from leafscan.api.routes import health, diagnose, feedback
 from leafscan.bundle.loader import load_model_bundle
-from leafscan.engines.onnx_engine import OnnxEngine
+from leafscan.core.logging import logger, setup_logging
 from leafscan.core.telemetry import metrics
-from leafscan.core.logging import setup_logging, logger
+from leafscan.engines.onnx_engine import OnnxEngine
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent.parent
 
@@ -51,7 +46,7 @@ async def lifespan(app: FastAPI):
             bundle=bundle,
             execution_provider=settings.execution_provider,
             intra_op_threads=settings.intra_op_threads,
-            inter_op_threads=settings.inter_op_threads
+            inter_op_threads=settings.inter_op_threads,
         )
         app.state.engine = engine
 
@@ -73,7 +68,7 @@ async def lifespan(app: FastAPI):
     logger.info("LeafScan V3 shutting down cleanly.")
 
 
-def create_app(settings: Optional[Settings] = None) -> FastAPI:
+def create_app(settings: Settings | None = None) -> FastAPI:
     """Application factory for LeafScan V3 REST API."""
     cfg = settings or get_settings()
 
@@ -83,7 +78,7 @@ def create_app(settings: Optional[Settings] = None) -> FastAPI:
         version=cfg.app_version,
         lifespan=lifespan,
         docs_url="/docs",
-        redoc_url="/redoc"
+        redoc_url="/redoc",
     )
     app.state.settings = cfg
 
@@ -98,9 +93,7 @@ def create_app(settings: Optional[Settings] = None) -> FastAPI:
 
     # 2. Concurrency Control Middleware (load shedding on peak concurrency)
     app.add_middleware(
-        BoundedConcurrencyMiddleware,
-        max_concurrent=cfg.max_concurrent_inferences,
-        target_path="/v2/diagnose"
+        BoundedConcurrencyMiddleware, max_concurrent=cfg.max_concurrent_inferences, target_path="/v2/diagnose"
     )
 
     # 3. Request ID Propagation Middleware

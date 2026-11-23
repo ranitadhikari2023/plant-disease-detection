@@ -4,51 +4,54 @@ Keras 3 / TensorFlow Inference Engine for Training, Parity & Development.
 TensorFlow is imported lazily to keep the production serving path 100% decoupled.
 """
 
-from typing import Dict, Any, Optional
 from pathlib import Path
+from typing import Any
+
 import numpy as np
 
 from leafscan.bundle.loader import ModelBundle
-from leafscan.engines.base import InferenceEngine, EngineInfo
 from leafscan.core.exceptions import InferenceEngineError
 from leafscan.core.logging import logger
+from leafscan.engines.base import EngineInfo
 
 
 class KerasEngine:
     """Development and parity testing engine using Keras 3 with lazy TensorFlow import."""
 
-    def __init__(self, bundle: Optional[ModelBundle] = None, keras_models_dir: str = "models/v2"):
+    def __init__(self, bundle: ModelBundle | None = None, keras_models_dir: str = "models/v2"):
         self.bundle = bundle
         self.keras_models_dir = Path(keras_models_dir)
-        self.models: Dict[str, Any] = {}
+        self.models: dict[str, Any] = {}
         self._tf = None
         self._initialize_models()
 
     def _get_tf(self):
         if self._tf is None:
             import os
-            os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+
+            os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
             import tensorflow as tf
+
             self._tf = tf
         return self._tf
 
     def _initialize_models(self):
         tf = self._get_tf()
-        from training.models import CBAM, ChannelAttention, SpatialAttention
         from training.losses import SparseCategoricalFocalLoss
+        from training.models import CBAM, ChannelAttention, SpatialAttention
 
         custom_objs = {
-            'CBAM': CBAM,
-            'ChannelAttention': ChannelAttention,
-            'SpatialAttention': SpatialAttention,
-            'SparseCategoricalFocalLoss': SparseCategoricalFocalLoss,
-            'preprocess_input': tf.keras.applications.mobilenet_v2.preprocess_input
+            "CBAM": CBAM,
+            "ChannelAttention": ChannelAttention,
+            "SpatialAttention": SpatialAttention,
+            "SparseCategoricalFocalLoss": SparseCategoricalFocalLoss,
+            "preprocess_input": tf.keras.applications.mobilenet_v2.preprocess_input,
         }
 
         mapping = {
             "species_expert": self.keras_models_dir / "species_expert_v2.keras",
             "potato_expert": self.keras_models_dir / "potato_expert_v2.keras",
-            "tomato_expert": self.keras_models_dir / "tomato_expert_v2.keras"
+            "tomato_expert": self.keras_models_dir / "tomato_expert_v2.keras",
         }
 
         for key, path in mapping.items():
@@ -83,5 +86,5 @@ class KerasEngine:
             execution_provider="TensorFlow-CPU",
             intra_op_threads=0,
             inter_op_threads=0,
-            models_loaded={k: str(p.name) for k, p in self.models.items()}
+            models_loaded={k: str(p.name) for k, p in self.models.items()},
         )

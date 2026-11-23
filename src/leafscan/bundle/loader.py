@@ -5,7 +5,6 @@ Model bundle loading, verification, and metadata encapsulation.
 
 import json
 from pathlib import Path
-from typing import Dict, Optional
 
 from leafscan.bundle.manifest import BundleManifest
 from leafscan.bundle.verification import verify_bundle_integrity
@@ -16,14 +15,14 @@ from leafscan.core.logging import logger
 class ModelBundle:
     """Encapsulates a verified, immutable LeafScan model bundle."""
 
-    def __init__(self, bundle_dir: Path, manifest: BundleManifest, verified_hashes: Dict[str, str]):
+    def __init__(self, bundle_dir: Path, manifest: BundleManifest, verified_hashes: dict[str, str]):
         self.bundle_dir = bundle_dir
         self.manifest = manifest
         self.verified_hashes = verified_hashes
         self.version = manifest.bundle_version
 
     @property
-    def model_paths(self) -> Dict[str, Path]:
+    def model_paths(self) -> dict[str, Path]:
         return {key: self.bundle_dir / spec.filename for key, spec in self.manifest.models.items()}
 
     def get_model_spec(self, key: str):
@@ -46,7 +45,7 @@ def load_model_bundle(bundle_dir: Path | str, verify_checksums: bool = True) -> 
         raise ModelBundleError(f"manifest.json missing in model bundle directory: {p}")
 
     try:
-        with open(manifest_path, "r", encoding="utf-8") as f:
+        with open(manifest_path, encoding="utf-8") as f:
             data = json.load(f)
         manifest = BundleManifest.model_validate(data)
     except Exception as e:

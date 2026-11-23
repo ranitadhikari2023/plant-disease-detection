@@ -11,22 +11,24 @@ Retains all 7 core verification categories:
   7. Legacy V1 asset preservation in archive/v1/ & error handling.
 """
 
+import json
 import os
 import sys
-import json
 from pathlib import Path
+
 import numpy as np
 import pytest
 from PIL import Image
 
 # Add project root to sys.path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 
 import tensorflow as tf
-from inference.model_loader import load_models, unload_models, get_custom_objects
-from inference.preprocessing import preprocess_image
+
+from inference.model_loader import load_models, unload_models
 from inference.predictor import HierarchicalPredictorV2, predict_v2
+from inference.preprocessing import preprocess_image
 from training.models import CBAM
 
 
@@ -41,7 +43,9 @@ def test_safe_mode_deserialization_and_cbam():
     assert tomato_m is not None, "Tomato model failed to load"
 
     # Inspect CBAM layer in Potato Doctor
-    cbam_layer = next((l for l in potato_m.layers if isinstance(l, CBAM) or l.__class__.__name__ == 'CBAM'), None)
+    cbam_layer = next(
+        (layer for layer in potato_m.layers if isinstance(layer, CBAM) or layer.__class__.__name__ == "CBAM"), None
+    )
     assert cbam_layer is not None, "Potato Doctor missing CBAM layer"
 
     # Inspect submodules
@@ -61,7 +65,9 @@ def test_safe_mode_deserialization_and_cbam():
     assert total_cbam == 206258, f"Expected 206,258 total CBAM weights, got {total_cbam}"
 
     # Also verify CBAM layer in Tomato Doctor
-    cbam_layer_t = next((l for l in tomato_m.layers if isinstance(l, CBAM) or l.__class__.__name__ == 'CBAM'), None)
+    cbam_layer_t = next(
+        (layer for layer in tomato_m.layers if isinstance(layer, CBAM) or layer.__class__.__name__ == "CBAM"), None
+    )
     assert cbam_layer_t is not None, "Tomato Doctor missing CBAM layer"
     assert sum(tf.size(w).numpy() for w in cbam_layer_t.weights) == 206258
 
@@ -128,7 +134,7 @@ def test_preprocessing_regression():
     assert t_cmyk.shape == (1, 224, 224, 3)
 
     # 5. NumPy 2D array
-    np_arr = (np.ones((200, 200), dtype=np.uint8) * 150)
+    np_arr = np.ones((200, 200), dtype=np.uint8) * 150
     t_np, _ = preprocess_image(np_arr)
     assert t_np.shape == (1, 224, 224, 3)
 
@@ -141,7 +147,7 @@ def test_species_gate_boundaries_and_abstention(sample_leaf_path):
         "safety_gates": {
             "species_confidence_threshold": 0.9442,  # sample_leaf has ~0.9441 < 0.9442
             "late_blight_confidence_threshold": 0.90,
-            "general_disease_confidence_threshold": 0.70
+            "general_disease_confidence_threshold": 0.70,
         }
     }
     pred_below = HierarchicalPredictorV2(config=cfg_below)
@@ -159,7 +165,7 @@ def test_species_gate_boundaries_and_abstention(sample_leaf_path):
         "safety_gates": {
             "species_confidence_threshold": actual_conf,
             "late_blight_confidence_threshold": 0.90,
-            "general_disease_confidence_threshold": 0.70
+            "general_disease_confidence_threshold": 0.70,
         }
     }
     pred_exact = HierarchicalPredictorV2(config=cfg_exact)
@@ -172,7 +178,7 @@ def test_species_gate_boundaries_and_abstention(sample_leaf_path):
         "safety_gates": {
             "species_confidence_threshold": 0.90,
             "late_blight_confidence_threshold": 0.90,
-            "general_disease_confidence_threshold": 0.70
+            "general_disease_confidence_threshold": 0.70,
         }
     }
     pred_std = HierarchicalPredictorV2(config=cfg_std)
@@ -190,7 +196,7 @@ def test_late_blight_gate_boundaries(sample_leaf_path):
         "safety_gates": {
             "species_confidence_threshold": 0.90,
             "late_blight_confidence_threshold": round(actual_dis_conf + 0.0001, 4),
-            "general_disease_confidence_threshold": 0.50
+            "general_disease_confidence_threshold": 0.50,
         }
     }
     res_lb_below = HierarchicalPredictorV2(config=cfg_lb_below).predict(sample_leaf_path)
@@ -202,7 +208,7 @@ def test_late_blight_gate_boundaries(sample_leaf_path):
         "safety_gates": {
             "species_confidence_threshold": 0.90,
             "late_blight_confidence_threshold": actual_dis_conf,
-            "general_disease_confidence_threshold": 0.50
+            "general_disease_confidence_threshold": 0.50,
         }
     }
     res_lb_exact = HierarchicalPredictorV2(config=cfg_lb_exact).predict(sample_leaf_path)
@@ -213,7 +219,7 @@ def test_late_blight_gate_boundaries(sample_leaf_path):
         "safety_gates": {
             "species_confidence_threshold": 0.90,
             "late_blight_confidence_threshold": round(actual_dis_conf - 0.0001, 4),
-            "general_disease_confidence_threshold": 0.50
+            "general_disease_confidence_threshold": 0.50,
         }
     }
     res_lb_above = HierarchicalPredictorV2(config=cfg_lb_above).predict(sample_leaf_path)
@@ -231,7 +237,9 @@ def test_sample_leaf_and_advisory_safety(sample_leaf_path):
     advisory = res["advisory"]
     assert "DO NOT apply" in advisory or "Do not apply" in advisory, "Missing chemical suppression advisory!"
     assert "24" in advisory and "48" in advisory, "Missing isolation re-inspection timeline"
-    assert "extension" in advisory.lower() or "consult" in advisory.lower(), "Missing professional consultation advisory"
+    assert "extension" in advisory.lower() or "consult" in advisory.lower(), (
+        "Missing professional consultation advisory"
+    )
 
     # Verify JSON serialization
     json_str = json.dumps(res, indent=2)
@@ -244,7 +252,7 @@ def test_legacy_v1_asset_preservation_and_error_handling():
     v1_models = [
         "archive/v1/models/species_expert.keras",
         "archive/v1/models/potato_expert.keras",
-        "archive/v1/models/tomato_expert.keras"
+        "archive/v1/models/tomato_expert.keras",
     ]
     for p in v1_models:
         assert os.path.exists(p), f"Archived V1 legacy model missing: {p}"
@@ -257,7 +265,7 @@ def test_legacy_v1_asset_preservation_and_error_handling():
     v2_models = [
         "models/v2/species_expert_v2.keras",
         "models/v2/potato_expert_v2.keras",
-        "models/v2/tomato_expert_v2.keras"
+        "models/v2/tomato_expert_v2.keras",
     ]
     for p in v2_models:
         assert os.path.exists(p), f"Production V2 model missing: {p}"

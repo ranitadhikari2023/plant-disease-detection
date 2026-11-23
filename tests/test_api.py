@@ -9,7 +9,7 @@ import io
 import os
 import sys
 from pathlib import Path
-from typing import Dict, Any
+from typing import Any
 from unittest.mock import MagicMock
 
 import pytest
@@ -20,8 +20,8 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from api.main import app, set_predictor, get_predictor, MAX_UPLOAD_SIZE_BYTES
-from inference.response_formatter import format_prediction_response, format_error_response
+from api.main import MAX_UPLOAD_SIZE_BYTES, app, set_predictor
+from inference.response_formatter import format_error_response, format_prediction_response
 
 
 class UnifiedTestClient:
@@ -30,12 +30,14 @@ class UnifiedTestClient:
     explicitly enabled via USE_TESTCLIENT=1 or when running outside the sandbox,
     and provides instant direct route dispatch for deterministic sandbox testing.
     """
+
     def __init__(self, fastapi_app):
         self.app = fastapi_app
         self._test_client = None
         if os.environ.get("USE_TESTCLIENT") == "1":
             try:
                 from starlette.testclient import TestClient
+
                 self._test_client = TestClient(fastapi_app, raise_server_exceptions=False)
             except Exception:
                 self._test_client = None
@@ -44,15 +46,15 @@ class UnifiedTestClient:
         if self._test_client:
             return self._test_client.get(path)
         # Direct fallback dispatcher
-        from fastapi import Request
-        from fastapi.responses import Response
 
         if path == "/health":
             from api.main import health_check
+
             data = health_check()
             return MockResponse(200, json_data=data)
         elif path in ["/", "/index.html"]:
             from api.main import serve_index
+
             resp = serve_index()
             return MockResponse(200, text=Path(resp.path).read_text(encoding="utf-8"))
         elif path == "/css/tokens.css":
@@ -66,10 +68,11 @@ class UnifiedTestClient:
     def post(self, path: str, files=None, data=None):
         if self._test_client:
             return self._test_client.post(path, files=files, data=data)
-        
+
         # Direct fallback dispatcher for /v2/diagnose
         if path == "/v2/diagnose":
-            from fastapi import UploadFile, HTTPException
+            from fastapi import HTTPException, UploadFile
+
             from api.main import diagnose_leaf
 
             if not files or "image" not in files:
@@ -77,17 +80,17 @@ class UnifiedTestClient:
 
             file_info = files["image"]
             if isinstance(file_info, tuple):
-                filename, file_obj, content_type = file_info
+                filename, file_obj, _ = file_info
             else:
                 filename = getattr(file_info, "name", "upload.jpg")
                 file_obj = file_info
-                content_type = "image/jpeg"
 
             upload = UploadFile(file=file_obj, filename=filename)
             try:
                 result = diagnose_leaf(image=upload)
                 if hasattr(result, "status_code"):
                     import json
+
                     body = json.loads(result.body.decode("utf-8")) if hasattr(result, "body") else result
                     return MockResponse(result.status_code, json_data=body)
                 return MockResponse(200, json_data=result)
@@ -101,6 +104,7 @@ class UnifiedTestClient:
 
 class MockResponse:
     """Mock HTTP Response wrapping status_code, json, and text."""
+
     def __init__(self, status_code: int, json_data: Any = None, text: str = ""):
         self.status_code = status_code
         self._json = json_data
@@ -139,6 +143,7 @@ def sample_jpeg_bytes():
 # 1. Health & Static Serving Tests
 # -----------------------------------------------------------------------------
 
+
 def test_health_endpoint(client):
     """GET /health must return status healthy without prematurely loading models."""
     res = client.get("/health")
@@ -175,6 +180,7 @@ def test_serve_static_assets(client):
 # 2. Defensive Input Validation Tests
 # -----------------------------------------------------------------------------
 
+
 def test_diagnose_missing_image_payload(client):
     """POST /v2/diagnose without an image field must be rejected."""
     res = client.post("/v2/diagnose", files={})
@@ -184,10 +190,7 @@ def test_diagnose_missing_image_payload(client):
 def test_diagnose_empty_file_content(client):
     """POST /v2/diagnose with a 0-byte file must return 400 Bad Request."""
     empty_stream = io.BytesIO(b"")
-    res = client.post(
-        "/v2/diagnose",
-        files={"image": ("empty.jpg", empty_stream, "image/jpeg")}
-    )
+    res = client.post("/v2/diagnose", files={"image": ("empty.jpg", empty_stream, "image/jpeg")})
     assert res.status_code == 400
     assert "empty" in res.json().get("detail", "").lower()
 
@@ -195,10 +198,7 @@ def test_diagnose_empty_file_content(client):
 def test_diagnose_corrupted_image_file(client):
     """POST /v2/diagnose with random corrupted bytes must return 400 Bad Request."""
     corrupt_stream = io.BytesIO(b"RIFF\x00\x00\x00\x00NOT_AN_IMAGE_PAYLOAD_CORRUPT")
-    res = client.post(
-        "/v2/diagnose",
-        files={"image": ("corrupted.jpg", corrupt_stream, "image/jpeg")}
-    )
+    res = client.post("/v2/diagnose", files={"image": ("corrupted.jpg", corrupt_stream, "image/jpeg")})
     assert res.status_code == 400
     assert "invalid" in res.json().get("detail", "").lower() or "decode" in res.json().get("detail", "").lower()
 
@@ -209,10 +209,7 @@ def test_diagnose_unsupported_image_format(client):
     img = Image.new("RGB", (50, 50), color=(100, 100, 100))
     img.save(buf, format="BMP")
 
-    res = client.post(
-        "/v2/diagnose",
-        files={"image": ("sample.bmp", io.BytesIO(buf.getvalue()), "image/bmp")}
-    )
+    res = client.post("/v2/diagnose", files={"image": ("sample.bmp", io.BytesIO(buf.getvalue()), "image/bmp")})
     assert res.status_code == 415
     assert "unsupported" in res.json().get("detail", "").lower()
 
@@ -220,10 +217,7 @@ def test_diagnose_unsupported_image_format(client):
 def test_diagnose_oversized_payload_rejection(client):
     """POST /v2/diagnose exceeding MAX_UPLOAD_SIZE_BYTES must return 413."""
     oversized_bytes = b"X" * (MAX_UPLOAD_SIZE_BYTES + 1024)
-    res = client.post(
-        "/v2/diagnose",
-        files={"image": ("giant.jpg", io.BytesIO(oversized_bytes), "image/jpeg")}
-    )
+    res = client.post("/v2/diagnose", files={"image": ("giant.jpg", io.BytesIO(oversized_bytes), "image/jpeg")})
     assert res.status_code == 413
     assert "exceeds maximum size" in res.json().get("detail", "").lower()
 
@@ -231,6 +225,7 @@ def test_diagnose_oversized_payload_rejection(client):
 # -----------------------------------------------------------------------------
 # 3. Deterministic Injected Mock Tests (All Safety Statuses & Edge Conditions)
 # -----------------------------------------------------------------------------
+
 
 def test_diagnose_confident_status_mapping(client, sample_jpeg_bytes):
     """Verify confident diagnosis response schema with mock predictor."""
@@ -246,14 +241,11 @@ def test_diagnose_confident_status_mapping(client, sample_jpeg_bytes):
         safety_warnings=[],
         advisory="EARLY BLIGHT DETECTED: Prune lower foliage and scout field.",
         execution_time_ms=45.2,
-        model_version="v2"
+        model_version="v2",
     )
     set_predictor(mock_pred)
 
-    res = client.post(
-        "/v2/diagnose",
-        files={"image": ("leaf.jpg", io.BytesIO(sample_jpeg_bytes), "image/jpeg")}
-    )
+    res = client.post("/v2/diagnose", files={"image": ("leaf.jpg", io.BytesIO(sample_jpeg_bytes), "image/jpeg")})
     assert res.status_code == 200
     data = res.json()
     assert data["success"] is True
@@ -281,14 +273,11 @@ def test_diagnose_species_uncertain_abstention(client, sample_jpeg_bytes):
         safety_warnings=["Species confidence (74.20%) is below the safety threshold (90%)."],
         advisory="SPECIES UNCERTAINTY: Do NOT apply chemical treatments to unverified plant species.",
         execution_time_ms=38.9,
-        model_version="v2"
+        model_version="v2",
     )
     set_predictor(mock_pred)
 
-    res = client.post(
-        "/v2/diagnose",
-        files={"image": ("leaf.jpg", io.BytesIO(sample_jpeg_bytes), "image/jpeg")}
-    )
+    res = client.post("/v2/diagnose", files={"image": ("leaf.jpg", io.BytesIO(sample_jpeg_bytes), "image/jpeg")})
     assert res.status_code == 200
     data = res.json()
     assert data["success"] is True
@@ -314,14 +303,11 @@ def test_diagnose_late_blight_uncertain_escalation(client, sample_jpeg_bytes):
         safety_warnings=["Late Blight confidence (69.64%) is below the safety threshold (90%)."],
         advisory="LATE BLIGHT UNCERTAINTY: DO NOT apply aggressive systemic fungicides at this stage. Re-inspect within 24 to 48 hours.",
         execution_time_ms=92.1,
-        model_version="v2"
+        model_version="v2",
     )
     set_predictor(mock_pred)
 
-    res = client.post(
-        "/v2/diagnose",
-        files={"image": ("leaf.jpg", io.BytesIO(sample_jpeg_bytes), "image/jpeg")}
-    )
+    res = client.post("/v2/diagnose", files={"image": ("leaf.jpg", io.BytesIO(sample_jpeg_bytes), "image/jpeg")})
     assert res.status_code == 200
     data = res.json()
     assert data["success"] is True
@@ -345,14 +331,11 @@ def test_diagnose_general_disease_uncertain(client, sample_jpeg_bytes):
         safety_warnings=["Diagnostic confidence (62.00%) is below general safety threshold (70%)."],
         advisory="MARGINAL DIAGNOSTIC CONFIDENCE: Re-photograph leaf in diffuse daylight.",
         execution_time_ms=51.0,
-        model_version="v2"
+        model_version="v2",
     )
     set_predictor(mock_pred)
 
-    res = client.post(
-        "/v2/diagnose",
-        files={"image": ("leaf.jpg", io.BytesIO(sample_jpeg_bytes), "image/jpeg")}
-    )
+    res = client.post("/v2/diagnose", files={"image": ("leaf.jpg", io.BytesIO(sample_jpeg_bytes), "image/jpeg")})
     assert res.status_code == 200
     data = res.json()
     assert data["safety_status"] == "disease_uncertain"
@@ -365,10 +348,7 @@ def test_diagnose_internal_exception_masking(client, sample_jpeg_bytes):
     mock_pred.predict.side_effect = RuntimeError("Internal CUDA tensor failure at /secret/path/model.py:42")
     set_predictor(mock_pred)
 
-    res = client.post(
-        "/v2/diagnose",
-        files={"image": ("leaf.jpg", io.BytesIO(sample_jpeg_bytes), "image/jpeg")}
-    )
+    res = client.post("/v2/diagnose", files={"image": ("leaf.jpg", io.BytesIO(sample_jpeg_bytes), "image/jpeg")})
     assert res.status_code == 500
     data = res.json()
     assert data["success"] is False
@@ -380,6 +360,7 @@ def test_diagnose_internal_exception_masking(client, sample_jpeg_bytes):
 # -----------------------------------------------------------------------------
 # 4. Real Integration Smoke Test (Live Models & Sample Leaf)
 # -----------------------------------------------------------------------------
+
 
 @pytest.mark.smoke
 def test_real_sample_leaf_integration_smoke(client):
@@ -398,10 +379,7 @@ def test_real_sample_leaf_integration_smoke(client):
     # Call with unmocked real predictor
     set_predictor(None)
 
-    res = client.post(
-        "/v2/diagnose",
-        files={"image": ("sample_leaf.JPG", io.BytesIO(img_bytes), "image/jpeg")}
-    )
+    res = client.post("/v2/diagnose", files={"image": ("sample_leaf.JPG", io.BytesIO(img_bytes), "image/jpeg")})
     assert res.status_code == 200
     data = res.json()
     assert data["success"] is True

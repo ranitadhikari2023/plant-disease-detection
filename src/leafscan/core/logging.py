@@ -3,26 +3,34 @@ src/leafscan/core/logging.py
 Structured JSON logging for LeafScan V3.
 """
 
-import sys
 import json
 import logging
+import sys
 from datetime import datetime, timezone
-from typing import Any, Dict
+from typing import Any
 
 
 class JSONLogFormatter(logging.Formatter):
     """Formats log records as single-line JSON objects."""
 
     def format(self, record: logging.LogRecord) -> str:
-        log_entry: Dict[str, Any] = {
+        log_entry: dict[str, Any] = {
             "timestamp": datetime.now(timezone.utc).isoformat(),
             "level": record.levelname,
             "logger": record.name,
-            "message": record.getMessage()
+            "message": record.getMessage(),
         }
 
         # Include custom attributes if passed in extra
-        for key in ("request_id", "endpoint", "status_code", "duration_ms", "model_bundle", "safety_status", "error_code"):
+        for key in (
+            "request_id",
+            "endpoint",
+            "status_code",
+            "duration_ms",
+            "model_bundle",
+            "safety_status",
+            "error_code",
+        ):
             val = getattr(record, key, None)
             if val is not None:
                 log_entry[key] = val

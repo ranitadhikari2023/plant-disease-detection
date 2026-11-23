@@ -3,21 +3,22 @@ src/leafscan/api/routes/health.py
 Health, Readiness, Model Information, and Metrics endpoints.
 """
 
-from typing import Dict, Any
-from fastapi import APIRouter, Depends, Response, status
+from typing import Any
+
+from fastapi import APIRouter, Depends
 from starlette.responses import PlainTextResponse
 
-from leafscan.api.dependencies import get_model_bundle, get_inference_engine, get_app_settings
+from leafscan.api.dependencies import get_app_settings, get_inference_engine, get_model_bundle
 from leafscan.api.settings import Settings
 from leafscan.bundle.loader import ModelBundle
-from leafscan.engines.base import InferenceEngine
 from leafscan.core.telemetry import metrics
+from leafscan.engines.base import InferenceEngine
 
 router = APIRouter(tags=["System & Observability"])
 
 
 @router.get("/health", summary="Lightweight Liveness Check")
-def health_check(request_app_state: Any = None) -> Dict[str, Any]:
+def health_check(request_app_state: Any = None) -> dict[str, Any]:
     """
     Lightweight health check endpoint.
     Reports operational status and model caching state without triggering model deserialization.
@@ -28,15 +29,14 @@ def health_check(request_app_state: Any = None) -> Dict[str, Any]:
         "status": "healthy",
         "model_version": "v2",
         "architecture": "MobileNetV2 + CBAM Attention",
-        "models_loaded": True
+        "models_loaded": True,
     }
 
 
 @router.get("/ready", summary="Readiness Probe")
 def readiness_check(
-    bundle: ModelBundle = Depends(get_model_bundle),
-    engine: InferenceEngine = Depends(get_inference_engine)
-) -> Dict[str, Any]:
+    bundle: ModelBundle = Depends(get_model_bundle), engine: InferenceEngine = Depends(get_inference_engine)
+) -> dict[str, Any]:
     """
     Readiness endpoint for container orchestrators (Docker / Kubernetes).
     Verifies that model sessions are initialized, bundle is verified, and engine is operational.
@@ -47,7 +47,7 @@ def readiness_check(
         "bundle_version": bundle.version,
         "engine": info.engine_name,
         "execution_provider": info.execution_provider,
-        "models_verified": list(bundle.model_paths.keys())
+        "models_verified": list(bundle.model_paths.keys()),
     }
 
 
@@ -55,8 +55,8 @@ def readiness_check(
 def model_info(
     bundle: ModelBundle = Depends(get_model_bundle),
     engine: InferenceEngine = Depends(get_inference_engine),
-    settings: Settings = Depends(get_app_settings)
-) -> Dict[str, Any]:
+    settings: Settings = Depends(get_app_settings),
+) -> dict[str, Any]:
     """Returns read-only operational specifications and verified checksums for the active model bundle."""
     manifest = bundle.manifest
     info = engine.info
@@ -73,7 +73,7 @@ def model_info(
                 "sha256": spec.sha256,
                 "classes": list(spec.index_to_label.values()),
                 "input_node": spec.input_name,
-                "output_node": spec.output_name
+                "output_node": spec.output_name,
             }
             for k, spec in manifest.models.items()
         },
@@ -83,9 +83,9 @@ def model_info(
             "name": info.engine_name,
             "provider": info.execution_provider,
             "intra_op_threads": info.intra_op_threads,
-            "inter_op_threads": info.inter_op_threads
+            "inter_op_threads": info.inter_op_threads,
         },
-        "metrics": manifest.metrics
+        "metrics": manifest.metrics,
     }
 
 

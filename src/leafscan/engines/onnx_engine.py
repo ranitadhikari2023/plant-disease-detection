@@ -4,16 +4,13 @@ Production ONNX Runtime Inference Engine.
 Zero TensorFlow dependency. High throughput, low-latency CPU serving.
 """
 
-import os
-from pathlib import Path
-from typing import Dict, Any, Optional
 import numpy as np
 import onnxruntime as ort
 
 from leafscan.bundle.loader import ModelBundle
-from leafscan.engines.base import InferenceEngine, EngineInfo
 from leafscan.core.exceptions import InferenceEngineError
 from leafscan.core.logging import logger
+from leafscan.engines.base import EngineInfo
 
 
 class OnnxEngine:
@@ -24,16 +21,16 @@ class OnnxEngine:
         bundle: ModelBundle,
         execution_provider: str = "CPUExecutionProvider",
         intra_op_threads: int = 2,
-        inter_op_threads: int = 1
+        inter_op_threads: int = 1,
     ):
         self.bundle = bundle
         self.execution_provider = execution_provider
         self.intra_op_threads = intra_op_threads
         self.inter_op_threads = inter_op_threads
 
-        self.sessions: Dict[str, ort.InferenceSession] = {}
-        self.input_names: Dict[str, str] = {}
-        self.output_names: Dict[str, str] = {}
+        self.sessions: dict[str, ort.InferenceSession] = {}
+        self.input_names: dict[str, str] = {}
+        self.output_names: dict[str, str] = {}
 
         self._initialize_sessions()
 
@@ -50,12 +47,10 @@ class OnnxEngine:
         # Optimize thread pool configuration for CPU serving
         providers = [self.execution_provider]
         if self.execution_provider not in ort.get_available_providers():
-            logger.warning(
-                f"Provider {self.execution_provider} not available. Falling back to CPUExecutionProvider."
-            )
+            logger.warning(f"Provider {self.execution_provider} not available. Falling back to CPUExecutionProvider.")
             providers = ["CPUExecutionProvider"]
 
-        for key, spec in self.bundle.manifest.models.items():
+        for key, _spec in self.bundle.manifest.models.items():
             model_path = self.bundle.model_paths[key]
             logger.info(f"Initializing ONNX session for {key} from {model_path.name}")
             try:
@@ -66,7 +61,7 @@ class OnnxEngine:
             except Exception as e:
                 raise InferenceEngineError(
                     f"Failed to initialize ONNX session for '{key}': {e}",
-                    details={"model_key": key, "path": str(model_path)}
+                    details={"model_key": key, "path": str(model_path)},
                 ) from e
 
     def predict(self, model_key: str, batch: np.ndarray) -> np.ndarray:
@@ -122,5 +117,5 @@ class OnnxEngine:
             execution_provider=self.execution_provider,
             intra_op_threads=self.intra_op_threads,
             inter_op_threads=self.inter_op_threads,
-            models_loaded={k: str(p.name) for k, p in self.bundle.model_paths.items()}
+            models_loaded={k: str(p.name) for k, p in self.bundle.model_paths.items()},
         )

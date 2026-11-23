@@ -6,17 +6,17 @@ gradient flow, serialization, and specimen-level class weighting calculations.
 """
 
 import csv
-from pathlib import Path
+
 import numpy as np
 import pytest
 import tensorflow as tf
 
 from training.losses import SparseCategoricalFocalLoss, compute_specimen_class_weights
 
-
 # ==============================================================================
 # 1. Specimen Class Weighting Tests
 # ==============================================================================
+
 
 @pytest.mark.losses
 def test_compute_specimen_class_weights_balanced(tmp_path):
@@ -27,16 +27,24 @@ def test_compute_specimen_class_weights_balanced(tmp_path):
     rows = []
     # 10 specimens for each of the 3 potato classes
     for i in range(10):
-        rows.append({"source_group_id": f"EB_{i}", "crop": "potato", "disease_class": "Early_blight", "assigned_split": "train"})
-        rows.append({"source_group_id": f"LB_{i}", "crop": "potato", "disease_class": "Late_blight", "assigned_split": "train"})
-        rows.append({"source_group_id": f"H_{i}", "crop": "potato", "disease_class": "healthy", "assigned_split": "train"})
+        rows.append(
+            {"source_group_id": f"EB_{i}", "crop": "potato", "disease_class": "Early_blight", "assigned_split": "train"}
+        )
+        rows.append(
+            {"source_group_id": f"LB_{i}", "crop": "potato", "disease_class": "Late_blight", "assigned_split": "train"}
+        )
+        rows.append(
+            {"source_group_id": f"H_{i}", "crop": "potato", "disease_class": "healthy", "assigned_split": "train"}
+        )
 
     with open(manifest_file, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=headers)
         writer.writeheader()
         writer.writerows(rows)
 
-    weights, counts = compute_specimen_class_weights(str(manifest_file), crop_filter="potato", model_type="potato_expert")
+    weights, counts = compute_specimen_class_weights(
+        str(manifest_file), crop_filter="potato", model_type="potato_expert"
+    )
 
     assert counts == {"Early_blight": 10, "Late_blight": 10, "healthy": 10}
     # Formula: 30 / (3 * 10) = 1.0
@@ -57,23 +65,31 @@ def test_compute_specimen_class_weights_imbalance_and_duplicate_deduplication(tm
     rows = []
     # 20 distinct Early Blight specimens (each appears 1 time)
     for i in range(20):
-        rows.append({"source_group_id": f"EB_{i}", "crop": "potato", "disease_class": "Early_blight", "assigned_split": "train"})
+        rows.append(
+            {"source_group_id": f"EB_{i}", "crop": "potato", "disease_class": "Early_blight", "assigned_split": "train"}
+        )
 
     # 10 distinct Late Blight specimens (each appears 1 time)
     for i in range(10):
-        rows.append({"source_group_id": f"LB_{i}", "crop": "potato", "disease_class": "Late_blight", "assigned_split": "train"})
+        rows.append(
+            {"source_group_id": f"LB_{i}", "crop": "potato", "disease_class": "Late_blight", "assigned_split": "train"}
+        )
 
     # 2 distinct Healthy specimens, but heavily duplicated (5 duplicate images per specimen = 10 rows)
     for i in range(2):
-        for dup in range(5):
-            rows.append({"source_group_id": f"H_{i}", "crop": "potato", "disease_class": "healthy", "assigned_split": "train"})
+        for _dup in range(5):
+            rows.append(
+                {"source_group_id": f"H_{i}", "crop": "potato", "disease_class": "healthy", "assigned_split": "train"}
+            )
 
     with open(manifest_file, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=headers)
         writer.writeheader()
         writer.writerows(rows)
 
-    weights, counts = compute_specimen_class_weights(str(manifest_file), crop_filter="potato", model_type="potato_expert")
+    weights, counts = compute_specimen_class_weights(
+        str(manifest_file), crop_filter="potato", model_type="potato_expert"
+    )
 
     # True biological counts: 20 Early Blight, 10 Late Blight, 2 Healthy (NOT 10 Healthy!)
     assert counts["Early_blight"] == 20
@@ -101,9 +117,13 @@ def test_compute_specimen_class_weights_species_expert(tmp_path):
     rows = []
     # 15 potato specimens, 5 tomato specimens
     for i in range(15):
-        rows.append({"source_group_id": f"P_{i}", "crop": "potato", "disease_class": "healthy", "assigned_split": "train"})
+        rows.append(
+            {"source_group_id": f"P_{i}", "crop": "potato", "disease_class": "healthy", "assigned_split": "train"}
+        )
     for i in range(5):
-        rows.append({"source_group_id": f"T_{i}", "crop": "tomato", "disease_class": "healthy", "assigned_split": "train"})
+        rows.append(
+            {"source_group_id": f"T_{i}", "crop": "tomato", "disease_class": "healthy", "assigned_split": "train"}
+        )
 
     with open(manifest_file, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=headers)
@@ -148,6 +168,7 @@ def test_compute_specimen_class_weights_split_filtering(tmp_path):
 # 2. SparseCategoricalFocalLoss Tests
 # ==============================================================================
 
+
 @pytest.mark.losses
 def test_focal_loss_initialization():
     """Verify focal loss initialization parameters and defaults."""
@@ -170,11 +191,7 @@ def test_focal_loss_shapes_and_non_negativity():
 
     # Targets as 1D vector (B,)
     y_true_1d = tf.constant([0, 1, 2], dtype=tf.int32)
-    y_pred = tf.constant([
-        [0.8, 0.1, 0.1],
-        [0.1, 0.8, 0.1],
-        [0.1, 0.2, 0.7]
-    ], dtype=tf.float32)
+    y_pred = tf.constant([[0.8, 0.1, 0.1], [0.1, 0.8, 0.1], [0.1, 0.2, 0.7]], dtype=tf.float32)
 
     val_1d = loss_fn(y_true_1d, y_pred)
     assert np.isfinite(val_1d.numpy())
@@ -250,10 +267,7 @@ def test_focal_loss_numerical_stability():
 
     # Extreme probabilities
     y_true = tf.constant([0, 1], dtype=tf.int32)
-    y_pred = tf.constant([
-        [1.0, 0.0],
-        [0.0, 1.0]
-    ], dtype=tf.float32)
+    y_pred = tf.constant([[1.0, 0.0], [0.0, 1.0]], dtype=tf.float32)
 
     val = loss_fn(y_true, y_pred).numpy()
     assert np.isfinite(val)

@@ -7,28 +7,19 @@ Production ASGI Middleware for LeafScan V3:
   - Safe error masking (enforces invariant JSON error schema)
 """
 
+import asyncio
 import time
 import uuid
-import asyncio
-from typing import Dict, Tuple
 from collections import defaultdict
 
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 from starlette.responses import JSONResponse, Response
-from starlette.status import (
-    HTTP_429_TOO_MANY_REQUESTS,
-    HTTP_503_SERVICE_UNAVAILABLE,
-    HTTP_500_INTERNAL_SERVER_ERROR
-)
+from starlette.status import HTTP_500_INTERNAL_SERVER_ERROR, HTTP_503_SERVICE_UNAVAILABLE
 
-from leafscan.core.exceptions import (
-    LeafScanException,
-    ConcurrencyLimitExceededError,
-    RateLimitExceededError
-)
-from leafscan.core.telemetry import metrics
+from leafscan.core.exceptions import LeafScanException
 from leafscan.core.logging import logger
+from leafscan.core.telemetry import metrics
 
 
 class RequestIdMiddleware(BaseHTTPMiddleware):
@@ -49,7 +40,7 @@ class RateLimiter:
     def __init__(self, requests_per_minute: int = 60):
         self.rpm = requests_per_minute
         self.window = 60.0
-        self.client_records: Dict[str, list] = defaultdict(list)
+        self.client_records: dict[str, list] = defaultdict(list)
         self._lock = asyncio.Lock()
 
     async def is_allowed(self, client_ip: str) -> bool:
@@ -101,9 +92,9 @@ class BoundedConcurrencyMiddleware(BaseHTTPMiddleware):
                     "probabilities": {},
                     "error": {
                         "type": "CapacityExceededError",
-                        "message": "Inference server is temporarily operating at maximum concurrent capacity."
-                    }
-                }
+                        "message": "Inference server is temporarily operating at maximum concurrent capacity.",
+                    },
+                },
             )
 
         async with self.semaphore:
@@ -149,12 +140,8 @@ class ExceptionMaskingMiddleware(BaseHTTPMiddleware):
                     "advisory": "Inference could not be completed. Please check image validity and file path.",
                     "species_probabilities": {},
                     "probabilities": {},
-                    "error": {
-                        "type": type(lse).__name__,
-                        "message": lse.message,
-                        "code": lse.error_code
-                    }
-                }
+                    "error": {"type": type(lse).__name__, "message": lse.message, "code": lse.error_code},
+                },
             )
         except Exception as exc:
             req_id = getattr(request.state, "request_id", None)
@@ -178,7 +165,7 @@ class ExceptionMaskingMiddleware(BaseHTTPMiddleware):
                     "probabilities": {},
                     "error": {
                         "type": "InferenceExecutionError",
-                        "message": "Diagnostic inference encountered an internal error. Please check image framing and retry."
-                    }
-                }
+                        "message": "Diagnostic inference encountered an internal error. Please check image framing and retry.",
+                    },
+                },
             )

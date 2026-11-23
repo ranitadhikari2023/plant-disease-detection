@@ -3,20 +3,20 @@ src/leafscan/core/telemetry.py
 Lightweight Prometheus-compatible metrics and OpenTelemetry trace helpers.
 """
 
-import time
-from typing import Dict, Any, Optional
-from collections import defaultdict
 import threading
+from collections import defaultdict
+
 
 class LeafScanMetrics:
     """
     In-memory Prometheus-compatible metrics collector.
     Avoids external dependencies while providing standard prometheus exposition.
     """
+
     def __init__(self):
         self._lock = threading.Lock()
         self.request_count = defaultdict(int)  # (endpoint, status) -> count
-        self.error_count = defaultdict(int)    # (error_code) -> count
+        self.error_count = defaultdict(int)  # (error_code) -> count
         self.safety_status_count = defaultdict(int)  # (status) -> count
         self.active_requests = 0
         self.inference_latencies = []
@@ -45,53 +45,58 @@ class LeafScanMetrics:
         with self._lock:
             lines = [
                 "# HELP leafscan_requests_total Total HTTP requests handled",
-                "# TYPE leafscan_requests_total counter"
+                "# TYPE leafscan_requests_total counter",
             ]
             for (ep, status), cnt in self.request_count.items():
                 lines.append(f'leafscan_requests_total{{endpoint="{ep}",status="{status}"}} {cnt}')
 
-            lines.extend([
-                "# HELP leafscan_errors_total Total errors by code",
-                "# TYPE leafscan_errors_total counter"
-            ])
+            lines.extend(["# HELP leafscan_errors_total Total errors by code", "# TYPE leafscan_errors_total counter"])
             for code, cnt in self.error_count.items():
                 lines.append(f'leafscan_errors_total{{code="{code}"}} {cnt}')
 
-            lines.extend([
-                "# HELP leafscan_safety_status_total Distribution of safety status outcomes",
-                "# TYPE leafscan_safety_status_total counter"
-            ])
+            lines.extend(
+                [
+                    "# HELP leafscan_safety_status_total Distribution of safety status outcomes",
+                    "# TYPE leafscan_safety_status_total counter",
+                ]
+            )
             for status, cnt in self.safety_status_count.items():
                 lines.append(f'leafscan_safety_status_total{{status="{status}"}} {cnt}')
 
-            lines.extend([
-                "# HELP leafscan_active_requests Currently in-flight requests",
-                "# TYPE leafscan_active_requests gauge",
-                f'leafscan_active_requests {self.active_requests}'
-            ])
+            lines.extend(
+                [
+                    "# HELP leafscan_active_requests Currently in-flight requests",
+                    "# TYPE leafscan_active_requests gauge",
+                    f"leafscan_active_requests {self.active_requests}",
+                ]
+            )
 
-            lines.extend([
-                "# HELP leafscan_model_load_duration_ms Model initialization duration in milliseconds",
-                "# TYPE leafscan_model_load_duration_ms gauge",
-                f'leafscan_model_load_duration_ms{{bundle="{self.bundle_version}"}} {self.model_load_time_ms:.2f}'
-            ])
+            lines.extend(
+                [
+                    "# HELP leafscan_model_load_duration_ms Model initialization duration in milliseconds",
+                    "# TYPE leafscan_model_load_duration_ms gauge",
+                    f'leafscan_model_load_duration_ms{{bundle="{self.bundle_version}"}} {self.model_load_time_ms:.2f}',
+                ]
+            )
 
             if self.inference_latencies:
                 lats = sorted(self.inference_latencies)
                 p50 = lats[len(lats) // 2]
                 p95 = lats[int(len(lats) * 0.95)]
                 p99 = lats[int(len(lats) * 0.99)]
-                avg = sum(lats) / len(lats)
-                lines.extend([
-                    "# HELP leafscan_inference_latency_ms Inference latency summary in milliseconds",
-                    "# TYPE leafscan_inference_latency_ms summary",
-                    f'leafscan_inference_latency_ms{{quantile="0.5"}} {p50:.2f}',
-                    f'leafscan_inference_latency_ms{{quantile="0.95"}} {p95:.2f}',
-                    f'leafscan_inference_latency_ms{{quantile="0.99"}} {p99:.2f}',
-                    f'leafscan_inference_latency_ms_sum {sum(lats):.2f}',
-                    f'leafscan_inference_latency_ms_count {len(lats)}'
-                ])
+                lines.extend(
+                    [
+                        "# HELP leafscan_inference_latency_ms Inference latency summary in milliseconds",
+                        "# TYPE leafscan_inference_latency_ms summary",
+                        f'leafscan_inference_latency_ms{{quantile="0.5"}} {p50:.2f}',
+                        f'leafscan_inference_latency_ms{{quantile="0.95"}} {p95:.2f}',
+                        f'leafscan_inference_latency_ms{{quantile="0.99"}} {p99:.2f}',
+                        f"leafscan_inference_latency_ms_sum {sum(lats):.2f}",
+                        f"leafscan_inference_latency_ms_count {len(lats)}",
+                    ]
+                )
 
             return "\n".join(lines) + "\n"
+
 
 metrics = LeafScanMetrics()
