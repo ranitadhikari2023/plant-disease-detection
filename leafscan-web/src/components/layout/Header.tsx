@@ -2,8 +2,7 @@
 
 import { flushOfflineQueue } from "@/features/history/historyStore";
 import { fetchHealth, fetchReady } from "@/lib/api/diagnoseClient";
-import { usePrefsStore } from "@/stores/prefsStore";
-import { Activity, Globe, Leaf, Wifi, WifiOff } from "lucide-react";
+import { Activity, Leaf, Wifi, WifiOff } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type React from "react";
@@ -11,7 +10,6 @@ import { useEffect, useState } from "react";
 
 export const Header: React.FC = () => {
   const pathname = usePathname();
-  const { locale, setLocale } = usePrefsStore();
 
   const [systemState, setSystemState] = useState<
     "checking" | "ready" | "degraded" | "offline"
@@ -139,8 +137,8 @@ export const Header: React.FC = () => {
           })}
         </nav>
 
-        {/* Status Indicators & Controls */}
-        <div className="flex items-center gap-3">
+        {/* Status Indicators */}
+        <div className="flex items-center">
           {/* Engine & Network Status */}
           <div
             role="status"
@@ -171,21 +169,6 @@ export const Header: React.FC = () => {
                 <span className="text-rust-600 text-[11px]">Offline</span>
               </>
             )}
-          </div>
-
-          {/* Locale switcher */}
-          <div className="flex items-center gap-1 text-xs text-bark-500">
-            <Globe className="h-3.5 w-3.5" />
-            <select
-              value={locale}
-              onChange={(e) => setLocale(e.target.value as any)}
-              className="bg-transparent text-xs font-semibold text-bark-700 focus:outline-none cursor-pointer"
-              aria-label="Select Language"
-            >
-              <option value="en">EN</option>
-              <option value="hi">HI</option>
-              <option value="es">ES</option>
-            </select>
           </div>
         </div>
       </div>

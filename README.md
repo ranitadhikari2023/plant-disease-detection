@@ -5,134 +5,126 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.143.0-009688.svg?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
 [![Docker Ready](https://img.shields.io/badge/Docker-Non--Root%20%3C500MB-2496ED.svg?logo=docker&logoColor=white)](https://www.docker.com/)
 [![Pytest](https://img.shields.io/badge/Pytest-55%20Passed-brightgreen.svg?logo=pytest&logoColor=white)](https://pytest.org/)
-[![Vitest](https://img.shields.io/badge/Vitest-109%20Passed-brightgreen.svg?logo=vitest&logoColor=white)](https://vitest.dev/)
+[![Vitest](https://img.shields.io/badge/Vitest-112%20Passed-brightgreen.svg?logo=vitest&logoColor=white)](https://vitest.dev/)
 [![Parity](https://img.shields.io/badge/Parity-0%20Gate%20Flips-success.svg)](https://pytest.org/)
 [![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions-blue.svg?logo=github-actions&logoColor=white)](https://github.com/ranitadhikari2023/plant-disease-detection/actions)
 
 Production-grade hierarchical deep learning system for high-consequence agricultural foliar pathology diagnosis in Solanaceous crops (*Solanum tuberosum* — Potato and *Solanum lycopersicum* — Tomato).
 
 Powered by the **LeafScan V3 Production Engine**:
-- **ONNX Runtime Serving:** Pure CPU graph execution with zero TensorFlow dependencies in production, delivering **10.4x faster warm inference** (16.9 ms p50) and **-74% memory usage** (89 MB vs 345 MB).
-- **Cryptographic Model Bundles (`v3.0.0`):** Immutable, versioned release bundles verified on startup against SHA-256 digests in `manifest.json`.
-- **Deterministic Multi-Tier Safety Authority:** Strict gating boundaries enforcing species confidence ($\ge 90\%$), Late Blight quarantine escalation ($\ge 90\%$), and general disease thresholds ($\ge 70\%$).
-- **Statistical Uncertainty & OOD Screening:** Normalized Shannon entropy out-of-distribution detection and split conformal prediction sets.
-- **Enterprise DevSecOps Hardening:** 40 Megapixel decompression bomb guard, EXIF orientation transpose, bounded concurrency semaphore, Prometheus telemetry, and non-root Docker execution (UID 10001).
+- **ONNX Runtime Serving:** Pure CPU graph execution with zero TensorFlow dependencies in production, delivering **10.4x faster warm inference** (16.9 ms p50) and **-74% memory footprint** (89 MB vs 345 MB).
+- **Cryptographic Model Bundles (`v3.0.0`):** Immutable, versioned release bundles verified on startup against SHA-256 cryptographic digests in `manifest.json`.
+- **Deterministic Multi-Tier Safety Authority:** Programmatic gating boundaries enforcing species verification ($\ge 90\%$), Late Blight quarantine escalation ($\ge 90\%$), and general disease thresholds ($\ge 70\%$).
+- **Statistical Uncertainty & OOD Screening:** Normalized Shannon entropy out-of-distribution detection and split conformal prediction sets with coverage guarantees.
+- **Enterprise DevSecOps Hardening:** 40 Megapixel decompression bomb guard, EXIF orientation transpose, bounded concurrency semaphore, Prometheus telemetry, and unprivileged non-root Docker execution (UID 10001).
 
 ---
 
 ## Table of Contents
 
-1. [Project Title](#1-project-title)
-2. [Project Overview](#2-project-overview)
-3. [Project Objectives](#3-project-objectives)
-4. [Key Features](#4-key-features)
-5. [Application Architecture](#5-application-architecture)
-6. [Technology Stack](#6-technology-stack)
-7. [Complete Project Directory Structure](#7-complete-project-directory-structure)
-8. [Frontend Architecture](#8-frontend-architecture)
-9. [Backend Architecture](#9-backend-architecture)
-10. [CNN Model and ONNX Inference Architecture](#10-cnn-model-and-onnx-inference-architecture)
-11. [Image Upload and Prediction Workflow](#11-image-upload-and-prediction-workflow)
-12. [Prediction Confidence and Validation Mechanisms](#12-prediction-confidence-and-validation-mechanisms)
-13. [Installation and Environment Setup](#13-installation-and-environment-setup)
-14. [Python Virtual Environment Setup](#14-python-virtual-environment-setup)
-15. [Dependency Installation](#15-dependency-installation)
-16. [Environment Variables Configuration](#16-environment-variables-configuration)
-17. [Running the Application Locally](#17-running-the-application-locally)
-18. [Docker and Docker Compose Setup](#18-docker-and-docker-compose-setup)
-19. [API Documentation and Endpoints](#19-api-documentation-and-endpoints)
-20. [Testing Instructions](#20-testing-instructions)
-21. [Model and Dataset Information](#21-model-and-dataset-information)
-22. [Security and Error Handling](#22-security-and-error-handling)
-23. [Troubleshooting](#23-troubleshooting)
-24. [Current Limitations](#24-current-limitations)
-25. [Future Improvements](#25-future-improvements)
-26. [License](#26-license)
+1. [Project Overview](#1-project-overview)
+2. [Key Features](#2-key-features)
+3. [System Architecture](#3-system-architecture)
+4. [Project Structure](#4-project-structure)
+5. [Technology Stack](#5-technology-stack)
+6. [Machine Learning Pipeline](#6-machine-learning-pipeline)
+7. [Prerequisites](#7-prerequisites)
+8. [Installation and Setup](#8-installation-and-setup)
+9. [Docker Setup](#9-docker-setup)
+10. [API Documentation](#10-api-documentation)
+11. [Testing](#11-testing)
+12. [Configuration and Environment Variables](#12-configuration-and-environment-variables)
+13. [Deployment](#13-deployment)
+14. [Troubleshooting](#14-troubleshooting)
+15. [Future Improvements](#15-future-improvements)
+16. [License and Acknowledgements](#16-license-and-acknowledgements)
 
 ---
 
-## 1. Project Title
+## 1. Project Overview
 
+### Project Name
 **LeafScan V3: Production Deep Learning Plant Pathology Screening System**  
 *Hierarchical Solanaceous Foliar Disease Detection, Attention-Guided Feature Extraction, and Deterministic Agronomic Safety Guarding.*
 
----
+### Project Description
+LeafScan V3 is an end-to-end, safety-critical machine learning application engineered to diagnose devastating foliar blights in major Solanaceous crops. It replaces flat, error-prone multi-class classifiers with a cascaded two-tier diagnostic hierarchy that pairs MobileNetV2 base feature extractors with custom Convolutional Block Attention Modules (CBAM) and strict programmatic safety gates.
 
-## 2. Project Overview
+### Main Objective
+Provide agronomists, agricultural extension workers, commercial farm managers, and smallholder farmers with an ultra-fast, scientifically validated, and deterministic diagnostic decision-support system that prevents destructive crop misdiagnoses and suppresses inappropriate chemical fungicide recommendations.
 
-Foliar diseases in Solanaceous staple crops (*Solanum tuberosum* — Potato and *Solanum lycopersicum* — Tomato) present catastrophic risks to global food security, commercial agriculture, and smallholder farming livelihoods:
-- **Early Blight (*Alternaria solani*):** A destructive fungal disease marked by brown-to-black necrotic spots with concentric rings ("target board" pattern), causing chlorosis, extensive defoliation, premature ripening, and severe yield reductions.
-- **Late Blight (*Phytophthora infestans*):** A high-consequence oomycete pathogen notorious for precipitating the Great Irish Famine. Under cool, humid conditions, it produces expanding water-soaked necrotic lesions capable of destroying entire canopy stands within 7–10 days.
+### Problem Addressed
+Foliar diseases in Solanaceous staple crops (*Solanum tuberosum* — Potato and *Solanum lycopersicum* — Tomato) present existential threats to food security and agricultural livelihoods:
+- **Early Blight (*Alternaria solani*):** A destructive fungal disease marked by necrotic spots with concentric "target board" rings, causing chlorosis, premature defoliation, and significant yield collapse.
+- **Late Blight (*Phytophthora infestans*):** A high-consequence oomycete pathogen notorious for precipitating the historic Great Irish Famine. Under cool, humid conditions, it causes expanding water-soaked necrotic lesions capable of destroying entire field canopies within 7 to 10 days.
 
-Standard automated computer vision systems applied to foliar pathology suffer from three fatal production vulnerabilities:
-1. **Cross-Crop Misdiagnosis:** Flat multi-class classifiers trained indiscriminately across disparate plant species frequently confuse potato and tomato lesions when leaf geometry or soil background overlaps.
-2. **Synthetic Data Leakage:** Academic benchmark datasets (e.g., raw PlantVillage) often contain repeated laboratory crops and heavy synthetic augmentations. Naive random train/test splitting leaks identical biological leaves across splits, yielding artificially inflated laboratory accuracy metrics that collapse in the field.
-3. **Reckless Forced Diagnosis:** Standard classifiers output forced classifications even on out-of-domain images (non-crop vegetation, weeds, soil, blurry captures), encouraging premature or improper application of systemic chemical fungicides that breed pathogen resistance and contaminate soil ecosystems.
+Standard automated vision systems deployed for foliar pathology suffer from three fatal production vulnerabilities:
+1. **Cross-Crop Misdiagnosis:** Flat classifiers trained across disparate plant species frequently confuse potato and tomato lesions when leaf geometry or background soil overlaps.
+2. **Synthetic Data Leakage:** Academic benchmark datasets (such as raw PlantVillage) contain repeated photographic captures of the same leaf. Naive random train/test splitting leaks identical biological leaves across splits, yielding artificially inflated laboratory accuracy that collapses in the field.
+3. **Reckless Forced Classification:** Standard classifiers produce forced predictions even on non-crop leaves, background debris, or blurry images, encouraging premature or improper application of systemic chemical fungicides that breed pathogen resistance and contaminate agroecosystems.
 
-**LeafScan V3** solves these vulnerabilities by combining:
-- A **two-tier cascaded diagnostic hierarchy** decoupling host species identification from pathology diagnosis.
-- Custom **Convolutional Block Attention Modules (CBAM)** injected into MobileNetV2 terminal feature maps.
-- A **forensically grouped zero-leakage dataset** clustering 11,988 images into 3,971 biological leaf specimens using Disjoint Set Union (DSU) graph algorithms and perceptual hashing.
-- A **deterministic programmatic Safety Guard** that deliberately abstains on ambiguous species ($<90\%$) and escalates marginal Late Blight ($<90\%$) to quarantine protocols, prohibiting unwarranted fungicide spraying.
-- A **zero-TensorFlow ONNX Runtime microservice** engineered for high-throughput, low-latency, and resource-bounded production container deployment.
-
----
-
-## 3. Project Objectives
-
-1. **Eliminate Cross-Crop Misdiagnosis:** Structure neural inference hierarchically so disease specialists only evaluate specimens after host plant identification is verified with $\ge 90\%$ statistical confidence.
-2. **Prevent Reckless Chemical Intervention:** Implement deterministic safety gates that suppress aggressive systemic fungicide recommendations when pathogen identification is ambiguous or marginal.
-3. **Guarantee Scientific Generalization:** Enforce strict biological specimen isolation between training, validation, and testing sets, guaranteeing 0.0% data leakage across all splits.
-4. **Deploy Ultra-Lightweight Production Microservices:** Transition the production serving layer from heavy framework runtimes (TensorFlow/Keras) to lean, CPU-optimized ONNX Runtime graphs, slashing memory usage by 74% and achieving sub-20ms warm latency.
-5. **Enforce Enterprise DevSecOps & Security Hardening:** Guard all intake paths against image decompression bombs, sanitize inputs, enforce bounded concurrency under traffic spikes, prevent internal exception leakage, and execute in unprivileged non-root containers (UID 10001).
-6. **Support Multi-Platform Client Workflows:** Provide an instantaneous zero-dependency precompiled SPA, a modern React 18 / TypeScript SPA, and an offline-capable Next.js 15 PWA field console.
+### Intended Users and Use Cases
+- **Agronomists & Crop Scouts:** Rapid field validation of foliar lesions with instant confidence scoring and agronomic advisory guidance.
+- **Agricultural Extension Officers:** Reliable second-opinion diagnostics backed by cryptographic model verification and transparent out-of-distribution alerts.
+- **Commercial Farm Operations:** Low-latency batch screening integrated into farm management software or drone intake pipelines via standardized REST APIs.
+- **Agricultural Research & Education:** Baseline reference implementation for zero-leakage biological dataset curation, attention-guided foliar diagnosis, and conformal prediction in high-consequence computer vision.
 
 ---
 
-## 4. Key Features
+## 2. Key Features
 
-- **Hierarchical Cascaded Inference:**
-  - **Tier 1 (Botanist Species Expert):** Identifies host crop species (*Solanum tuberosum* vs. *Solanum lycopersicum*).
+- **Hierarchical Two-Tier Cascaded Screening:**
+  - **Tier 1 (Botanist Species Expert):** Accurately determines host crop species (*Solanum tuberosum* vs. *Solanum lycopersicum*).
   - **Tier 2 (Crop Doctor Specialists):** Dedicated specialists for Potato (`Early Blight`, `Late Blight`, `Healthy`) and Tomato (`Early Blight`, `Late Blight`, `Healthy`).
-- **Injected CBAM Attention:**
-  - 206,258-parameter Convolutional Block Attention Module directly integrated into the $7 \times 7 \times 1280$ terminal feature maps of MobileNetV2.
-  - Computes channel attention ($r=16$) and spatial attention masks to isolate diagnostic lesion margins from background noise.
-- **Deterministic Safety Authority (`SafetyGuard`):**
-  - **Species Gate (90%):** Abstains if host species probability is $<90\%$, eliminating cross-crop confusion.
-  - **Late Blight Escalation Gate (90%):** Enforces a 90% confidence threshold on *Phytophthora infestans*. If confidence is marginal (70%–90%), the system flags `late_blight_uncertain`, suppresses systemic fungicide recommendations, and advises physical quarantine and 24–48h scouting.
-  - **General Disease Gate (70%):** Flags diagnoses below 70% with `disease_uncertain` and prompts for clear daylight re-imaging.
-- **Defensive Intake Pipeline (`ImageIntake`):**
-  - Guards against decompression bombs (40 Megapixel limit).
-  - Automatically handles EXIF orientation transposes.
-  - Whitelists JPEG, PNG, and WebP payloads up to 10 MB.
-  - Composites transparent RGBA channels onto pure white to eliminate dark-edge boundary artifacts.
-- **Model Bundle Architecture (`models/bundles/v3`):**
-  - Models, class indices, safety thresholds, and calibration constants are packaged in immutable bundles verified via cryptographic SHA-256 digests against `manifest.json`.
+- **Convolutional Block Attention Modules (CBAM):**
+  - Integrated into the terminal $7 \times 7 \times 1280$ feature maps of MobileNetV2.
+  - Sequentially combines Channel Attention (reduction ratio $r=16$) and Spatial Attention ($7 \times 7$ kernel) with exactly 206,258 parameters per specialist to isolate diagnostic lesion margins from background noise.
+- **Deterministic Multi-Tier Safety Guard (`SafetyGuard`):**
+  - **Species Gate ($\ge 90\%$):** Abstains if host species probability is $<90\%$, returning `species_uncertain` and `disease: null` to eliminate cross-crop misdiagnosis.
+  - **Late Blight Escalation Gate ($\ge 90\%$):** Enforces a strict $90\%$ confidence requirement on *Phytophthora infestans*. If confidence is marginal ($70\% - 90\%$), flags `late_blight_uncertain`, suppresses systemic fungicide advice, and mandates physical isolation and 24–48 hour re-inspection.
+  - **General Disease Gate ($\ge 70\%$):** Flags diagnoses below $70\%$ with `disease_uncertain` and prompts for clear daylight re-imaging.
+- **Forensically Grouped Zero-Leakage Dataset:**
+  - 11,988 images clustered into 3,971 canonical biological leaf specimens using Disjoint Set Union (DSU) graph partitioning and perceptual hashing.
+  - Guaranteed 0.0% biological leaf leakage across training, validation, and held-out test splits.
 - **Zero-TensorFlow Production Serving:**
-  - Production container requires zero TensorFlow dependencies, running purely on CPU-optimized `onnxruntime`.
-  - Memory consumption drops from 345 MB to 89 MB (-74%), with warm latency under 17 ms.
-- **Multiple Production-Ready Frontend Clients:**
+  - Headless ONNX Runtime microservice (`CPUExecutionProvider`) executing pure computation graphs without TensorFlow or Keras dependencies in production.
+  - Memory consumption reduced by 74% (89 MB vs 345 MB) with sub-17ms warm p50 inference latency.
+- **Cryptographic Model Release Bundles (`v3.0.0`):**
+  - Production models packaged with `manifest.json`, validated on service startup via cryptographic SHA-256 digests. Tampered or corrupted artifacts trigger immediate startup abort.
+- **Defensive Intake Pipeline (`ImageIntake`):**
+  - Enforces 40 Megapixel decompression bomb limit (`Image.MAX_IMAGE_PIXELS = 40_000_000`).
+  - Automatically corrects EXIF orientation transposes from mobile cameras.
+  - Enforces 10 MB maximum payload cap and whitelists JPEG, PNG, and WebP magic bytes.
+  - Composites transparent RGBA alpha channels onto pure white background (`#FFFFFF`) to neutralize dark-edge border artifacts.
+- **Statistical Uncertainty & OOD Screening:**
+  - Normalized Shannon entropy calculation and Maximum Softmax Probability (MSP) screening.
+  - Split conformal prediction generating finite-sample valid prediction sets $\mathcal{C}(X)$ with statistical coverage guarantees.
+- **Multiple Frontends for Diverse Operational Needs:**
   - **Precompiled SPA (`frontend/`):** Dependency-free Single Page Application served directly by FastAPI at `/`.
-  - **Modern React 18 SPA (`web/`):** React 18, TypeScript 5, Vite 5, TanStack Query v5, HashRouter, with 67 automated Vitest tests.
-  - **Botanical Field Console (`leafscan-web/`):** Next.js 15, React 19, Tailwind CSS v4, Serwist offline PWA, with 42 automated Vitest tests.
-- **Comprehensive Quality Assurance:**
-  - 55 automated Pytest backend unit, regression, parity, and security tests (100% passing).
-  - 109 combined frontend Vitest tests across both web clients (100% passing).
-  - Zero gate decision flips between Keras and ONNX across all 49 curated golden specimens.
+  - **Modern React 18 SPA (`web/`):** React 18, TypeScript 5, Vite 5, TanStack Query v5, HashRouter, 67 automated Vitest tests.
+  - **Botanical Field Console (`leafscan-web/`):** Next.js 15, React 19, Tailwind CSS v4, Zustand, Serwist offline PWA caching, 45 automated Vitest tests.
+- **Enterprise DevSecOps & Resilience:**
+  - Non-root Docker execution (UID 10001 `leafscan:leafscan`), read-only container capabilities, and tmpfs volume mounts.
+  - Bounded concurrency semaphore (`asyncio.Semaphore(4)`) with automated HTTP 503 load shedding and `Retry-After: 5` headers.
+  - Exception sanitization middleware suppressing internal stack traces in client responses.
+  - Prometheus `/metrics` exposition for latency histograms, request counters, and gate activation telemetry.
 
 ---
 
-## 5. Application Architecture
+## 3. System Architecture
+
+### Architectural Overview
+LeafScan V3 employs a layered architecture separating HTTP transport, diagnostic orchestration, inference engine abstraction, and cryptographic model storage:
 
 ```mermaid
 flowchart TD
-    Client["Client Layer (Web SPA / Mobile Browser / Python CLI)"]
+    Client["Client Layer (Web SPA / Mobile PWA / Field CLI / REST Client)"]
 
     subgraph TransportLayer ["1. HTTP Transport Layer (src/leafscan/api/ & api/main.py)"]
         FastAPIApp["FastAPI Microservice (app.py)"]
         MW_ReqId["RequestIdMiddleware (X-Request-ID Header)"]
         MW_Conc["BoundedConcurrencyMiddleware (4 Concurrent Slots, HTTP 503 Shedding)"]
-        MW_Mask["ExceptionMaskingMiddleware (Internal Traceback Sanitization)"]
+        MW_Mask["ExceptionMaskingMiddleware (Traceback Sanitization)"]
         Route_Diag["POST /v2/diagnose"]
         Route_Health["GET /health, /ready, /v2/model, /metrics"]
         Route_Feed["POST /v2/feedback"]
@@ -155,7 +147,7 @@ flowchart TD
 
     subgraph BundleLayer ["4. Model Bundle Subsystem (src/leafscan/bundle/)"]
         Loader["ModelBundleLoader (loader.py)"]
-        Verifier["IntegrityVerifier (SHA-256 against manifest.json)"]
+        Verifier["IntegrityVerifier (SHA-256 Checksum Validation)"]
         Manifest["manifest.json (v3.0.0 Specification)"]
         Models["species_expert.onnx | potato_expert.onnx | tomato_expert.onnx"]
     end
@@ -175,25 +167,18 @@ flowchart TD
     Static -.->|"Serves Precompiled SPA"| Client
 ```
 
----
-
-## 6. Technology Stack
-
-| Category | Technology | Version | Purpose in Project |
-|---|---|:---:|---|
-| **Programming Languages** | Python<br/>TypeScript | 3.10 / 3.12<br/>5.6+ | Backend ML serving, training, and API microservice<br/>Type-safe frontend application logic |
-| **Production Serving Engine** | ONNX Runtime | 1.20.0 | High-performance CPU graph execution (Zero TensorFlow) |
-| **Deep Learning & Training** | TensorFlow<br/>Keras | 2.21.0<br/>3.12.1 | Model training, CBAM custom layers, and baseline parity |
-| **Web API Framework** | FastAPI<br/>Starlette<br/>Uvicorn<br/>Pydantic | 0.143.0<br/>1.7.0<br/>0.54.0<br/>2.14.0 | Asynchronous REST microservice with OpenAPI 3.1<br/>Static file mounts and request handling<br/>ASGI production web server<br/>Data parsing, schemas, and environment settings |
-| **Containerization** | Docker<br/>Docker Compose | Multi-Stage<br/>Compose v2 | Non-root production container (`< 500 MB`), resource limits |
-| **Image & Tensor Processing** | Pillow (PIL)<br/>NumPy | 12.1.1<br/>2.2.6 | Defensive image loading, EXIF transpose, 40MP guard<br/>Array manipulation and tensor mathematics |
-| **Frontend Applications** | React 18 (SPA in `web/`)<br/>Next.js 15 (`leafscan-web/`)<br/>Tailwind CSS | 18.3.1<br/>15.2.0<br/>4.0.9 | High-performance client SPA compiling to `frontend/`<br/>Botanical Field Console with offline PWA capabilities<br/>Design tokens and responsive styling |
-| **Testing & Quality Assurance** | Pytest<br/>Vitest<br/>Playwright<br/>Ruff | 8.3.5 (55 tests)<br/>3.2+ (109 tests)<br/>1.50+<br/>0.6+ | Python unit, regression, parity, and security tests<br/>Frontend unit, component, and contract tests<br/>End-to-End browser workflow automation<br/>Python linter and code formatter |
-| **Build System & Package Mgmt** | Hatchling<br/>uv / pip | Hatchling<br/>uv 0.5+ | Standard PEP 621 package build backend<br/>Fast dependency resolution and installation |
+### Component Breakdown
+1. **Frontend Layer:** Provides responsive desktop and mobile experiences via the precompiled SPA, the Vite-based React SPA, and the Next.js 15 PWA field console.
+2. **Transport Layer (`src/leafscan/api/`):** Manages ASGI lifecycle, CORS policies, bounded concurrency, request tracing, static file serving, and REST endpoints.
+3. **Diagnostic Service Layer (`src/leafscan/services/`):** Coordinates defensive image ingestion, multi-tier neural execution, temperature-calibrated probability evaluation, deterministic safety gating, OOD screening, and conformal prediction set generation.
+4. **Inference Engine Layer (`src/leafscan/engines/`):** Decouples graph runtime execution behind a strict Python `Protocol`, enabling production serving on CPU-optimized `onnxruntime` while supporting legacy `keras` during development.
+5. **Model Bundle Subsystem (`src/leafscan/bundle/`):** Manages release discovery, JSON schema parsing, and cryptographic integrity verification of ONNX model artifacts against their declared SHA-256 hashes.
 
 ---
 
-## 7. Complete Project Directory Structure
+## 4. Project Structure
+
+An accurate directory tree highlighting essential files and directories:
 
 ```text
 plant-disease-detection/
@@ -205,12 +190,12 @@ plant-disease-detection/
 │   ├── __init__.py                           # API package marker
 │   └── main.py                               # Backward-compatible FastAPI entry point & SPA mount
 │
-├── archive/                                  # Archived legacy implementations
-│   ├── frontend-v1/                          # Legacy Vanilla HTML5/CSS/JS frontend
+├── archive/                                  # Historical reference artifacts
+│   ├── frontend-v1/                          # Legacy HTML5/CSS/JS frontend prototype
 │   └── v1/                                   # Legacy V1 Keras models & prototype scripts
 │
-├── audit/                                    # Dataset forensics, manifests, and training curves
-│   ├── artifacts/                            # Specimen distribution, leakage & loss curve charts
+├── audit/                                    # Dataset forensics, manifests, and training metrics
+│   ├── artifacts/                            # Specimen distributions and loss curve charts
 │   ├── audit_summary.json                    # Summary of dataset audit metrics
 │   ├── dataset_manifest.csv                  # Master manifest of 11,988 images
 │   ├── specimen_manifest.csv                 # Canonical 3,971 biological leaf specimens
@@ -219,14 +204,14 @@ plant-disease-detection/
 │   └── validation_specimen_manifest.csv      # 592 validation specimens
 │
 ├── dataset/
-│   ├── README.md                             # Dataset documentation, species, and classes
+│   ├── README.md                             # Dataset documentation, species, and class labels
 │   ├── potato/                               # Early_blight, Late_blight, healthy (git-ignored)
 │   └── tomato/                               # Early_blight, Late_blight, healthy (git-ignored)
 │
-├── docs/                                     # Comprehensive technical documentation & reports
+├── docs/                                     # Comprehensive architectural documentation & reports
 │   ├── reports/
 │   │   └── GITHUB_ACTIONS_CI_CD_FAILURE_ANALYSIS_AND_FIX_REPORT.md  # CI/CD failure fix audit
-│   ├── API_CONTRACT.md                       # Full REST API specification with invariant rules
+│   ├── API_CONTRACT.md                       # REST API contract and invariant definitions
 │   ├── BACKEND_V3_ARCHITECTURE.md            # LeafScan V3 production backend architecture
 │   ├── BACKEND_V3_IMPLEMENTATION_AUDIT.md    # Code audit and security verification
 │   ├── BACKEND_V3_MIGRATION_REPORT.md        # Migration report from V2 Keras to V3 ONNX
@@ -254,7 +239,7 @@ plant-disease-detection/
 ├── leafscan-web/                             # Botanical Field Console (Next.js 15 PWA)
 │   ├── app/                                  # App Router routes (diagnose, result, history, model)
 │   ├── src/                                  # Features, stores (Zustand), API client, components
-│   ├── tests/                                # 42 Vitest unit, component, and contract tests
+│   ├── tests/                                # 45 Vitest unit, component, and contract tests
 │   ├── Dockerfile                            # Standalone container build for frontend
 │   └── package.json                          # Next.js 15, React 19, Tailwind CSS v4, Serwist
 │
@@ -310,7 +295,7 @@ plant-disease-detection/
 │   ├── fixtures/
 │   │   ├── golden_images/                    # 48 curated golden evaluation specimens (790 KB)
 │   │   └── golden_test_dataset.json          # 49 curated golden evaluation records
-│   ├── conftest.py                           # Pytest fixtures and mock predictors
+│   ├── conftest.py                           # Pytest fixtures and test harnesses
 │   ├── test_api.py                           # 14 tests: REST API endpoints and static routing
 │   ├── test_data_pipeline.py                 # 13 tests: Data loading, augmentation, error handling
 │   ├── test_losses.py                        # 12 tests: Focal loss math and class weighting
@@ -358,354 +343,233 @@ plant-disease-detection/
 
 ---
 
-## 8. Frontend Architecture
+## 5. Technology Stack
 
-LeafScan provides three distinct frontend interfaces tailored to different operational requirements:
-
-### 8.1 Precompiled Static SPA (`frontend/`)
-- **Direct FastAPI Mount:** Served directly by Starlette/FastAPI static file mounts from `/` and `/assets`.
-- **Zero Node.js Runtime in Production:** The container requires no Node.js runtime, keeping deployment footprint minimal.
-- **Botanical UI Design System:** Defined by `frontend/css/tokens.css` with semantic CSS variables for botanical color palettes, confidence meters, and advisory alerts.
-
-### 8.2 Modern React 18 SPA (`web/`)
-- **Technology:** React 18, TypeScript 5, Vite 5, TanStack Query v5, HashRouter.
-- **State & Data Management:** Clean separation of concerns with asynchronous query caching, drag-and-drop file uploaders, client-side EXIF thumbnailing, and local history management.
-- **Testing:** 67 automated Vitest unit, component, and hook tests (`npm --prefix web test -- --run`).
-- **Production Build:** `npm --prefix web run build` compiles hashed JavaScript and CSS directly into `frontend/`.
-
-### 8.3 Botanical Field Console (`leafscan-web/`)
-- **Technology:** Next.js 15, React 19, Tailwind CSS v4, Zustand.
-- **Progressive Web App (PWA):** Configured with Serwist for offline field caching and synchronization.
-- **Testing:** 42 automated Vitest tests covering contract schemas, timeline stages, confidence meters, and retry logic (`npm --prefix leafscan-web test -- --run`).
+| Layer | Technology | Version | Purpose & Implementation |
+|---|---|:---:|---|
+| **Backend & Serving** | Python<br/>FastAPI<br/>Uvicorn<br/>Starlette<br/>Pydantic | 3.10 / 3.12<br/>0.143.0<br/>0.54.0<br/>1.7.0<br/>2.14.0 | Core backend runtime environment<br/>Asynchronous REST API framework with OpenAPI 3.1<br/>High-performance ASGI production web server<br/>Request routing and static SPA asset serving<br/>Strict request/response schema validation and settings |
+| **Inference Engine** | ONNX Runtime | 1.20.0 | High-efficiency CPU graph execution (Zero TensorFlow Serving) |
+| **Deep Learning & Training** | TensorFlow<br/>Keras<br/>tf2onnx<br/>onnx | 2.21.0<br/>3.12.1<br/>1.17.0<br/>1.23.2 | Model training pipelines and Focal Loss formulations<br/>CBAM custom attention layer construction<br/>Computation graph conversion from Keras to ONNX<br/>ONNX model serialization and graph validation |
+| **Image & Data Processing** | Pillow (PIL)<br/>NumPy | 12.1.1<br/>2.2.6 | Image ingestion, EXIF transpose, 40MP decompression bomb guard<br/>Multidimensional array mathematics and tensor transformations |
+| **Web Frontend (Vite SPA)** | React 18<br/>TypeScript<br/>Vite<br/>TanStack Query | 18.3.1<br/>5.6.2<br/>5.4.1<br/>5.66.0 | Single-page client application compiling to `frontend/`<br/>Type-safe frontend logic and component architecture<br/>Modern frontend tooling and asset bundling<br/>Asynchronous API state management and caching |
+| **Botanical Field Console** | Next.js<br/>React<br/>Tailwind CSS<br/>Zustand<br/>Serwist | 15.2.0<br/>19.0.0<br/>4.0.9<br/>5.0.3<br/>9.0.12 | App Router architecture for progressive web application<br/>Modern concurrent UI components<br/>Utility-first responsive botanical design tokens<br/>Lightweight global client state management<br/>Service worker offline caching and sync for field scouts |
+| **Containerization & DevSecOps** | Docker<br/>Docker Compose | Multi-Stage<br/>Compose v2 | Unprivileged container runtime (UID 10001, `< 500 MB`)<br/>Multi-container orchestration for API and web services |
+| **Testing & Quality Assurance** | Pytest<br/>Vitest<br/>Ruff<br/>Playwright | 8.3.5 (55 tests)<br/>2.1 / 3.2 (112 tests)<br/>0.6+<br/>1.50.1 | Python unit, integration, parity, and security test suite<br/>Frontend unit, component, and contract test suites<br/>Fast Python linter and code formatter<br/>End-to-End browser test automation |
+| **Build & Packaging** | Hatchling<br/>uv / pip | Hatchling<br/>uv 0.5+ | Standard PEP 621 package build backend (`pyproject.toml`)<br/>Ultra-fast dependency resolution and virtual environments |
 
 ---
 
-## 9. Backend Architecture
+## 6. Machine Learning Pipeline
 
-The backend is built around clean architectural patterns located in `src/leafscan/`:
-
-### 9.1 API Transport Layer (`src/leafscan/api/`)
-- **`app.py`:** Application factory initializing the FastAPI instance, registering routers, configuring CORS, mounting static frontend files, and managing lifespan events (startup bundle verification and warm-up).
-- **`middleware.py`:**
-  - `RequestIdMiddleware`: Generates or propagates `X-Request-ID` across all incoming requests and outgoing headers.
-  - `BoundedConcurrencyMiddleware`: Protects CPU resources by restricting concurrent inference executions using an `asyncio.Semaphore(4)`. When capacity is reached, it immediately sheds load with `HTTP 503 Service Unavailable` and a `Retry-After: 5` header.
-  - `ExceptionMaskingMiddleware`: Sanitizes unhandled exceptions into safe, structured JSON responses, preventing internal server tracebacks from leaking to clients.
-- **`settings.py`:** Strongly-typed configuration powered by `pydantic-settings`, parsing all `LEAFSCAN_*` environment variables.
-
-### 9.2 Core Diagnostic Service Layer (`src/leafscan/services/`)
-- **`DiagnosisService`:** Orchestrates the diagnostic sequence:
-  1. Calls `ImageIntake` for defensive validation, orientation correction, and tensor conversion.
-  2. Runs Tier 1 Species inference via the configured `InferenceEngine`.
-  3. Evaluates Safety Gate 1 (`SafetyGuard.evaluate_species_gate`).
-  4. If species confidence $\ge 90\%$, routes the tensor to the corresponding Tier 2 Crop Specialist.
-  5. Evaluates Safety Gate 2 (`SafetyGuard.evaluate_disease_gate`), calculating conformal prediction sets and out-of-distribution entropy.
-  6. Formats structured JSON diagnostics including agronomic advisories.
-
-### 9.3 Release Bundle Subsystem (`src/leafscan/bundle/`)
-- **`manifest.py`:** Schema definitions for `BundleManifest`, `SafetyGates`, and metadata.
-- **`verification.py`:** Computes SHA-256 hashes of all `.onnx` models at startup and compares them to `manifest.json`. If any file is tampered with or corrupted, startup aborts with `BundleVerificationError`.
-- **`loader.py`:** Manages lazy or eager bundle loading and runtime model caching.
-
----
-
-## 10. CNN Model and ONNX Inference Architecture
-
-### 10.1 Neural Network Backbone
-- **Base Feature Extractor:** Pre-trained **MobileNetV2** initialized with ImageNet weights.
-- **Input Tensor:** $224 \times 224 \times 3$ normalized RGB float32 arrays scaled to $[-1.0, 1.0]$.
-- **Inverted Residual Bottlenecks:** Low-compute depthwise separable convolutions enabling rapid inference on commodity CPU infrastructure.
-
-### 10.2 Convolutional Block Attention Module (CBAM)
-Both Tier 2 Crop Doctor Specialists integrate a **Convolutional Block Attention Module** into the terminal $7 \times 7 \times 1280$ feature maps before global classification pooling:
+The prediction workflow executes through nine distinct, deterministic stages:
 
 ```mermaid
-flowchart LR
-    Input["Feature Map F (7x7x1280)"] --> ChannelAttn["Channel Attention Module"]
-    Input --> Multiply1["Element-wise Product ⊗"]
-    ChannelAttn --> Multiply1
-    Multiply1 --> F_Prime["Refined Feature Map F'"]
-    F_Prime --> SpatialAttn["Spatial Attention Module"]
-    F_Prime --> Multiply2["Element-wise Product ⊗"]
-    SpatialAttn --> Multiply2
-    Multiply2 --> Output["Attention Output F'' (7x7x1280)"]
-
-    subgraph CAM ["Channel Attention Submodule (206,160 params)"]
-        AvgPoolC["Global AvgPool (1x1x1280)"]
-        MaxPoolC["Global MaxPool (1x1x1280)"]
-        SharedMLP["Shared MLP: Dense 1280 -> 80 (r=16) -> Dense 80 -> 1280"]
-        AvgPoolC --> SharedMLP
-        MaxPoolC --> SharedMLP
-        SharedMLP --> AddSigmoid["Element-wise Add + Sigmoid σ"]
-    end
-
-    subgraph SAM ["Spatial Attention Submodule (98 params)"]
-        AvgPoolS["Channel-wise AvgPool (7x7x1)"]
-        MaxPoolS["Channel-wise MaxPool (7x7x1)"]
-        ConcatS["Channel Concatenation (7x7x2)"]
-        ConvS["Conv2D (7x7 kernel, 1 filter) + Sigmoid σ"]
-        AvgPoolS --> ConcatS
-        MaxPoolS --> ConcatS
-        ConcatS --> ConvS
-    end
+flowchart TD
+    A["1. Image Upload (Multipart File)"] --> B["2. Input Validation (Size, MIME, Decompression Guard)"]
+    B --> C["3. Image Preprocessing (EXIF Transpose, White Matting, Resize 224x224, Rescale [-1, 1])"]
+    C --> D["4. Model Loading (Integrity Verification & ONNX Session Caching)"]
+    D --> E["5. Tier 1 Inference (Botanist Species Expert)"]
+    E --> F{"Safety Gate 1: Species Conf >= 90%?"}
+    F -- No --> G["Abstain: species_uncertain (disease: null)"]
+    F -- Yes --> H["6. Tier 2 Inference (Dedicated Crop Doctor Specialist)"]
+    H --> I["7. Prediction & Confidence Processing (Temperature Scaling, OOD Entropy, Conformal Sets)"]
+    I --> J{"Safety Gate 2: Late Blight or General Thresholds"}
+    J -- Late Blight < 90% --> K["Escalate: late_blight_uncertain (Suppress Fungicide)"]
+    J -- Disease < 70% --> L["Flag: disease_uncertain (Request Daylight Re-scan)"]
+    J -- Confident --> M["Confirm: confident Diagnosis"]
+    G --> N["8. API Response Formatting (Structured JSON + Agronomic Advisory)"]
+    K --> N
+    L --> N
+    M --> N
+    N --> O["9. Frontend Result Presentation (Gauges, Advisory Cards, Quarantine Banners)"]
 ```
 
-- **Channel Attention Parameters:** Exactly $1280 \times 80 + 80 + 80 \times 1280 + 1280 = 206,160$ parameters.
-- **Spatial Attention Parameters:** Exactly $7 \times 7 \times 2 \times 1 + 1 = 99$ (or 98 unpadded) parameters.
-- **Total Injected Parameters:** Exactly **206,258 parameters** per specialist network.
+### Stage 1: Image Upload
+The client transmits an image payload to `POST /v2/diagnose` via `multipart/form-data` with form field `image`.
 
-### 10.3 ONNX Runtime Engine Execution
-- **Zero TensorFlow Serving:** Inference graphs run on `onnxruntime.InferenceSession` using `CPUExecutionProvider`.
-- **Thread Configuration:** Fine-tuned `intra_op_num_threads` and `inter_op_num_threads` prevent thread starvation under concurrent web load.
-- **Inference Speedup:** Reduces warm p50 latency from 175 ms (Keras/TensorFlow) down to **16.9 ms** (ONNX Runtime).
+### Stage 2: Input Validation
+`ImageIntake` reads the incoming byte stream defensively:
+- Limits payload ingestion to `10 MB + 1 byte` to instantly reject oversized files with `HTTP 413 Content Too Large`.
+- Validates magic bytes against approved formats (`JPEG`, `PNG`, `WebP`). Non-conforming payloads are rejected with `HTTP 415 Unsupported Media Type`.
+- Sets `Image.MAX_IMAGE_PIXELS = 40_000_000` to prevent decompression bombs.
+
+### Stage 3: Image Preprocessing
+- **Orientation Correction:** Pillow applies `ImageOps.exif_transpose` to orient images captured on mobile devices.
+- **Alpha Matte Neutralization:** If an image contains an alpha channel (`RGBA` or `LA`), it is composited over a solid white background (`#FFFFFF`) to eliminate dark border artifacts.
+- **Resizing & Normalization:** Resized to $224 \times 224$ pixels using bilinear interpolation, converted to `float32`, and normalized to $[-1.0, 1.0]$ via $(x / 127.5) - 1.0$.
+
+### Stage 4: Model Loading & Integrity Verification
+On startup, `ModelBundleLoader` loads `manifest.json` from `models/bundles/v3/`. `IntegrityVerifier` computes SHA-256 hashes of all three ONNX models and compares them against declared values. Once verified, ONNX Runtime sessions are initialized and warmed up with dummy tensors.
+
+### Stage 5: Tier 1 Inference (Species Expert)
+The preprocessed tensor $(1, 224, 224, 3)$ is passed to `species_expert.onnx`. The output logits are passed through Softmax to produce probabilities for `Potato` and `Tomato`.
+
+### Stage 6: Safety Gate 1 Evaluation
+`SafetyGuard.evaluate_species_gate` inspects the maximum species probability:
+- **Species Confidence $< 0.90$:** System abstains from disease classification. Returns status `species_uncertain`, sets `disease: null`, and attaches an agronomic advisory explaining that host crop identity cannot be confirmed.
+- **Species Confidence $\ge 0.90$:** Host crop is confirmed, and execution proceeds to Tier 2.
+
+### Stage 7: Tier 2 Inference (Crop Doctor Specialist)
+The tensor is routed to the corresponding specialist:
+- Potato: `potato_expert.onnx` (Classes: `Early Blight`, `Late Blight`, `Healthy`).
+- Tomato: `tomato_expert.onnx` (Classes: `Early Blight`, `Late Blight`, `Healthy`).
+
+Both specialist networks employ **CBAM Attention** injected into the terminal $7 \times 7 \times 1280$ feature maps:
+$$\mathbf{M}_c(\mathbf{F}) = \sigma(\text{MLP}(\text{AvgPool}(\mathbf{F})) + \text{MLP}(\text{MaxPool}(\mathbf{F})))$$
+$$\mathbf{F}' = \mathbf{M}_c(\mathbf{F}) \otimes \mathbf{F}$$
+$$\mathbf{M}_s(\mathbf{F}') = \sigma(f^{7 \times 7}([\text{AvgPool}(\mathbf{F}'); \text{MaxPool}(\mathbf{F}')]))$$
+$$\mathbf{F}'' = \mathbf{M}_s(\mathbf{F}') \otimes \mathbf{F}'$$
+
+### Stage 8: Prediction Processing & Safety Gate 2
+The disease probabilities are evaluated by `SafetyGuard.evaluate_disease_gate`:
+- **Late Blight Escalation Gate:** If the predicted disease is `Late Blight` but confidence is $< 0.90$, the system flags `late_blight_uncertain`, suppresses systemic chemical spraying advice, and advises physical quarantine and 24–48 hour re-inspection.
+- **General Disease Gate:** If the predicted disease confidence is $< 0.70$, the diagnosis is marked `disease_uncertain`.
+- **Confident Diagnosis:** If confidence meets or exceeds thresholds, the diagnosis is confirmed as `confident`.
+- **Uncertainty & Conformal Sets:** `OODDetector` computes normalized Shannon entropy; `ConformalPredictor` generates finite-sample prediction sets.
+
+### Stage 9: API Response & Frontend Presentation
+The backend formats a structured JSON response containing diagnosis, confidence metrics, probabilities, request metadata, and actionable agronomic advisories. The web clients render dynamic confidence meters, safety banners, and management guidelines.
 
 ---
 
-## 11. Image Upload and Prediction Workflow
+## 7. Prerequisites
 
-```mermaid
-sequenceDiagram
-    autonumber
-    actor User as Agronomist / Field User
-    participant Web as Web Client (SPA / PWA)
-    participant API as FastAPI Transport (/v2/diagnose)
-    participant MW as Bounded Concurrency MW
-    participant Svc as DiagnosisService
-    participant Intake as ImageIntake
-    participant ONNX as OnnxEngine
-    participant Guard as SafetyGuard
+Before installing and running the project, ensure your host environment meets the following requirements:
 
-    User->>Web: Select or drop leaf photograph
-    Web->>Web: Client-side validation (MIME, <10MB) & thumbnail render
-    Web->>API: POST /v2/diagnose (multipart/form-data)
-    API->>MW: Check concurrency slot (limit=4)
-    alt Slots Exceeded
-        MW-->>Web: HTTP 503 (Retry-After: 5)
-    else Slot Acquired
-        MW->>Svc: Hand off request bytes
-        Svc->>Intake: decode_and_orient(raw_bytes)
-        Intake->>Intake: EXIF transpose, 40MP guard, white alpha matte, resize (224x224)
-        Intake-->>Svc: Normalized float32 tensor [-1, 1]
-        
-        Svc->>ONNX: Predict Tier 1 (Species Expert)
-        ONNX-->>Svc: Species Probabilities (Potato vs Tomato)
-        
-        Svc->>Guard: evaluate_species_gate(species_conf, probs)
-        alt Species Conf < 90% (Ambiguous)
-            Guard-->>Svc: SafetyDecision (species_uncertain, abstained=True)
-            Svc-->>API: JSON: status="species_uncertain", disease=null, advisory
-        else Species Conf >= 90% (Confirmed)
-            Svc->>ONNX: Predict Tier 2 (Crop Doctor Specialist)
-            ONNX-->>Svc: Disease Probabilities (Early Blight, Late Blight, Healthy)
-            Svc->>Guard: evaluate_disease_gate(disease_conf, probs)
-            Guard-->>Svc: SafetyDecision (confident / late_blight_uncertain / disease_uncertain)
-            Svc-->>API: Full diagnostic JSON payload + Agronomic Advisory
-        end
-        API-->>Web: HTTP 200 OK
-        MW->>MW: Release concurrency slot
-        Web-->>User: Display diagnosis, confidence gauges, safety banner & advisory
-    end
-```
-
----
-
-## 12. Prediction Confidence and Validation Mechanisms
-
-### 12.1 Deterministic Safety Gating Thresholds
-The diagnostic pipeline enforces hardcoded mathematical thresholds in `SafetyGuard` that cannot be bypassed:
-
-```text
-+---------------------------------------------------------------------------------------+
-|                               LEAFSCAN SAFETY GATING RULES                            |
-+---------------------------------------------------------------------------------------+
-|  Gate 1: Species Gate                                                                 |
-|  - Species Confidence >= 0.90  --> PROCEED to Tier 2 Specialist                       |
-|  - Species Confidence <  0.90  --> ABSTAIN (status: "species_uncertain", disease=null)|
-|                                                                                       |
-|  Gate 2: Late Blight Escalation Gate (High-Consequence Pathogen)                      |
-|  - Late Blight Confidence >= 0.90 --> CONFIRMED (status: "confident")                 |
-|  - Late Blight Confidence <  0.90 --> ESCALATE (status: "late_blight_uncertain")      |
-|                                       Suppresses systemic fungicide spraying advice!  |
-|                                                                                       |
-|  Gate 3: General Disease Gate (Early Blight / Healthy)                               |
-|  - Disease Confidence >= 0.70  --> CONFIRMED (status: "confident")                   |
-|  - Disease Confidence <  0.70  --> UNCERTAIN (status: "disease_uncertain")            |
-+---------------------------------------------------------------------------------------+
-```
-
-### 12.2 Temperature Scaling & Calibration
-Softmax outputs from neural networks are known to be overconfident. LeafScan applies post-hoc **temperature scaling** ($T > 0$) calibrated against validation sets to minimize Expected Calibration Error (ECE):
-$$P(y = k | \mathbf{z}) = \frac{\exp(z_k / T)}{\sum_j \exp(z_j / T)}$$
-
-### 12.3 Out-of-Distribution (OOD) Screening
-The `OODDetector` analyzes normalized Shannon entropy across output probability distributions:
-$$H(P) = -\sum_{k=1}^K P(y = k) \frac{\log P(y = k)}{\log K}$$
-When $H(P)$ exceeds entropy limits, or Maximum Softmax Probability (MSP) drops below threshold, the specimen is flagged as `out_of_scope` (e.g., non-crop vegetation or background debris).
-
-### 12.4 Split Conformal Prediction
-`ConformalPredictor` generates finite-sample valid prediction sets $\mathcal{C}(X)$ guaranteeing statistical coverage at a chosen significance level $(1 - \alpha)$:
-$$\mathbb{P}(Y \in \mathcal{C}(X)) \ge 1 - \alpha$$
-If the prediction set contains multiple competing diagnoses (e.g., `{"Early Blight", "Late Blight"}`), the system triggers uncertainty protocols.
-
----
-
-## 13. Installation and Environment Setup
-
-### 13.1 Prerequisites
-- **Python:** Version 3.10.x or 3.12.x installed.
-- **Git:** Git 2.30+ installed.
-- **Node.js (Optional):** Node.js 18+ and npm (only needed when developing or compiling frontend clients).
+- **Operating System:** Windows 10/11, Ubuntu 22.04+, Debian 12+, or macOS 13+.
+- **Python:** Python 3.10.x or 3.12.x.
+- **Package Manager:** `pip` (or `uv` 0.5+ for high-speed installation).
+- **Node.js (Optional):** Node.js 18.x or 20.x and npm 9+ (only required if developing or building frontend clients).
 - **Docker (Optional):** Docker Engine 24+ and Docker Compose v2 (for containerized deployments).
+- **Git:** Git 2.30+ installed and available on PATH.
 
 ---
 
-## 14. Python Virtual Environment Setup
+## 8. Installation and Setup
 
-### 14.1 Windows (PowerShell)
+### 8.1 Cloning the Repository
+```bash
+git clone https://github.com/ranitadhikari2023/plant-disease-detection.git
+cd plant-disease-detection
+```
+
+### 8.2 Setting Up the Python Environment
+
+#### Windows (PowerShell)
 ```powershell
-# Navigate to the project root directory
-cd d:\plant-disease-detection
-
 # Create virtual environment
 python -m venv .venv
 
-# If script execution is disabled, allow Process-level execution:
+# Enable script execution for current session if restricted
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 
-# Activate the virtual environment
+# Activate virtual environment
 .\.venv\Scripts\Activate.ps1
 ```
 
-### 14.2 Linux / WSL2 (Ubuntu/Debian)
+#### Linux / macOS / WSL
 ```bash
-# Navigate to project root
-cd /path/to/plant-disease-detection
-
 # Create virtual environment
 python3 -m venv .venv
 
-# Activate the virtual environment
+# Activate virtual environment
 source .venv/bin/activate
 ```
 
----
+### 8.3 Installing Dependencies
 
-## 15. Dependency Installation
-
-### 15.1 Production Serving Dependencies (Lightweight — Zero TensorFlow)
-For running the production REST API and precompiled SPA:
-```powershell
+#### Production Serving (Lightweight — Zero TensorFlow)
+For running the production FastAPI microservice, ONNX inference engine, and precompiled SPA:
+```bash
 python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
-
-Alternatively, install via editable package options:
-```powershell
+*Or install via package extras:*
+```bash
 pip install -e ".[serve]"
 ```
 
-### 15.2 Development & Training Dependencies
-To run training pipelines, Keras model exports, or test suites:
-```powershell
+#### Development & Training
+For training pipelines, model export, and running the full test suite:
+```bash
 pip install -r requirements-dev.txt
 pip install -e ".[train,dev]"
 ```
 
----
+### 8.4 Configuring Environment Variables
+Copy the template configuration file:
+```bash
+# Windows PowerShell
+cp .env.example .env
 
-## 16. Environment Variables Configuration
-
-Copy the sample environment file to create your local `.env`:
-
-```powershell
+# Linux / macOS
 cp .env.example .env
 ```
+Inspect `.env` and adjust settings as necessary (refer to [Section 12](#12-configuration-and-environment-variables)).
 
-### Configuration Parameters
-
-| Variable | Type | Default | Description |
-|---|:---:|:---:|---|
-| `LEAFSCAN_APP_ENV` | `string` | `production` | Environment mode (`development`, `staging`, `production`) |
-| `LEAFSCAN_HOST` | `string` | `0.0.0.0` | Host IP address to bind server |
-| `LEAFSCAN_PORT` | `integer` | `8000` | Port for HTTP service |
-| `LEAFSCAN_MODEL_BUNDLE_PATH` | `string` | `models/bundles/v3` | Relative or absolute path to release bundle |
-| `LEAFSCAN_VERIFY_BUNDLE_CHECKSUMS` | `boolean` | `true` | Verify SHA-256 digests against `manifest.json` on startup |
-| `LEAFSCAN_EXECUTION_PROVIDER` | `string` | `CPUExecutionProvider` | Execution provider for ONNX Runtime |
-| `LEAFSCAN_MAX_CONCURRENT_INFERENCES` | `integer` | `4` | Concurrency semaphore limit before HTTP 503 shedding |
-| `LEAFSCAN_RATE_LIMIT_PER_MINUTE` | `integer` | `60` | Client rate limit requests per minute |
-| `LEAFSCAN_MAX_UPLOAD_SIZE_BYTES` | `integer` | `10485760` | Maximum upload size in bytes (10 MB) |
-| `LEAFSCAN_MAX_DECODED_PIXELS` | `integer` | `40000000` | Decompression bomb ceiling (40 Megapixels) |
-| `LEAFSCAN_LOG_LEVEL` | `string` | `INFO` | Logging level (`DEBUG`, `INFO`, `WARNING`, `ERROR`) |
-| `LEAFSCAN_LOG_JSON` | `boolean` | `true` | Format log lines as structured JSON |
-| `LEAFSCAN_API_KEY` | `string` | *(empty)* | Optional API token for header-authenticated endpoints |
-
-> [!IMPORTANT]
-> Never commit active `.env` files containing production secrets to version control. The repository `.gitignore` automatically excludes `.env` and `.env.*`.
-
----
-
-## 17. Running the Application Locally
-
-### 17.1 Running the Production Web Service
-Start the FastAPI server hosting the API microservice and precompiled web SPA:
-
-```powershell
-# Recommended: Run directly via Uvicorn module
+### 8.5 Starting the Backend Application
+Start the FastAPI server hosting the REST API and the precompiled SPA:
+```bash
+# Recommended production entry point
 uvicorn leafscan.api.app:app --host 127.0.0.1 --port 8000 --reload
 
-# Or run via backward-compatible entry point:
+# Backward-compatible entry point
 uvicorn api.main:app --host 127.0.0.1 --port 8000
 ```
+- **Web SPA:** [http://127.0.0.1:8000](http://127.0.0.1:8000)
+- **Interactive Swagger Docs:** [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+- **ReDoc Documentation:** [http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc)
 
-- **Open Web SPA:** [http://127.0.0.1:8000](http://127.0.0.1:8000)
-- **Interactive OpenAPI Docs (Swagger UI):** [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
-- **Alternative ReDoc UI:** [http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc)
-
-### 17.2 Running CLI Inference
-Diagnose foliage images from the command line without launching a web server:
-
-```powershell
-# Default diagnosis (runs on test_images/sample_leaf.JPG)
+### 8.6 Running CLI Inference
+Execute local diagnostic inference without running a web server:
+```bash
+# Run default inference on sample leaf fixture
 python predict_hierarchical_v2.py
 
-# Diagnose a custom leaf image
+# Diagnose custom leaf image
 python predict_hierarchical_v2.py --image path/to/leaf.jpg
 
-# Output structured JSON for automation or pipelines
+# Output machine-readable JSON
 python predict_hierarchical_v2.py --image path/to/leaf.jpg --json
 ```
 
-### 17.3 Running Frontend Development Servers
+### 8.7 Starting Frontend Development Servers (Optional)
 
-**React 18 SPA (`web/`):**
-```powershell
+#### React 18 SPA (`web/`):
+```bash
 cd web
 npm install
 npm run dev
-# Starts local development server at http://localhost:3000
-# To compile new static build into frontend/:
+# Starts local Vite development server at http://localhost:3000
+# To compile new static build into root frontend/:
 npm run build
 ```
 
-**Botanical Field Console (`leafscan-web/`):**
-```powershell
+#### Botanical Field Console PWA (`leafscan-web/`):
+```bash
 cd leafscan-web
 npm install
 npm run dev
-# Starts Next.js 15 PWA at http://localhost:3000
+# Starts local Next.js 15 PWA development server at http://localhost:3000
 ```
 
 ---
 
-## 18. Docker and Docker Compose Setup
+## 9. Docker Setup
 
-### 18.1 Single-Service Container Build & Run
-The multi-stage `Dockerfile` compiles an ultra-lightweight, non-root container (<500MB) without TensorFlow:
+### 9.1 Container Prerequisites
+- Docker Engine 24.0+
+- Docker Compose v2.20+
+- At least 1.5 GB free disk space and 1 GB available RAM
+
+### 9.2 Single-Service Production Container Build & Run
+The multi-stage `Dockerfile` produces an unprivileged, non-root container (<500MB) without TensorFlow:
 
 ```bash
-# Build the production container image
+# Build production container image
 docker build -t leafscan:3.0.0 .
 
-# Run the container with non-root security and resource limits
+# Run container with resource boundaries
 docker run -d \
   --name leafscan-api \
   -p 8000:8000 \
@@ -714,52 +578,77 @@ docker run -d \
   leafscan:3.0.0
 ```
 
-Verify container health:
+Verify container health status:
 ```bash
 docker inspect --format='{{json .State.Health}}' leafscan-api
 ```
 
-### 18.2 Docker Compose Deployments
+### 9.3 Docker Compose Deployments
 
-Deploy the core backend API microservice:
+#### Core Backend Microservice Only
 ```bash
-docker compose up -d
-```
+# Build and start container in background
+docker compose up -d --build
 
-Deploy the full stack including the Next.js Field Console PWA:
-```bash
-docker compose -f compose.yaml -f compose.override.yaml up -d
-```
-
-Check logs and status:
-```bash
-docker compose ps
+# View container logs
 docker compose logs -f api
+
+# Check container status
+docker compose ps
+
+# Graceful shutdown
+docker compose down
 ```
+
+#### Full Stack (API Microservice + Next.js Field Console PWA)
+```bash
+# Start both API and Next.js Web services
+docker compose -f compose.yaml -f compose.override.yaml up -d --build
+
+# View combined logs
+docker compose -f compose.yaml -f compose.override.yaml logs -f
+
+# Shutdown full stack
+docker compose -f compose.yaml -f compose.override.yaml down
+```
+
+### 9.4 Service Access Information
+- **API Service:** [http://localhost:8000](http://localhost:8000)
+- **API Health Endpoint:** [http://localhost:8000/health](http://localhost:8000/health)
+- **API Readiness Endpoint:** [http://localhost:8000/ready](http://localhost:8000/ready)
+- **Prometheus Metrics:** [http://localhost:8000/metrics](http://localhost:8000/metrics)
+- **Field Console PWA (when compose.override.yaml is active):** [http://localhost:3000](http://localhost:3000)
 
 ---
 
-## 19. API Documentation and Endpoints
+## 10. API Documentation
 
-### 19.1 Endpoints Summary
+### 10.1 Endpoints Summary
 
 | Method | Path | Summary | Success Status | Auth Required |
 |---|---|---|:---:|:---:|
-| `GET` | `/` | Serves LeafScan SPA `index.html` | `200 OK` | No |
-| `GET` | `/health` | Liveness probe reporting model status | `200 OK` | No |
-| `GET` | `/ready` | Readiness probe validating bundle integrity | `200 OK` / `503 Unavailable` | No |
-| `GET` | `/v2/model` | Model transparency (bundle version, hashes, gates) | `200 OK` | No |
+| `GET` | `/` | Serves LeafScan precompiled SPA (`index.html`) | `200 OK` | No |
+| `GET` | `/health` | Lightweight liveness probe | `200 OK` | No |
+| `GET` | `/ready` | Readiness probe verifying model bundle integrity | `200 OK` / `503 Unavailable` | No |
+| `GET` | `/v2/model` | Model transparency (bundle version, hashes, gates, metrics) | `200 OK` | No |
 | `GET` | `/metrics` | Prometheus metrics scrape endpoint | `200 OK` | No |
 | `POST` | `/v2/diagnose` | Core hierarchical foliar screening endpoint | `200 OK` | Optional API Key |
-| `POST` | `/v2/feedback` | User diagnostic feedback with idempotency support | `200 OK` | No |
+| `POST` | `/v2/feedback` | Agronomic diagnostic feedback with idempotency support | `200 OK` | No |
 
-### 19.2 Diagnostic Screening Request (`POST /v2/diagnose`)
-- **Headers:** `Content-Type: multipart/form-data`, optional `X-Request-ID: <string>`
-- **Body Field:** `image` (binary file: JPEG, PNG, or WebP up to 10 MB)
+---
 
-#### Example cURL
+### 10.2 Diagnostic Screening (`POST /v2/diagnose`)
+Executes two-tier hierarchical foliar diagnosis on an uploaded leaf photograph.
+
+- **Content-Type:** `multipart/form-data`
+- **Headers:** Optional `X-Request-ID: <string>`, optional `X-API-Key: <string>`
+- **Parameters:**
+  - `image` (binary, required): JPEG, PNG, or WebP image up to 10 MB.
+
+#### Example Request (cURL)
 ```bash
 curl -X POST http://127.0.0.1:8000/v2/diagnose \
+     -H "X-Request-ID: req_test_001" \
      -F "image=@test_images/sample_leaf.JPG"
 ```
 
@@ -775,7 +664,7 @@ curl -X POST http://127.0.0.1:8000/v2/diagnose \
   "diagnosis": "Potato - Early Blight",
   "safety_status": "confident",
   "safety_warnings": [],
-  "advisory": "EARLY BLIGHT DETECTED: Foliar symptoms characteristic of Alternaria solani. Remove severely infected lower leaves, improve canopy airflow, and apply protective copper-based or chlorothalonil fungicides if disease pressure persists.",
+  "advisory": "EARLY BLIGHT DETECTED: Symptoms are characteristic of Early Blight (Alternaria solani) with high diagnostic confidence. Recommended management options: prune lower senescent leaves to minimize soil-splash inoculation; ensure proper plant spacing for canopy drying. If chemical control is warranted, consult certified agricultural extension guidelines for locally approved preventive fungicides.",
   "species_probabilities": {
     "Potato": 0.9852,
     "Tomato": 0.0148
@@ -788,7 +677,7 @@ curl -X POST http://127.0.0.1:8000/v2/diagnose \
   "metadata": {
     "execution_time_ms": 16.9,
     "architecture": "MobileNetV2 + CBAM Attention",
-    "request_id": "req_f8b1c4a2",
+    "request_id": "req_test_001",
     "bundle_version": "v3.0.0"
   }
 }
@@ -821,7 +710,7 @@ curl -X POST http://127.0.0.1:8000/v2/diagnose \
   "metadata": {
     "execution_time_ms": 17.2,
     "architecture": "MobileNetV2 + CBAM Attention",
-    "request_id": "req_c3a9d2e1",
+    "request_id": "req_test_002",
     "bundle_version": "v3.0.0"
   }
 }
@@ -841,7 +730,7 @@ curl -X POST http://127.0.0.1:8000/v2/diagnose \
   "safety_warnings": [
     "Species confidence (62.40%) is below the safety threshold (90%). Disease classification abstained to prevent crop misdiagnosis."
   ],
-  "advisory": "SPECIES UNCERTAINTY: Unable to confirm host crop (Potato or Tomato) with required confidence (>=90%). Disease classification abstained to prevent misdiagnosis. Ensure the leaf is cleanly framed against a neutral background and re-scan.",
+  "advisory": "SPECIES UNCERTAINTY: Automated botanist confidence is below the safety threshold (<90%). Specimen disease diagnosis has been abstained to avoid crop misdiagnosis. Provide a clear, well-lit photograph showing leaf margins and venation, or submit a sample to an accredited agricultural extension laboratory. Do NOT apply chemical treatments to unverified plant species.",
   "species_probabilities": {
     "Potato": 0.6240,
     "Tomato": 0.3760
@@ -850,21 +739,59 @@ curl -X POST http://127.0.0.1:8000/v2/diagnose \
   "metadata": {
     "execution_time_ms": 11.4,
     "architecture": "MobileNetV2",
-    "request_id": "req_8a7d6e5b",
+    "request_id": "req_test_003",
     "bundle_version": "v3.0.0"
   }
 }
 ```
 
+#### Error Responses
+- **`400 Bad Request`:** Missing upload file or unreadable byte stream.
+- **`413 Content Too Large`:** File exceeds 10 MB payload limit.
+- **`415 Unsupported Media Type`:** Non-whitelisted image format (e.g. BMP, TIFF, HEIC).
+- **`422 Unprocessable Content`:** Pillow decompression bomb (>40MP) or corrupt image bytes.
+- **`503 Service Unavailable`:** Concurrency ceiling reached (4 active inferences). Header `Retry-After: 5` attached.
+
 ---
 
-## 20. Testing Instructions
+### 10.3 Diagnostic Feedback (`POST /v2/feedback`)
+Records field feedback or agronomist observations with idempotency protection.
 
-LeafScan maintains rigorous multi-layered testing across backend ML serving, data pipelines, mathematical focal loss formulations, and frontend clients.
+- **Content-Type:** `application/json`
+- **Headers:** Optional `Idempotency-Key: <string>`
+- **Request Body:**
+```json
+{
+  "request_id": "req_test_001",
+  "predicted_species": "Potato",
+  "predicted_disease": "Early Blight",
+  "observed_species": "Potato",
+  "observed_disease": "Early Blight",
+  "feedback_type": "agree",
+  "agronomic_notes": "Concentric target spots confirmed on lower canopy leaves.",
+  "idempotency_key": "idem_abc123"
+}
+```
+- **Response (`200 OK`):**
+```json
+{
+  "success": true,
+  "feedback_id": "fb_7a8f9b0c1d2e",
+  "status": "recorded",
+  "message": "Diagnostic feedback recorded. Submissions require certified agricultural extension validation before dataset curation.",
+  "idempotency_key": "idem_abc123"
+}
+```
+
+---
+
+## 11. Testing
+
+The repository maintains an automated test harness with **167 total automated tests** across Python backend microservices and TypeScript frontend applications.
 
 ```text
 ====================================================================================================
-TEST HARNESS SUMMARY (164 Total Automated Tests — 100% Passing)
+LEAFSCAN V3 AUTOMATED TEST SUITE (167 Total Tests — 100% Passing)
 ====================================================================================================
 Suite                 Target Scope                                      Tests Passed     Pass Rate
 ----------------------------------------------------------------------------------------------------
@@ -874,18 +801,18 @@ Pytest (Backend)      tests/test_v2_inference.py (Gates & Keras)         7 Passe
 Pytest (Backend)      tests/test_losses.py (Focal Loss math)            12 Passed        100%
 Pytest (Backend)      tests/test_data_pipeline.py (tf.data pipeline)    13 Passed        100%
 Vitest (Frontend)     web/ (React 18 SPA components, hooks, api)        67 Passed        100%
-Vitest (Frontend)     leafscan-web/ (Next.js 15 PWA unit & contract)    42 Passed        100%
+Vitest (Frontend)     leafscan-web/ (Next.js 15 PWA unit & contract)    45 Passed        100%
 ----------------------------------------------------------------------------------------------------
-Total Automated Tests                                                   164 Passed        100%
+Total Automated Tests                                                   167 Passed        100%
 ====================================================================================================
 ```
 
-### 20.1 Running Backend Pytest Suites
+### 11.1 Running Backend Pytest Suites
 ```powershell
 # Run the complete Python test suite (55 tests)
 python -m pytest tests/ -v
 
-# Run only production serving, model integrity, and parity tests
+# Run production serving, model integrity, and parity tests only
 python -m pytest tests/test_v3_serving.py -v
 
 # Run API endpoint tests
@@ -898,117 +825,142 @@ python -m pytest tests/test_losses.py -v
 python -m pytest tests/test_data_pipeline.py -v
 ```
 
-### 20.2 Running Code Quality & Linting Checks
+### 11.2 Running Code Quality & Linting Checks
 ```powershell
 # Check code style with Ruff
 ruff check src/ tests/
 
-# Verify code formatting
+# Verify code formatting with Ruff
 ruff format --check src/ tests/
 ```
 
-### 20.3 Running Frontend Vitest Suites
+### 11.3 Running Frontend Vitest Suites
 ```powershell
-# Run React 18 SPA unit and component tests (67 tests)
+# Run React 18 SPA tests (67 tests)
 npm --prefix web test -- --run
 
-# Run Next.js 15 PWA unit and contract tests (42 tests)
+# Run Next.js 15 Field Console tests (45 tests)
 npm --prefix leafscan-web test -- --run
 ```
 
 ---
 
-## 21. Model and Dataset Information
+## 12. Configuration and Environment Variables
 
-### 21.1 Forensically Grouped Zero-Leakage Dataset
-Academic plant pathology datasets frequently contain duplicate photographic captures of the same leaf specimen under slightly varied angles, zooms, and lighting conditions.
+Configuration is handled by `src/leafscan/api/settings.py` via Pydantic Settings, with all parameters prefixed with `LEAFSCAN_`.
 
-To eliminate data leakage:
-- **11,988 images** were analyzed using **Disjoint Set Union (DSU)** graph partitioning and perceptual hashing.
-- Collapsed into **3,971 canonical biological leaf specimens**.
-- Split strictly at the specimen level:
-  - **Training:** 2,776 specimens
-  - **Validation:** 592 specimens
-  - **Held-Out Test:** 603 specimens (0.0% leakage guarantee)
+| Variable | Type | Default | Description |
+|---|:---:|:---:|---|
+| `LEAFSCAN_APP_ENV` | `string` | `production` | Environment mode (`development`, `staging`, `production`) |
+| `LEAFSCAN_HOST` | `string` | `0.0.0.0` | IP address for server binding |
+| `LEAFSCAN_PORT` | `integer` | `8000` | Port for HTTP service |
+| `LEAFSCAN_CORS_ORIGINS` | `list[str]` | `http://127.0.0.1:8000, ...` | Comma-separated list of allowed CORS origins |
+| `LEAFSCAN_MODEL_BUNDLE_PATH` | `string` | `models/bundles/v3` | Path to release bundle containing ONNX models |
+| `LEAFSCAN_VERIFY_BUNDLE_CHECKSUMS` | `boolean` | `true` | Verify SHA-256 hashes against `manifest.json` on startup |
+| `LEAFSCAN_EXECUTION_PROVIDER` | `string` | `CPUExecutionProvider` | Execution provider for ONNX Runtime |
+| `LEAFSCAN_INTRA_OP_THREADS` | `integer` | `2` | ONNX Runtime intra-op execution thread count |
+| `LEAFSCAN_INTER_OP_THREADS` | `integer` | `1` | ONNX Runtime inter-op execution thread count |
+| `LEAFSCAN_MAX_CONCURRENT_INFERENCES` | `integer` | `4` | Concurrency semaphore limit before HTTP 503 shedding |
+| `LEAFSCAN_RATE_LIMIT_PER_MINUTE` | `integer` | `60` | Client request rate limit per minute per IP |
+| `LEAFSCAN_RATE_LIMITING_ENABLED` | `boolean` | `true` | Enables or disables rate limiting middleware |
+| `LEAFSCAN_MAX_UPLOAD_SIZE_BYTES` | `integer` | `10485760` | Maximum upload size in bytes (10 MB) |
+| `LEAFSCAN_MAX_DECODED_PIXELS` | `integer` | `40000000` | Pillow decompression bomb limit (40 Megapixels) |
+| `LEAFSCAN_ENABLE_QUALITY_CHECKS` | `boolean` | `false` | Enable blur/exposure quality screening |
+| `LEAFSCAN_BLUR_THRESHOLD` | `float` | `30.0` | Laplacian variance threshold for blur rejection |
+| `LEAFSCAN_API_KEY_AUTH_ENABLED` | `boolean` | `false` | Enable integrator API key verification |
+| `LEAFSCAN_AUTHORIZED_API_KEY_HASHES` | `list[str]` | `[]` | Comma-separated SHA-256 hashes of approved API keys |
+| `LEAFSCAN_LOG_LEVEL` | `string` | `INFO` | Logging level (`DEBUG`, `INFO`, `WARNING`, `ERROR`) |
+| `LEAFSCAN_LOG_JSON` | `boolean` | `true` | Format log lines as structured JSON |
 
-### 21.2 Golden Evaluation Test Fixtures
-To ensure end-to-end parity and CI/CD test stability without bundling multi-gigabyte raw datasets:
-- **48 curated golden evaluation specimens** are packaged in `tests/fixtures/golden_images/` (total size: 790 KB).
-- Paired with baseline ground truth records in `tests/fixtures/golden_test_dataset.json`.
-- Tested in CI/CD pipeline with **100% agreement and zero gate flips** between Keras and ONNX.
-
-### 21.3 Empirical Model Metrics (Held-Out Specimen Split)
-
-| System Component | Specimen Test Accuracy | Macro Precision | Macro Recall | Macro F1-Score |
-|---|---:|---:|---:|---:|
-| **Species Expert V2** | **98.01%** | 0.9760 | 0.9774 | **0.9767** |
-| **Potato Doctor CBAM V2** | **97.84%** | 0.9678 | 0.9669 | **0.9673** |
-| **Tomato Doctor CBAM V2** | **89.95%** | 0.8872 | 0.8870 | **0.8870** |
-| **Hierarchical System (Ungated)** | **91.85%** | — | — | — |
-| **Hierarchical System (End-to-End)** | **84.08%** | — | — | — |
-
-*Note: In the end-to-end system, the pipeline deliberately abstained on **51 ambiguous specimens (8.46%)**, prioritizing safety over speculative diagnoses.*
-
----
-
-## 22. Security and Error Handling
-
-### 22.1 Defensive Image Ingestion
-- **Decompression Bomb Guard:** Explicitly caps Pillow memory allocations via `Image.MAX_IMAGE_PIXELS = 40_000_000` (40 MP), rejecting malicious ZIP-bomb style payloads before parsing.
-- **Payload Limiting:** Reads up to `10 MB + 1 byte` to instantly reject oversized uploads with `HTTP 413 Content Too Large`.
-- **MIME & Format Whitelisting:** Strictly validates image magic bytes against `JPEG`, `PNG`, and `WEBP`. Rejects unapproved formats with `HTTP 415 Unsupported Media Type`.
-- **Alpha Matte Neutralization:** Composites transparent RGBA channels over pure white backgrounds (`#FFFFFF`) to eliminate dark boundary artifacts from transparent cutouts.
-
-### 22.2 Service Hardening & Resilience
-- **Bounded Concurrency Semaphore:** Restricts concurrent active inferences to 4 worker tasks, immediately shedding excessive load with `HTTP 503` and `Retry-After: 5` to prevent CPU exhaustion.
-- **Exception Sanitization:** Catches unhandled internal exceptions at the middleware boundary, logging details internally while returning safe JSON error structures to clients.
-- **Unprivileged Container Execution:** Docker runtime runs under user `leafscan:leafscan` (UID 10001) with `no-new-privileges:true` and a 64MB `tmpfs` mounted at `/tmp`.
+> [!IMPORTANT]
+> Never commit real secrets, API keys, or production credential values to version control. The repository `.gitignore` automatically excludes all `.env` files.
 
 ---
 
-## 23. Troubleshooting
+## 13. Deployment
+
+### 13.1 Production Architecture
+In production, LeafScan runs as an unprivileged containerized microservice:
+- **Container User:** Runs under user `leafscan:leafscan` (UID 10001, GID 10001) with `no-new-privileges:true`.
+- **Filesystem Security:** Mounts a 64MB `tmpfs` at `/tmp` with `noexec,nosuid`.
+- **Resource Constraints:** Constrained to 2.0 CPUs and 1024 MB RAM via Docker deployment specs.
+- **Readiness Probes:** Orchestrators query `GET /ready` to ensure model bundles are cryptographic-verified before routing traffic.
+
+### 13.2 Reverse Proxy Setup (Nginx Example)
+Place Nginx or Traefik in front of the container to terminate TLS and forward requests:
+
+```nginx
+server {
+    listen 443 ssl http2;
+    server_name leafscan.example.com;
+
+    ssl_certificate /etc/letsencrypt/live/leafscan.example.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/leafscan.example.com/privkey.pem;
+
+    client_max_body_size 12M;
+
+    location / {
+        proxy_pass http://127.0.0.1:8000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+```
+
+### 13.3 CI/CD Pipeline
+Continuous Integration is configured via `.github/workflows/ci.yml`:
+1. **Code Quality & Security Linting:** Validates code style and imports using `ruff check` and `ruff format --check`.
+2. **Production Serving & Parity Test Suite:** Executes Pytest serving, parity, and security tests on Ubuntu with Python 3.12.
+3. **Container Build & Vulnerability Scan:** Builds the production Docker image, executes container healthchecks, and performs Trivy vulnerability scans.
+
+---
+
+## 14. Troubleshooting
 
 ### 1. PowerShell Script Execution Policy Error
 - **Symptom:** `Activate.ps1 cannot be loaded because running scripts is disabled on this system.`
-- **Resolution:** Set process-level execution policy:
+- **Resolution:** Set process-level execution policy in your active terminal:
   ```powershell
   Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
   .\.venv\Scripts\Activate.ps1
   ```
 
-### 2. Port Collision (HTTP 8000 Already in Use)
+### 2. Port Collision (HTTP 8000 Already Bound)
 - **Symptom:** `[Errno 10048] error while attempting to bind on address ('127.0.0.1', 8000)`
-- **Resolution:** Run Uvicorn on an alternative port:
+- **Resolution:** Run Uvicorn on an alternate port:
   ```powershell
   uvicorn leafscan.api.app:app --port 8080
   ```
 
-### 3. Model Bundle Checksum Verification Mismatch
+### 3. Model Bundle Checksum Verification Failure
 - **Symptom:** `BundleVerificationError: Checksum mismatch for species_expert.onnx`
-- **Resolution:** Ensure model files in `models/bundles/v3` have not been altered. Re-generate ONNX models and manifest via:
+- **Resolution:** Verify that models in `models/bundles/v3` have not been altered. Check hashes against `manifest.json`. If necessary, re-export ONNX models via:
   ```powershell
   python export_to_onnx.py
   ```
 
-### 4. Golden Test Images Not Found in CI/CD
+### 4. Golden Test Images Not Found
 - **Symptom:** `AssertionError: Golden image ... not found`
-- **Resolution:** Verify that `tests/fixtures/golden_images/` contains the 48 fixture images and that git tracks them (`git status tests/fixtures/golden_images/`).
+- **Resolution:** Verify that `tests/fixtures/golden_images/` contains the 48 curated fixture specimens. Ensure Git tracks them:
+  ```powershell
+  git status tests/fixtures/golden_images/
+  ```
 
-### 5. Image Upload Rejected (HTTP 415 or 400)
+### 5. Image Upload Rejected with HTTP 415 or 400
 - **Symptom:** `{"detail": "Unsupported image format..."}`
-- **Resolution:** Convert images to standard JPEG, PNG, or WebP. TIFF, BMP, and raw HEIC formats are intentionally rejected by security policy.
+- **Resolution:** Provide standard JPEG, PNG, or WebP images. TIFF, BMP, SVG, and raw HEIC formats are intentionally rejected by defensive intake policy.
+
+### 6. HTTP 503 Load Shedding Under Peak Concurrency
+- **Symptom:** `{"detail": "Inference server busy. Please retry shortly."}` with `Retry-After: 5`.
+- **Resolution:** The concurrency semaphore is protecting CPU resources. Increase `LEAFSCAN_MAX_CONCURRENT_INFERENCES` in `.env` if host CPU has sufficient cores.
 
 ---
 
-## 24. Current Limitations
+## 15. Future Improvements
 
-1. **Crop Scope Restriction:** Restricted specifically to Solanaceous crops (*Solanum tuberosum* — Potato and *Solanum lycopersicum* — Tomato). Foliage from non-target families triggers species abstention.
-2. **Single Leaf Framing:** Optimized for individual foliar leaves. Full field canopy vistas, aerial drone overviews, or complex multi-leaf clusters require pre-cropping.
-3. **Lighting & Motion Artifacts:** Severe motion blur, out-of-focus captures, or extreme backlight flares elevate entropy and trigger uncertainty abstentions.
-
----
-
-## 25. Future Improvements
+The following items represent potential extensions that are not yet implemented in the current codebase:
 
 - **Broader Solanaceous Coverage:** Extend training pipelines to Bell Pepper (*Capsicum annuum*) and Eggplant (*Solanum melongena*).
 - **Edge INT8 Quantization:** Generate INT8-quantized ONNX models to achieve sub-5ms latency on low-power IoT farm sensors.
@@ -1017,9 +969,16 @@ To ensure end-to-end parity and CI/CD test stability without bundling multi-giga
 
 ---
 
-## 26. License
+## 16. License and Acknowledgements
 
-This project is developed and maintained by **Ranit Adhikari** ([@ranitadhikari2023](https://github.com/ranitadhikari2023)).
-
+### Maintainer
+Developed and maintained by **Ranit Adhikari** ([@ranitadhikari2023](https://github.com/ranitadhikari2023)).
 - **Repository:** [https://github.com/ranitadhikari2023/plant-disease-detection](https://github.com/ranitadhikari2023/plant-disease-detection)
 - **License:** Proprietary / All rights reserved. For academic research collaboration, commercial licensing, or agronomic integration inquiries, contact the repository maintainer.
+
+### Acknowledgements & Citations
+- **PlantVillage Dataset:** Hughes, D., & Salathé, M. (2015). *An open access repository of images on plant health to enable the development of mobile disease diagnostics.* arXiv:1511.08060.
+- **MobileNetV2 Architecture:** Sandler, M., Howard, A., Zhu, M., Zhmoginov, A., & Chen, L. C. (2018). *MobileNetV2: Inverted Residuals and Linear Bottlenecks.* IEEE CVPR.
+- **CBAM Attention Mechanism:** Woo, S., Park, J., Lee, J. Y., & Kweon, I. S. (2018). *CBAM: Convolutional Block Attention Module.* ECCV.
+- **ONNX Runtime:** Microsoft Corporation & Open Neural Network Exchange contributors.
+- **FastAPI Framework:** Sebastián Ramírez and the FastAPI community.
